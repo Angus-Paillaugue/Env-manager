@@ -26,16 +26,19 @@ export class API {
 		}
 	}
 
-	static async getVariables(projectId: Project['id'], environementName: Environment['name']) {
+	static async getVariables(
+		projectId: Project['id'],
+		environementName: Environment['name']
+	): Promise<string> {
 		try {
 			const response = await axios.get(
-				`${API_URL}/projects/${projectId}/environments/${environementName}`,
+				`${API_URL}/projects/${projectId}/environments/${environementName}/variables?raw`,
 				{
 					headers: { Authorization: `Bearer ${Auth.getToken()}` }
 				}
 			);
 
-			return response.data.environment?.variables || [];
+			return response.data;
 		} catch (error) {
 			throw new Error(error.response?.data?.error || error.message);
 		}

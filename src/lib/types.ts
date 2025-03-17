@@ -4,19 +4,22 @@ export type User = {
 	email: string;
 	passwordHash: string;
 	createdAt: Date;
+	profilePicture: string;
 };
 
 export type Project = {
 	id: string;
 	name: string;
 	createdAt: Date;
-	environments?: Environment[];
+	environments: Environment[];
+	members: ProjectMember[];
 };
 
 export type ProjectMember = {
 	userId: string;
 	projectId: string;
 	role: 'owner' | 'guest';
+	user: User;
 };
 
 export type Environment = {
@@ -24,7 +27,7 @@ export type Environment = {
 	projectId: string;
 	name: string;
 	createdAt: Date;
-	variables?: Variable[];
+	variables: Variable[];
 };
 
 export type Variable = {

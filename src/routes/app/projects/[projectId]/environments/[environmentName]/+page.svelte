@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
-	import { Alert, Button, Hr, Input, Modal } from '$lib/components';
+	import { Alert, Button, Card, Hr, Input, Modal } from '$lib/components';
 	import { pageHeading } from '$lib/stores';
 	import type { Environment, Variable } from '$lib/types';
 	import { cn } from '$lib/utils';
 	import { Eye, EyeClosed, Key, Plus } from 'lucide-svelte';
 	import { fade, slide } from 'svelte/transition';
+	import Action from './action.svelte';
+	import { flip } from 'svelte/animate';
 
 	interface HiddenVariable extends Variable {
 		hidden: boolean;
@@ -23,20 +25,31 @@
 	});
 	let createVariableModalOpen = $state(false);
 	let isCreatingVariable = $state(false);
-	let envFilefiles = $state<FileList>();
+	let envFileFiles = $state<FileList>();
 	let createVariableForm = $state<HTMLFormElement>();
+	let dropdownOpenIndex = $state(-1);
 
-	pageHeading.set({
-		title: environment.name + ' environment',
-		description: `Manage variables in the <b>${environment.name}</b> environment of the <b>${page.data.project.name}</b> project`,
-		breadcrumbs: [
-			{ title: 'Projects', href: '/app' },
-			{ title: page.data.project.name, href: '/app/projects/' + page.data.project.id },
-			{
-				title: environment.name,
-				href: '/app/projects/' + page.data.project.id + '/environments/' + environment.name
-			}
-		]
+	$effect(() => {
+		pageHeading.set({
+			title: environment.name + ' environment',
+			description: `Manage variables in the <b>${environment.name}</b> environment of the <b>${page.data.project.name}</b> project`,
+			breadcrumbs: [
+				{ title: 'Projects', href: '/app' },
+				{ title: page.data.project.name, href: '/app/projects/' + page.data.project.id },
+				{
+					title: environment.name,
+					href: '/app/projects/' + page.data.project.id + '/environments/' + environment.name
+				}
+			]
+		});
+	});
+
+	// For refreshing page data after navigation on the same page but with a different path param
+	$effect(() => {
+		environment = {
+			...data.environment,
+			variables: transformEnvVariables(data.environment)
+		};
 	});
 
 	function transformEnvVariables(env: Environment): HiddenVariable[] {
@@ -48,17 +61,41 @@
 		});
 	}
 
+	function closeAllDropdowns() {
+		dropdownOpenIndex = -1;
+	}
+
 	$effect(() => {
 		if (!form) return;
-		console.log(form);
 		const { body, ok, action } = form;
 		if (!ok || !body) {
 			console.error(action, body);
 			return;
 		}
+
 		switch (action) {
 			case 'createVariable':
-				environment.variables = transformEnvVariables(body as unknown as Environment);
+				const newEnv = body as unknown as Environment;
+				environment = {
+					...newEnv,
+					variables: transformEnvVariables(newEnv)
+				};
+				createVariableModalOpen = false;
+				break;
+			case 'deleteVariable':
+				environment.variables = environment.variables.filter(
+					(v) => v.id !== (body as Variable['id'])
+				);
+				closeAllDropdowns();
+				break;
+			case 'editVariable':
+				const editedVariable = body as Variable;
+				const index = environment.variables.findIndex((v) => v.id === editedVariable.id);
+				environment.variables[index] = {
+					...editedVariable,
+					hidden: environment.variables[index].hidden
+				};
+				closeAllDropdowns();
 				break;
 			default:
 				console.error('Unknown action', action);
@@ -69,8 +106,8 @@
 
 	// Handle the form submission when an env file is selected
 	$effect(() => {
-		if (!envFilefiles || !createVariableForm) return;
-		if (envFilefiles.length === 0) return;
+		if (!envFileFiles || !createVariableForm) return;
+		if (envFileFiles.length === 0) return;
 		createVariableForm.submit();
 	});
 
@@ -117,13 +154,13 @@
 				id="envFile"
 				placeholder="Choose a .env file"
 				accept=".env, .env.*"
-				bind:files={envFilefiles}
+				bind:files={envFileFiles}
 			/>
 		</div>
 		<Hr text="OR" />
 		<h3 class="text-lg font-medium">Enter it manually</h3>
 		<div class="grid grid-cols-2 gap-4">
-			<Input type="text" id="environmentName" label="Key" placeholder="e.g. API_KEY" />
+			<Input type="text" id="variableName" label="Key" placeholder="e.g. API_KEY" />
 			<Input type="text" id="variableValue" label="Value" />
 		</div>
 		{#if form && form.ok === false && form?.action === 'createVariable' && form.error}
@@ -148,12 +185,18 @@
 	</div>
 
 	<!-- Variables list -->
-	<div class="flex flex-col gap-2">
-		{#if environment?.variables && environment.variables.length > 0}
-			<div class="bg-card border-border flex flex-col rounded border">
-				{#each environment.variables as variable, i}
-					<!-- Table row -->
-					<div class={cn('grid grid-cols-3 items-center p-5', i !== 0 && 'border-border border-t')}>
+	{#if environment?.variables && environment.variables.length > 0}
+		<div class="border-border flex flex-col rounded border">
+			{#each environment.variables as variable, i (variable.id)}
+				<div animate:flip={{ duration: 400 }}>
+					<Card
+						class={cn(
+							'grid grid-cols-3 items-center rounded-none border-0 p-5',
+							i !== 0 && 'border-t',
+							i === 0 && 'rounded-t',
+							i === environment.variables.length - 1 && 'rounded-b'
+						)}
+					>
 						<!-- Variable name -->
 						<div class="flex flex-row items-center gap-4">
 							<div class="border-border text-muted bg-background rounded-full border p-1.5">
@@ -163,7 +206,7 @@
 						</div>
 
 						<!-- Variable value -->
-						<div class="col-span-2 flex h-6 flex-row items-center">
+						<div class="justify-bertween col-span-2 flex h-6 flex-row items-center gap-2">
 							<!-- Toggle visiblity  -->
 							<button
 								class="hover:bg-secondary-hover text-muted mr-1 size-6 shrink-0 cursor-pointer rounded-sm p-1 transition-colors"
@@ -200,15 +243,25 @@
 									onclick={() => copyVariable(variable)}>{variable.value}</button
 								>
 							{/if}
+
+							<Action
+								onOpen={() => {
+									dropdownOpenIndex = i;
+								}}
+								open={dropdownOpenIndex === i}
+								{variable}
+								{environment}
+								{form}
+							/>
 						</div>
-					</div>
-				{/each}
-			</div>
-		{:else}
-			<!-- No variables indicator -->
-			<Alert.Info>
-				Looks like there are no variables in this environment. Click the button above to create one.
-			</Alert.Info>
-		{/if}
-	</div>
+					</Card>
+				</div>
+			{/each}
+		</div>
+	{:else}
+		<!-- No variables indicator -->
+		<Alert.Info>
+			Looks like there are no variables in this environment. Click the button above to create one.
+		</Alert.Info>
+	{/if}
 </section>

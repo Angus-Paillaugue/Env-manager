@@ -10,6 +10,14 @@ export class ErrorHandling {
 		});
 	}
 
+	static returnSuccess(action: string, body?: unknown) {
+		return {
+			ok: true,
+			action,
+			body
+		};
+	}
+
 	static throwServerError(message: string) {
 		console.error(`Server error:`, message);
 		throw error(500, message);

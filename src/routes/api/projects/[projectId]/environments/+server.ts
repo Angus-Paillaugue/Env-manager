@@ -4,7 +4,7 @@ import { EnvironmentDAO } from '$lib/server/db/environment';
 
 export const GET: RequestHandler = async ({ params, locals }) => {
 	const { user } = locals;
-	console.log(user.id, params.projectId);
+
 	const environments = await EnvironmentDAO.getEnvironmentsByProjectId(user.id, params.projectId);
 	return json({ environments });
 };

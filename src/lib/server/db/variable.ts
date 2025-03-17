@@ -17,6 +17,15 @@ export class VariableDAO {
 		name: Variable['name'],
 		value: Variable['value']
 	): Promise<Variable> {
+		if (!environmentId) {
+			throw new Error('Environment ID is required');
+		}
+		if (!name) {
+			throw new Error('Variable name is required');
+		}
+		if (!value) {
+			throw new Error('Variable value is required');
+		}
 		const result = await pool.query(
 			`INSERT INTO variables (environment_id, name, value)
       VALUES ($1, $2, $3)
@@ -37,5 +46,25 @@ export class VariableDAO {
 			[environmentId, userId]
 		);
 		return result.rows.map(VariableDAO.convertToVariable);
+	}
+
+	static async deleteVariable(userId: User['id'], variableId: Variable['id']): Promise<void> {
+		await pool.query(
+			'DELETE FROM variables WHERE id = $1 AND environment_id IN (SELECT id FROM environments WHERE project_id IN (SELECT project_id FROM project_members WHERE user_id = $2))',
+			[variableId, userId]
+		);
+	}
+
+	static async editVariable(
+		userId: User['id'],
+		variableId: Variable['id'],
+		name: Variable['name'],
+		value: Variable['value']
+	): Promise<Variable> {
+		const result = await pool.query(
+			'UPDATE variables SET name = $1, value = $2 WHERE id = $3 AND environment_id IN (SELECT id FROM environments WHERE project_id IN (SELECT project_id FROM project_members WHERE user_id = $4)) RETURNING *',
+			[name, value, variableId, userId]
+		);
+		return VariableDAO.convertToVariable(result.rows[0]);
 	}
 }

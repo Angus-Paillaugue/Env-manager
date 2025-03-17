@@ -1,14 +1,20 @@
 import type { User } from '$lib/types';
 import pool from '.';
+import { writeFile } from 'fs/promises';
 
 export class UserDAO {
+	static PUBLIC_PROFILE_PICTURE_DIR = '/uploads/profile_pictures/';
+
 	static convertToUser(row: Record<string, never>): User {
 		return {
 			id: row.id,
 			email: row.email,
 			username: row.username,
 			passwordHash: row.password_hash,
-			createdAt: row.created_at
+			createdAt: row.created_at,
+			profilePicture: row.profile_picture
+				? UserDAO.PUBLIC_PROFILE_PICTURE_DIR + row.profile_picture
+				: '/uploads/profile_pictures/default.jpg'
 		};
 	}
 
@@ -65,5 +71,40 @@ export class UserDAO {
 	static async userExistsByUsername(username: User['username']): Promise<boolean> {
 		const result = await pool.query('SELECT 1 FROM users WHERE username = $1', [username]);
 		return result.rows.length > 0;
+	}
+
+	static async uploadProfilePicture(
+		userId: User['id'],
+		file: File
+	): Promise<User['profilePicture']> {
+		const ext = file.name.split('.').pop();
+		const filename = `${userId}.${ext}`;
+		const publicPath = UserDAO.PUBLIC_PROFILE_PICTURE_DIR + filename;
+		const path = 'static' + publicPath;
+		await writeFile(path, Buffer.from(await file.arrayBuffer()));
+		const result = await pool.query(
+			'UPDATE users SET profile_picture = $1 WHERE id = $2 RETURNING profile_picture',
+			[filename, userId]
+		);
+		if (result.rows.length === 0) {
+			throw new Error('Failed to upload profile picture');
+		}
+
+		return publicPath;
+	}
+
+	static async updateUser(user: User): Promise<User> {
+		const result = await pool.query(
+			'UPDATE users SET email = $1, username = $2, password_hash = $3 WHERE id = $4 RETURNING *',
+			[user.email, user.username, user.passwordHash, user.id]
+		);
+		if (result.rows.length === 0) {
+			throw new Error('Failed to update user');
+		}
+		return UserDAO.convertToUser(result.rows[0]);
+	}
+
+	static async deleteUser(user: User): Promise<void> {
+		await pool.query('DELETE FROM users WHERE id = $1', [user.id]);
 	}
 }

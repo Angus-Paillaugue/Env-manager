@@ -33,6 +33,11 @@ export const handle = async ({ event, resolve }) => {
 		throw redirect(307, '/auth/log-in');
 	}
 
+	// Redirects out of the app if user is logged in and trying to access a non-protected route
+	if (locals.user && urlStartsWith(url.pathname, '/auth')) {
+		throw redirect(307, '/app');
+	}
+
 	const response = await resolve(event);
 	response.headers.set(
 		'X-Robots-Tag',

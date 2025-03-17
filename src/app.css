@@ -15,11 +15,12 @@
 	--color-secondary-foreground: hsl(0, 0%, 93%);
 
 	--color-card: #0a0a0a;
-	--color-card-hover: hsl(0, 0%, 6%);
+	--color-card-hover: hsl(0, 0%, 10%);
 
 	--color-border: hsla(0, 0%, 100%, 0.14);
 
 	--color-danger: #c50000;
+	--color-danger-hover: #e00;
 	--color-warning: #ab570a;
 	--color-success: #00783e;
 
@@ -52,6 +53,10 @@
 	::backdrop,
 	::file-selector-button {
 		border-color: var(--color-card, currentColor);
+	}
+
+	*::selection {
+		@apply text-background bg-foreground;
 	}
 }
 

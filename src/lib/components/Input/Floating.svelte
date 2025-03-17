@@ -15,6 +15,7 @@
 		type = 'text',
 		id,
 		placeholder = ' ',
+		value = $bindable(''),
 		...restProps
 	}: SvelteHTMLElements['input'] & MyProps = $props();
 
@@ -67,6 +68,7 @@
 		{placeholder}
 		type={innerType}
 		name={id}
+		bind:value
 		{...restProps}
 	/>
 	<label for={id} class={concatenateClasses(classes.label)}>{label}</label>

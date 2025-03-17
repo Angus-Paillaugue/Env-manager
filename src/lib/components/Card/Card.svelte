@@ -12,7 +12,7 @@
 <svelte:element
 	this={tagName}
 	class={cn(
-		'bg-card border-card text-foreground flex flex-col rounded-lg border p-4',
+		'bg-card border-border text-foreground flex flex-col rounded-lg border p-4',
 		tagName === 'a' && 'hover:bg-card-hover cursor-pointer transition-colors',
 		className
 	)}

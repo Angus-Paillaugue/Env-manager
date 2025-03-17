@@ -18,6 +18,7 @@ CREATE TABLE users (
     username TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
+    profile_picture TEXT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
 

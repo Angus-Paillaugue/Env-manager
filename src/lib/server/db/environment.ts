@@ -45,6 +45,11 @@ export class EnvironmentDAO {
 	): Promise<Environment> {
 		name = name.trim();
 		if (name === '') throw new Error('Environment name cannot be empty');
+		const alreadyExists = await pool.query(
+			'SELECT 1 FROM environments WHERE project_id = $1 AND name = $2',
+			[projectId, name]
+		);
+		if (alreadyExists.rows.length > 0) throw new Error('Environment "' + name + '" already exists');
 		const result = await pool.query(
 			'INSERT INTO environments (project_id, name) VALUES ($1, $2) RETURNING *',
 			[projectId, name]
@@ -52,8 +57,14 @@ export class EnvironmentDAO {
 		return EnvironmentDAO.transformEnvironment(result.rows[0]);
 	}
 
-	static async deleteEnvironment(environmentId: Environment['id']): Promise<void> {
-		await pool.query('DELETE FROM environments WHERE id = $1', [environmentId]);
+	static async deleteEnvironment(
+		userId: User['id'],
+		environmentId: Environment['id']
+	): Promise<void> {
+		await pool.query(
+			'DELETE FROM environments WHERE id = $1 AND EXISTS (SELECT 1 FROM project_members WHERE project_id = (SELECT project_id FROM environments WHERE id = $1) AND user_id = $2)',
+			[environmentId, userId]
+		);
 	}
 
 	static async getEnvironmentById(
@@ -68,5 +79,17 @@ export class EnvironmentDAO {
 		const environment = EnvironmentDAO.transformEnvironment(result.rows[0]);
 		environment.variables = await VariableDAO.getVariablesByEnvironment(userId, environment.id);
 		return environment;
+	}
+
+	static async editEnvironment(
+		userId: User['id'],
+		environmentId: Environment['id'],
+		environment: Environment
+	): Promise<Environment> {
+		const result = await pool.query(
+			'UPDATE environments SET name = $1 WHERE id = $2 AND EXISTS (SELECT 1 FROM project_members WHERE project_id = (SELECT project_id FROM environments WHERE id = $2) AND user_id = $3) RETURNING *',
+			[environment.name, environmentId, userId]
+		);
+		return EnvironmentDAO.transformEnvironment(result.rows[0]);
 	}
 }

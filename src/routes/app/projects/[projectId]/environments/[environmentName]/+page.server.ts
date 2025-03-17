@@ -3,7 +3,7 @@ import type { PageServerLoad } from './$types';
 import { VariableDAO } from '$lib/server/db/variable';
 import { EnvironmentDAO } from '$lib/server/db/environment';
 import { ErrorHandling } from '$lib/server/errorHandling';
-import type { Environment, Project } from '$lib/types';
+import type { Environment, Project, Variable } from '$lib/types';
 
 async function getEnvironment(
 	projectId: Project['id'],
@@ -38,7 +38,7 @@ export const actions: Actions = {
 		};
 
 		// If an environment file is uploaded, read the content and create variables from it
-		if (envFile) {
+		if (envFile.size > 0) {
 			// Extract all of the variables from the uploaded file
 			const envFileContent = await envFile.text();
 			const lines = envFileContent.split('\n');
@@ -49,15 +49,15 @@ export const actions: Actions = {
 				})
 				.filter(({ name, value }) => name && value);
 
+			const environment = await EnvironmentDAO.getEnvironmentByName(
+				user.id,
+				params.projectId as string,
+				params.environmentName as string
+			);
+			if (!environment) return error(404, 'Environment not found');
 			// Insert each variable into the database
 			for (const { name, value } of variables) {
 				try {
-					const environment = await EnvironmentDAO.getEnvironmentByName(
-						user.id,
-						params.projectId as string,
-						params.environmentName as string
-					);
-					if (!environment) return error(404, 'Environment not found');
 					await VariableDAO.createVariable(environment.id, name, value);
 				} catch (error) {
 					return ErrorHandling.throwActionError(400, 'createVariable', error);
@@ -88,5 +88,50 @@ export const actions: Actions = {
 			ok: true,
 			body: environment
 		};
+	},
+	async deleteVariable({ locals, request }) {
+		const { user } = locals;
+		const formData = Object.fromEntries(await request.formData());
+		const { variableId } = formData as {
+			variableId: Variable['id'];
+		};
+
+		try {
+			await VariableDAO.deleteVariable(user.id, variableId);
+		} catch (error) {
+			return ErrorHandling.throwActionError(400, 'deleteVariable', error);
+		}
+
+		return {
+			action: 'deleteVariable',
+			body: variableId,
+			ok: true
+		};
+	},
+	async editVariable({ locals, request }) {
+		const { user } = locals;
+		const formData = Object.fromEntries(await request.formData());
+		const { variableName, variableValue, variableId } = formData as {
+			variableName: string;
+			variableValue: string;
+			variableId: Variable['id'];
+		};
+
+		try {
+			const editedVariable = await VariableDAO.editVariable(
+				user.id,
+				variableId,
+				variableName,
+				variableValue
+			);
+			if (!editedVariable) return error(404, 'Variable not found');
+			return {
+				action: 'editVariable',
+				body: editedVariable,
+				ok: true
+			};
+		} catch (error) {
+			return ErrorHandling.throwActionError(400, 'editVariable', error);
+		}
 	}
 };

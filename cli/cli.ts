@@ -3,16 +3,10 @@
 import { Command } from 'commander';
 import fs from 'fs-extra';
 import inquirer from 'inquirer';
-import type { Variable } from '../src/lib/types';
 import { API } from './api';
 import { Auth } from './auth';
 
 const program = new Command();
-
-function writeEnvFile(variables: Variable[], filename: string = '.env') {
-	const envContent = variables.map((v) => `${v.name}=${v.value}`).join('\n');
-	fs.writeFileSync(filename, envContent);
-}
 
 // Login command
 program
@@ -70,7 +64,7 @@ program
 				message: 'Enter the filename to save the variables',
 				default: '.env.' + environmentName.toLowerCase().replace(/\s/g, '-')
 			});
-			writeEnvFile(variables, filenameAnswer.filename);
+			fs.writeFileSync(filenameAnswer.filename, variables);
 		} catch (error) {
 			console.error('Failed to fetch:', error.response?.data?.error || error.message);
 		}

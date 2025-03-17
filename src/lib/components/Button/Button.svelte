@@ -4,7 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import Spinner from '../Spinner';
 
-	type Variant = 'primary' | 'secondary';
+	type Variant = 'primary' | 'secondary' | 'danger';
 
 	interface MyProps {
 		loading?: boolean;
@@ -30,7 +30,8 @@
 		[
 			'secondary',
 			'bg-secondary hover:bg-secondary-hover text-secondary-foreground border border-border'
-		]
+		],
+		['danger', 'bg-danger hover:bg-danger-hover text-foreground']
 	]);
 
 	const finalClasses = cn(
