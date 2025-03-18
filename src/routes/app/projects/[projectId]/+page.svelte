@@ -6,68 +6,67 @@
 	import { Code, Plus } from 'lucide-svelte';
 	import Action from './action.svelte';
 	import type { Environment, Project, ProjectMember } from '$lib/types';
+	import { handleForm } from '$lib/utils/formHandler.svelte';
 
 	let { data, form } = $props();
-	let project = $state<Project>(data.project);
+	let project = $derived<Project>(data.project);
 	let createEnvironmentModalOpen = $state(false);
 	let isCreatingEnvironment = $state(false);
-	let dropdownOpenIndex = $state(-1);
-
-	function closeAllDropdowns() {
-		dropdownOpenIndex = -1;
-	}
-
-	pageHeading.set({
-		title: 'Environments',
-		description: `Manage environments in the <b>${project.name}</b> project`,
-		breadcrumbs: [
-			{ title: 'Projects', href: '/app' },
-			{ title: project.name, href: '/app/projects/' + project.id }
-		]
-	});
 
 	$effect(() => {
-		if (!form) return;
-		let { body, ok, action } = form;
-		if (!ok || !action || !body) {
-			console.error(form);
-			return;
-		}
-
-		switch (action) {
-			case 'deleteEnvironment': {
-				project.environments = project.environments.filter((env: Environment) => env.id !== body);
-				closeAllDropdowns();
-				break;
+		pageHeading.set({
+			title: 'Environments',
+			description: `Manage environments in the <b>${project.name}</b> project`,
+			breadcrumbs: [
+				{ title: 'Projects', href: '/app' },
+				{ title: project.name, href: '/app/projects/' + project.id }
+			],
+			seo: {
+				title: project.name + ' - Environments'
 			}
-			case 'addMember': {
-				const data = body as unknown as ProjectMember;
-				if (!project.members.some((member) => member.userId === data.userId)) {
-					project.members.push(data);
-					closeAllDropdowns();
-				} else {
-					form = {
-						ok: false,
-						action: 'addMember',
-						error: 'User is already a member'
-					};
+		});
+	});
+
+	handleForm(form, {
+		onSuccess: (body, action) => {
+			switch (action) {
+				case 'deleteEnvironment': {
+					project.environments = project.environments.filter((env: Environment) => env.id !== body);
+					break;
 				}
-				break;
-			}
-			case 'editEnvironment': {
-				const data = body as unknown as Environment;
-				project.environments = project.environments.map((env) => {
-					if (env.id === data.id) {
-						return data;
+				case 'addMember': {
+					const data = body as unknown as ProjectMember;
+					if (!project.members.some((member) => member.userId === data.userId)) {
+						project.members.push(data);
+					} else {
+						form = {
+							ok: false,
+							action: 'addMember',
+							error: 'User is already a member'
+						};
 					}
-					return env;
-				});
-				closeAllDropdowns();
-				break;
+					break;
+				}
+				case 'editEnvironment': {
+					const data = body as unknown as Environment;
+					project.environments = project.environments.map((env) => {
+						if (env.id === data.id) {
+							return data;
+						}
+						return env;
+					});
+					break;
+				}
+				case 'removeMember': {
+					const data = body as unknown as ProjectMember['userId'];
+					project.members = project.members.filter((member) => member.userId !== data);
+					break;
+				}
 			}
+		},
+		onError: (error, action) => {
+			console.error(`Error in action ${action}:`, error);
 		}
-
-		form = null;
 	});
 </script>
 
@@ -109,10 +108,11 @@
 			><Plus class="size-4" />Create environment</Button
 		>
 	</div>
-	{#each project.environments as environment, i}
+	{#each project.environments as environment}
 		<Card
 			href="/app/projects/{project.id}/environments/{environment.name}"
 			class="group flex-row items-center gap-4 rounded font-mono text-base font-bold"
+			hoverEffect={true}
 		>
 			<div
 				class="border-border text-muted bg-background group-hover:bg-primary group-hover:text-primary-foreground rounded-full border p-1.5 transition-colors"
@@ -122,16 +122,11 @@
 			{environment.name}
 
 			<div class="ml-auto">
-				<Action
-					{form}
-					{environment}
-					onOpen={() => {
-						dropdownOpenIndex = i;
-					}}
-					open={dropdownOpenIndex === i}
-				/>
+				<Action {form} {environment} />
 			</div>
 		</Card>
+	{:else}
+		<Alert.Info>No environments found. Create one to manage your variables.</Alert.Info>
 	{/each}
 </section>
 

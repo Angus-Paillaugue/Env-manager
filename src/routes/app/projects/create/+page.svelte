@@ -4,7 +4,6 @@
 	import { Alert, Button, Input } from '$lib/components';
 
 	let { form } = $props();
-	let error = $state<string | null>(null);
 	let isLoading = $state<boolean>(false);
 
 	pageHeading.set({
@@ -14,11 +13,6 @@
 			{ title: 'Projects', href: '/app' },
 			{ title: 'Create', href: '/app/projects/create' }
 		]
-	});
-
-	$effect(() => {
-		if (!form) return;
-		if (form.error) error = form.error;
 	});
 </script>
 
@@ -34,10 +28,10 @@
 		};
 	}}
 >
-	<Input.Floating type="text" id="name" label="Name" />
+	<Input.Floating type="text" id="name" label="Name" autofocus={true} autocomplete="off" />
 
-	{#if error}
-		<Alert.Danger>{error}</Alert.Danger>
+	{#if form && form.ok === false && form?.action === 'editEnvironment' && form.error}
+		<Alert.Danger>{form.error}</Alert.Danger>
 	{/if}
 
 	<Button loading={isLoading}>Create</Button>

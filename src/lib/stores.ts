@@ -71,6 +71,10 @@ export interface PageHeading {
 	title: string;
 	description?: string;
 	breadcrumbs?: { title: string; href: string }[];
+	seo?: {
+		title?: string;
+		description?: string;
+	};
 }
 
 export const pageHeading = writable<PageHeading>({ title: '', description: '' });

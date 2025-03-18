@@ -3,6 +3,8 @@
 	import { isMobile } from '$lib/utils';
 	import MobileModal from './mobileModal.svelte';
 	import DesktopModal from './desktopModal.svelte';
+	import { portal } from '$lib/utils/portal.svelte';
+	import Backdrop from './Backdrop.svelte';
 
 	interface MyProps {
 		open: boolean;
@@ -16,10 +18,23 @@
 		onClose,
 		children
 	}: SvelteHTMLElements['div'] & MyProps = $props();
+
+	$effect(() => {
+		if (open) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = 'auto';
+			if (onClose) onClose();
+		}
+	});
 </script>
 
-{#if isMobile.current}
-	<MobileModal bind:open {children} {onClose} {fullScreen} />
-{:else}
-	<DesktopModal bind:open {children} {onClose} />
-{/if}
+<Backdrop bind:open />
+
+<div use:portal class="portal">
+	{#if isMobile.current}
+		<MobileModal bind:open {children} {fullScreen} />
+	{:else}
+		<DesktopModal bind:open {children} />
+	{/if}
+</div>

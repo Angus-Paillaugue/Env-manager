@@ -1,9 +1,12 @@
 import type { User } from '$lib/types';
+import sharp from 'sharp';
 import pool from '.';
-import { writeFile } from 'fs/promises';
+import { writeFile, unlink } from 'fs/promises';
 
 export class UserDAO {
+	static UPLOAD_DIR = 'static';
 	static PUBLIC_PROFILE_PICTURE_DIR = '/uploads/profile_pictures/';
+	static DEFAULT_PROFILE_PICTURE = '/uploads/profile_pictures/default.webp';
 
 	static convertToUser(row: Record<string, never>): User {
 		return {
@@ -14,7 +17,7 @@ export class UserDAO {
 			createdAt: row.created_at,
 			profilePicture: row.profile_picture
 				? UserDAO.PUBLIC_PROFILE_PICTURE_DIR + row.profile_picture
-				: '/uploads/profile_pictures/default.jpg'
+				: UserDAO.DEFAULT_PROFILE_PICTURE
 		};
 	}
 
@@ -77,11 +80,26 @@ export class UserDAO {
 		userId: User['id'],
 		file: File
 	): Promise<User['profilePicture']> {
-		const ext = file.name.split('.').pop();
+		// Remove old picture if exists
+		const user = await UserDAO.getUserById(userId);
+		if (user && user.profilePicture !== UserDAO.DEFAULT_PROFILE_PICTURE) {
+			const oldPath = UserDAO.UPLOAD_DIR + user.profilePicture;
+			try {
+				await unlink(oldPath);
+			} catch (error) {
+				console.error('Error deleting old profile picture:', error);
+			}
+		}
+		// Compress and resize the new image
+		const buffer = await file.arrayBuffer();
+		const ext = 'webp';
+		const resizedImage = await sharp(buffer).resize(60, 60).webp({ quality: 80 }).toBuffer();
 		const filename = `${userId}.${ext}`;
 		const publicPath = UserDAO.PUBLIC_PROFILE_PICTURE_DIR + filename;
-		const path = 'static' + publicPath;
-		await writeFile(path, Buffer.from(await file.arrayBuffer()));
+		const path = UserDAO.UPLOAD_DIR + publicPath;
+		// Save the new image to the filesystem
+		await writeFile(path, resizedImage);
+		// Update the database with the new image path
 		const result = await pool.query(
 			'UPDATE users SET profile_picture = $1 WHERE id = $2 RETURNING profile_picture',
 			[filename, userId]
@@ -89,7 +107,6 @@ export class UserDAO {
 		if (result.rows.length === 0) {
 			throw new Error('Failed to upload profile picture');
 		}
-
 		return publicPath;
 	}
 

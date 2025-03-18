@@ -1,9 +1,23 @@
-import { redirect, type Actions } from '@sveltejs/kit';
+import { redirect, type Actions, error } from '@sveltejs/kit';
 import { EnvironmentDAO } from '$lib/server/db/environment';
 import { ErrorHandling } from '$lib/server/errorHandling';
 import type { Environment, ProjectMember } from '$lib/types';
 import { UserDAO } from '$lib/server/db/user';
 import { ProjectMembersDAO } from '$lib/server/db/projectMember';
+
+export const load = async ({ params, locals }) => {
+	const { user } = locals;
+	const { projectId } = params;
+
+	try {
+		const role = await ProjectMembersDAO.getUserRole(projectId, user.id);
+		if (!role) {
+			throw new Error('Unauthorized');
+		}
+	} catch (e) {
+		return error(401, e instanceof Error ? e.message : 'Unauthorized');
+	}
+};
 
 export const actions: Actions = {
 	async createEnvironment({ request, params }) {
@@ -98,5 +112,28 @@ export const actions: Actions = {
 		} catch (error) {
 			return ErrorHandling.throwActionError(400, 'addMember', error);
 		}
+	},
+	async removeMember({ request, locals, params }) {
+		const { user } = locals;
+		const formData = Object.fromEntries(await request.formData());
+		const { memberId } = formData as {
+			memberId: string;
+		};
+
+		try {
+			await ProjectMembersDAO.removeMember(user.id, params.projectId as string, memberId);
+		} catch (error) {
+			return ErrorHandling.throwActionError(400, 'removeMember', error);
+		}
+
+		if (user.id === memberId) {
+			throw redirect(303, '/app');
+		}
+
+		return {
+			ok: true,
+			action: 'removeMember',
+			body: memberId
+		};
 	}
 };

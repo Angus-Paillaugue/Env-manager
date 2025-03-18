@@ -5,6 +5,8 @@
 	import { pageHeading } from '$lib/stores';
 	import type { User } from '$lib/types';
 	import { Upload } from 'lucide-svelte';
+	import { handleForm } from '$lib/utils/formHandler.svelte';
+	import { cloneObject, isDeepEqual } from '$lib/utils/';
 
 	let { data, form } = $props();
 
@@ -14,7 +16,8 @@
 	let profilePicturePreview: HTMLImageElement | null = $state(null);
 	let isUploadingProfilePicture = $state(false);
 	let isSavingGeneral = $state(false);
-	let updatedUser = $derived<User>(user);
+	// svelte-ignore state_referenced_locally
+	let updatedUser = $state<User>(cloneObject(user) as User);
 	let deleteAccountConfirmModalOpen = $state(false);
 	let isDeletingAccount = $state(false);
 
@@ -27,27 +30,26 @@
 		]
 	});
 
-	$effect(() => {
-		if (!form) return;
-		let { body, ok, action } = form;
-		if (!ok || !action || !body) {
-			console.error(form);
-			return;
-		}
-
-		switch (action) {
-			case 'updateProfilePicture': {
-				user.profilePicture = body + '?' + Date.now();
-				profilePicturePreview = null;
-				profilePictureInputFiles = null;
-				profilePictureModalOpen = false;
-				break;
+	handleForm(form, {
+		onSuccess: (body, action) => {
+			switch (action) {
+				case 'updateProfilePicture': {
+					user.profilePicture = body + '?' + Date.now();
+					profilePicturePreview = null;
+					profilePictureInputFiles = null;
+					profilePictureModalOpen = false;
+					break;
+				}
+				case 'saveGeneral': {
+					const data = body as User;
+					user = data;
+					updatedUser = cloneObject(data) as User; // Update the derived state
+					break;
+				}
 			}
-			case 'saveGeneral': {
-				const data = body as User;
-				user = data;
-				break;
-			}
+		},
+		onError: (error, action) => {
+			console.error(`Error in action ${action}:`, error);
 		}
 	});
 
@@ -62,6 +64,8 @@
 			reader.readAsDataURL(profilePictureInputFiles[0]);
 		}
 	});
+
+	$inspect(user, updatedUser, isDeepEqual(user, updatedUser));
 </script>
 
 <!-- General -->
@@ -69,7 +73,7 @@
 	<h2 class="text-2xl font-medium">General</h2>
 
 	<form
-		class="grid grid-cols-2 gap-4"
+		class="grid grid-cols-1 gap-4 lg:grid-cols-2"
 		method="POST"
 		action="?/saveGeneral"
 		use:enhance={() => {
@@ -80,11 +84,17 @@
 			};
 		}}
 	>
-		<Input.Floating type="text" id="name" label="Username" value={updatedUser.username} />
-		<Input.Floating type="email" id="email" label="E-mail" value={updatedUser.email} disabled />
+		<Input.Floating type="text" id="name" label="Username" bind:value={updatedUser.username} />
+		<Input.Floating
+			type="email"
+			id="email"
+			label="E-mail"
+			bind:value={updatedUser.email}
+			disabled
+		/>
 
-		<div class="col-span-2 flex flex-row gap-4">
-			<Button loading={isSavingGeneral}>Save</Button>
+		<div class="flex flex-row gap-4 lg:col-span-2">
+			<Button loading={isSavingGeneral} disabled={isDeepEqual(user, updatedUser)}>Save</Button>
 			{#if form?.ok && form.action === 'saveGeneral'}
 				<Alert.Success>Your changes have been saved successfully.</Alert.Success>
 			{/if}
@@ -136,7 +146,7 @@
 		</form>
 	</Modal>
 
-	<div class="grid grid-cols-2 gap-4">
+	<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
 		<!-- Profile picture input -->
 		<label
 			for="profilePicture"

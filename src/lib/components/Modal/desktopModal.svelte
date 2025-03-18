@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { SvelteHTMLElements } from 'svelte/elements';
-	import Backdrop from './Backdrop.svelte';
 	import { fly } from 'svelte/transition';
 	import { TRANSITION_DURATION } from '.';
 	import { cn } from '$lib/utils';
@@ -8,26 +7,10 @@
 
 	interface MyProps {
 		open: boolean;
-		onClose?: () => void;
 	}
 
-	let {
-		open = $bindable(false),
-		onClose,
-		children
-	}: SvelteHTMLElements['div'] & MyProps = $props();
-
-	$effect(() => {
-		if (open) {
-			document.body.style.overflow = 'hidden';
-		} else {
-			document.body.style.overflow = 'auto';
-			if (onClose) onClose();
-		}
-	});
+	let { open = $bindable(false), children }: SvelteHTMLElements['div'] & MyProps = $props();
 </script>
-
-<Backdrop bind:open />
 
 {#if open}
 	<div class="pointer-events-none fixed inset-2 z-50 flex items-center justify-center">

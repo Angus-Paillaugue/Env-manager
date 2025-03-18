@@ -18,7 +18,11 @@
 		<Button href="/app/projects/create"><Plus class="size-5" />Create a project</Button>
 	</div>
 	{#each projects as project}
-		<Card href="/app/projects/{project.id}" class="group flex-row items-center gap-4 rounded">
+		<Card
+			href="/app/projects/{project.id}"
+			class="group flex-row items-center gap-4 rounded"
+			hoverEffect={true}
+		>
 			<div
 				class="border-border text-muted bg-background group-hover:bg-primary group-hover:text-primary-foreground rounded-full border p-1.5 font-mono text-base font-bold transition-colors"
 			>

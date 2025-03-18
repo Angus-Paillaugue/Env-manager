@@ -1,69 +1,121 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { Hr } from '$lib/components';
+	import { Card, Hr } from '$lib/components';
 	import { cn } from '$lib/utils';
-	import { ChevronDown } from 'lucide-svelte';
+	import { ChevronDown, Folder, FolderOpen, User } from 'lucide-svelte';
 
 	let projects = $derived(page.data.projects);
 	let currentProject = $derived(page.data?.project);
 	let currentEnvironment = $derived(page.data?.environment);
 	let user = $derived(page.data.user);
+	let pathname = $derived(page.url.pathname);
+
+	// TODO: Fix this
+	function isActive(node: HTMLAnchorElement) {
+		const href = node.getAttribute('href');
+		const isActive = href && pathname === href;
+		node.dataset.active = isActive ? 'true' : 'false';
+		return {
+			update(newHref: string) {
+				console.log(newHref);
+				node.dataset.active = newHref && pathname === newHref ? 'true' : 'false';
+			}
+		};
+	}
 </script>
 
+<div class="p-2 lg:hidden">
+	<div class="border-border bg-card grid h-12 w-full grid-cols-2 rounded-full border">
+		<a
+			class="flex h-full w-full flex-row items-center justify-center gap-2 font-mono text-base font-medium"
+			href="/app"
+			use:isActive
+		>
+			{#if pathname.startsWith('/app/projects')}
+				<FolderOpen class="size-4" />
+			{:else}
+				<Folder class="size-4" />
+			{/if}
+			Projects
+		</a>
+		<a
+			class="flex h-full w-full flex-row items-center justify-center gap-2 font-mono text-base font-medium"
+			href="/app/account"
+			use:isActive
+		>
+			<User class="size-5" />
+			Account
+		</a>
+	</div>
+</div>
+
 <aside
-	class="bg-background border-border flex h-full w-full max-w-sm shrink-0 flex-col border-r p-4"
+	class="bg-background border-border hidden h-full w-full max-w-sm shrink-0 flex-col border-r p-4 transition-transform duration-300 lg:flex"
 >
 	<div class="flex flex-col gap-1">
 		<Hr text="Projects" />
 		<!-- <Collapsible.Group> -->
 		{#each projects as project}
 			<!-- <Collapsible summary={project.name} open={currentProject?.id === project.id}>
-          {#each project.environments as environment}
-            <a href="/app/projects/{project.id}/environments/{environment.name}" class={cn("p-2 rounded border text-base font-normal border-background", currentEnvironment?.id === environment.id && "bg-card border-border")}>{environment.name}</a>
-          {/each}
-        </Collapsible> -->
+        {#each project.environments as environment}
+          <a href="/app/projects/{project.id}/environments/{environment.name}" class={cn("p-2 rounded border text-base font-normal border-background", currentEnvironment?.id === environment.id && "bg-card border-border")}>{environment.name}</a>
+        {/each}
+      </Collapsible> -->
 
-			<details open={currentProject?.id === project.id} class="group">
-				<summary
-					class={cn(
-						'border-background flex cursor-pointer flex-row items-center justify-between rounded border p-2 text-lg font-medium',
-						currentProject?.id === project.id && !currentEnvironment && 'bg-card border-border'
-					)}
+			{#if project.environments.length > 0}
+				<details open={currentProject?.id === project.id} class="group">
+					<summary
+						class={cn(
+							'border-background flex cursor-pointer flex-row items-center justify-between rounded border p-2 text-lg font-medium',
+							currentProject?.id === project.id && !currentEnvironment && 'bg-card border-border'
+						)}
+					>
+						<a href="/app/projects/{project.id}" class="flex grow flex-row items-center gap-2">
+							{#if currentProject?.id === project.id}
+								<FolderOpen class="size-4" />
+							{:else}
+								<Folder class="size-4" />
+							{/if}
+							{project.name}
+						</a>
+						<div
+							class="hover:bg-card-hover text-muted size-6 shrink-0 rounded-sm p-1 transition-all group-open:rotate-180"
+						>
+							<ChevronDown class="size-full" />
+						</div>
+					</summary>
+
+					<div class="ml-4 flex flex-col">
+						{#each project.environments as environment}
+							<a
+								href="/app/projects/{project.id}/environments/{environment.name}"
+								class={cn(
+									'border-background rounded border p-2 text-base font-normal',
+									currentEnvironment?.id === environment.id && 'bg-card border-border'
+								)}>{environment.name}</a
+							>
+						{/each}
+					</div>
+				</details>
+			{:else}
+				<a
+					href="/app/projects/{project.id}"
+					class="border-background flex cursor-pointer flex-row items-center justify-between rounded border p-2 text-lg font-medium"
 				>
 					{project.name}
-					<div
-						class="hover:bg-card-hover text-muted size-6 rounded-sm p-1 transition-all group-open:rotate-180"
-					>
-						<ChevronDown class="size-full" />
-					</div>
-				</summary>
-
-				<div class="ml-4 flex flex-col">
-					{#each project.environments as environment}
-						<a
-							href="/app/projects/{project.id}/environments/{environment.name}"
-							class={cn(
-								'border-background rounded border p-2 text-base font-normal',
-								currentEnvironment?.id === environment.id && 'bg-card border-border'
-							)}>{environment.name}</a
-						>
-					{/each}
-				</div>
-			</details>
+				</a>
+			{/if}
 		{/each}
 		<!-- </Collapsible.Group> -->
 	</div>
 
-	<a
-		href="/app/account"
-		class="bg-card hover:border-border hover:bg-card-hover border-card mt-auto flex cursor-pointer flex-row items-center gap-4 rounded border p-3 transition-all"
-	>
+	<Card hoverEffect={true} href="/app/account" class="mt-auto flex-row items-center gap-4 rounded">
 		<div class="border-border size-8 overflow-hidden rounded-full border">
 			<!-- svelte-ignore a11y_img_redundant_alt -->
 			<img src={user.profilePicture} alt="Profile picture" class="object-cover object-center" />
 		</div>
 		<span class="text-sm font-medium">{user.username}</span>
-	</a>
+	</Card>
 </aside>
 
 <style>

@@ -11,7 +11,7 @@
 		variant?: Variant | Variant[];
 	}
 
-	type Props = MyProps &
+	export type ButtonProps = MyProps &
 		(({ href: string } & SvelteHTMLElements['a']) | SvelteHTMLElements['button']);
 
 	const {
@@ -20,7 +20,7 @@
 		variant = 'primary',
 		children,
 		...restProps
-	}: Props = $props();
+	}: ButtonProps = $props();
 
 	const baseClasses =
 		'rounded transition-colors flex flex-row gap-2 w-fit items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed px-3 py-2 cursor-pointer text-medium font-sans font-medium h-fit';

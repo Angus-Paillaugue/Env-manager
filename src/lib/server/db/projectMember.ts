@@ -1,5 +1,6 @@
 import type { Project, ProjectMember, User } from '$lib/types';
 import pool from '.';
+import { ProjectDAO } from './project';
 import { UserDAO } from './user';
 
 export class ProjectMembersDAO {
@@ -15,10 +16,10 @@ export class ProjectMembersDAO {
 		userId: User['id'],
 		projectId: Project['id'],
 		addedUserId: User['id'],
-		role: 'owner' | 'guest'
+		role: ProjectMember['role']
 	): Promise<void> {
 		const hasPermission = await ProjectMembersDAO.getUserRole(projectId, userId);
-		if (hasPermission !== 'owner') {
+		if (hasPermission && hasPermission !== 'owner') {
 			throw new Error('You do not have permission to add members to this project');
 		}
 		await pool.query(
@@ -27,16 +28,34 @@ export class ProjectMembersDAO {
 		);
 	}
 
-	static async removeMember(projectId: Project['id'], userId: User['id']): Promise<void> {
+	static async removeMember(
+		userId: User['id'],
+		projectId: Project['id'],
+		removeUserId: User['id']
+	): Promise<void> {
+		if (userId !== removeUserId) {
+			const hasPermission = await ProjectMembersDAO.getUserRole(projectId, userId);
+			if (hasPermission !== 'owner') {
+				throw new Error('You do not have permission to remove members from this project');
+			}
+		}
 		await pool.query('DELETE FROM project_members WHERE project_id = $1 AND user_id = $2', [
 			projectId,
-			userId
+			removeUserId
 		]);
+
+		// Check if project still has members
+		const result = await pool.query('SELECT COUNT(*) FROM project_members WHERE project_id = $1', [
+			projectId
+		]);
+		if (parseInt(result.rows[0].count) === 0) {
+			await ProjectDAO.deleteProject(projectId);
+		}
 	}
 
 	static async getMembers(projectId: Project['id']): Promise<ProjectMember[]> {
 		const result = await pool.query(
-			'SELECT pm.*, u.username, u.email FROM project_members pm JOIN users u ON pm.user_id = u.id WHERE pm.project_id = $1',
+			'SELECT pm.*, u.* FROM project_members pm JOIN users u ON pm.user_id = u.id WHERE pm.project_id = $1 ORDER BY pm.added_at ASC',
 			[projectId]
 		);
 		return result.rows.map(ProjectMembersDAO.transformProjectMember);
@@ -59,5 +78,14 @@ export class ProjectMembersDAO {
 			[projectId, userId]
 		);
 		return result.rows.length > 0 ? result.rows[0].role : null;
+	}
+
+	static async autocomplete(userId: User['id'], query: string, limit?: number): Promise<User[]> {
+		limit ??= 5;
+		const result = await pool.query(
+			'SELECT * FROM users WHERE (username ILIKE $1 OR email ILIKE $1) AND id != $2 LIMIT $3',
+			[`%${query}%`, userId, limit]
+		);
+		return result.rows.map(UserDAO.convertToUser);
 	}
 }

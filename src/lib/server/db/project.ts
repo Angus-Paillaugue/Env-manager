@@ -14,9 +14,14 @@ export class ProjectDAO {
 		};
 	}
 
-	static async createProject(name: Project['name']): Promise<Project> {
+	static async createProject(userId: User['id'], name: Project['name']): Promise<Project> {
 		const result = await pool.query('INSERT INTO projects (name) VALUES ($1) RETURNING *', [name]);
-		return ProjectDAO.convertToProject(result.rows[0]);
+		const project = ProjectDAO.convertToProject(result.rows[0]);
+		await pool.query(
+			"INSERT INTO project_members (project_id, user_id, role) VALUES ($1, $2, 'owner');",
+			[project.id, userId]
+		);
+		return project;
 	}
 
 	static async getProjectsByUser(userId: User['id']): Promise<Project[]> {
@@ -47,5 +52,9 @@ export class ProjectDAO {
 		project.environments = await EnvironmentDAO.getEnvironmentsByProjectId(userId, project.id);
 		project.members = await ProjectMembersDAO.getMembers(project.id);
 		return project;
+	}
+
+	static async deleteProject(projectId: Project['id']): Promise<void> {
+		await pool.query('DELETE FROM projects WHERE id = $1', [projectId]);
 	}
 }

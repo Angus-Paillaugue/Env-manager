@@ -1,7 +1,7 @@
 import { ProjectDAO } from '$lib/server/db/project';
-import { ProjectMembersDAO } from '$lib/server/db/projectMember';
+import { ErrorHandling } from '$lib/server/errorHandling';
 import type { Project } from '$lib/types';
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { redirect, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
 	async create({ locals, request }) {
@@ -11,20 +11,26 @@ export const actions: Actions = {
 
 		// Check if username is provided
 		if (!name || name.length < 3)
-			return fail(400, { error: 'Please enter a name (at least 3 characters)!' });
+			return ErrorHandling.throwActionError(
+				400,
+				'create',
+				'Project name must be at least 3 characters long!'
+			);
 
 		let project: Project | null = null;
 		try {
-			project = await ProjectDAO.createProject(name);
-			ProjectMembersDAO.addMember(project.id, user.id, 'owner');
+			project = await ProjectDAO.createProject(user.id, name);
 		} catch (error) {
-			console.error(error);
-			return fail(400, { error: 'An error occurred!' });
+			return ErrorHandling.throwActionError(400, 'create', error);
 		}
 
 		if (project) throw redirect(303, '/app/projects/' + project.id);
 		else {
-			return fail(400, { error: 'An error occurred!' });
+			return ErrorHandling.throwActionError(
+				400,
+				'create',
+				'An error occurred while creating the project!'
+			);
 		}
 	}
 };

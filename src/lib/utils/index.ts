@@ -58,25 +58,30 @@ export const isDeepEqual = (
 	object1: Record<string, unknown>,
 	object2: Record<string, unknown>
 ): boolean => {
-	const objKeys1 = Object.keys(object1);
-	const objKeys2 = Object.keys(object2);
+	if (object1 === object2) return true;
 
-	if (objKeys1.length !== objKeys2.length) return false;
+	if (typeof object1 !== 'object' || typeof object2 !== 'object') return false;
 
-	for (const key of objKeys1) {
+	const keys1 = Object.keys(object1);
+	const keys2 = Object.keys(object2);
+
+	if (keys1.length !== keys2.length) return false;
+
+	for (const key of keys1) {
+		if (!keys2.includes(key)) return false;
+
 		const value1 = object1[key];
 		const value2 = object2[key];
 
-		const isObjects = isObject(value1) && isObject(value2);
-
-		if (
-			(isObjects &&
-				!isDeepEqual(value1 as Record<string, unknown>, value2 as Record<string, unknown>)) ||
-			(!isObjects && value1 !== value2)
-		) {
+		if (isObject(value1) && isObject(value2)) {
+			if (!isDeepEqual(value1 as Record<string, unknown>, value2 as Record<string, unknown>)) {
+				return false;
+			}
+		} else if (value1 !== value2) {
 			return false;
 		}
 	}
+
 	return true;
 };
 
@@ -89,3 +94,19 @@ export const noop = (...args: unknown[]) => {
 };
 
 export const isMobile = new MediaQuery('width < 48rem');
+
+export function cloneObject(obj: Record<string, unknown>): Record<string, unknown> {
+	if (obj === null || typeof obj !== 'object') return obj;
+
+	if (Array.isArray(obj)) {
+		return obj.map(cloneObject) as unknown as Record<string, unknown>;
+	}
+
+	const clonedObj: Record<string, unknown> = {};
+
+	for (const key in obj) {
+		clonedObj[key] = cloneObject(obj[key] as Record<string, unknown>);
+	}
+
+	return clonedObj;
+}

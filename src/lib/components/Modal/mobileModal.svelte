@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { SvelteHTMLElements } from 'svelte/elements';
-	import Backdrop from './Backdrop.svelte';
 	import { fly } from 'svelte/transition';
 	import { TRANSITION_DURATION } from '.';
 	import { cn } from '$lib/utils';
@@ -9,24 +8,13 @@
 	interface MyProps {
 		open: boolean;
 		fullScreen?: boolean;
-		onClose?: () => void;
 	}
 
 	let {
 		open = $bindable(false),
 		fullScreen = false,
-		onClose,
 		children
 	}: SvelteHTMLElements['div'] & MyProps = $props();
-
-	$effect(() => {
-		if (open) {
-			document.body.style.overflow = 'hidden';
-		} else {
-			document.body.style.overflow = 'auto';
-			if (onClose) onClose();
-		}
-	});
 
 	let initialPosition = $state<{ y: number }>({ y: 0 });
 	let swipeY = $state(0);
@@ -84,8 +72,6 @@
 </script>
 
 <svelte:window onmousemove={handleMouseMove} onmouseup={handleMouseUp} />
-
-<Backdrop bind:open />
 
 {#if open}
 	<div class="pointer-events-none fixed right-0 bottom-0 left-0 z-40 h-fit max-h-svh p-2">

@@ -9,6 +9,7 @@
 	import { fade, slide } from 'svelte/transition';
 	import Action from './action.svelte';
 	import { flip } from 'svelte/animate';
+	import { handleForm } from '$lib/utils/formHandler.svelte';
 
 	interface HiddenVariable extends Variable {
 		hidden: boolean;
@@ -27,7 +28,6 @@
 	let isCreatingVariable = $state(false);
 	let envFileFiles = $state<FileList>();
 	let createVariableForm = $state<HTMLFormElement>();
-	let dropdownOpenIndex = $state(-1);
 
 	$effect(() => {
 		pageHeading.set({
@@ -40,7 +40,10 @@
 					title: environment.name,
 					href: '/app/projects/' + page.data.project.id + '/environments/' + environment.name
 				}
-			]
+			],
+			seo: {
+				title: data.project.name + ' - ' + environment.name
+			}
 		});
 	});
 
@@ -52,6 +55,7 @@
 		};
 	});
 
+	// Transform the environment variables to include a hidden property
 	function transformEnvVariables(env: Environment): HiddenVariable[] {
 		return (env.variables ?? []).map((variable) => {
 			return {
@@ -61,47 +65,37 @@
 		});
 	}
 
-	function closeAllDropdowns() {
-		dropdownOpenIndex = -1;
-	}
-
-	$effect(() => {
-		if (!form) return;
-		const { body, ok, action } = form;
-		if (!ok || !body) {
-			console.error(action, body);
-			return;
+	handleForm(form, {
+		onSuccess: (body, action) => {
+			switch (action) {
+				case 'createVariable':
+					const newEnv = body as unknown as Environment;
+					environment = {
+						...newEnv,
+						variables: transformEnvVariables(newEnv)
+					};
+					createVariableModalOpen = false;
+					break;
+				case 'deleteVariable':
+					environment.variables = environment.variables.filter(
+						(v) => v.id !== (body as Variable['id'])
+					);
+					break;
+				case 'editVariable':
+					const editedVariable = body as Variable;
+					const index = environment.variables.findIndex((v) => v.id === editedVariable.id);
+					environment.variables[index] = {
+						...editedVariable,
+						hidden: environment.variables[index].hidden
+					};
+					break;
+				default:
+					console.error('Unknown action', action);
+			}
+		},
+		onError: (error, action) => {
+			console.error(`Error in action ${action}:`, error);
 		}
-
-		switch (action) {
-			case 'createVariable':
-				const newEnv = body as unknown as Environment;
-				environment = {
-					...newEnv,
-					variables: transformEnvVariables(newEnv)
-				};
-				createVariableModalOpen = false;
-				break;
-			case 'deleteVariable':
-				environment.variables = environment.variables.filter(
-					(v) => v.id !== (body as Variable['id'])
-				);
-				closeAllDropdowns();
-				break;
-			case 'editVariable':
-				const editedVariable = body as Variable;
-				const index = environment.variables.findIndex((v) => v.id === editedVariable.id);
-				environment.variables[index] = {
-					...editedVariable,
-					hidden: environment.variables[index].hidden
-				};
-				closeAllDropdowns();
-				break;
-			default:
-				console.error('Unknown action', action);
-		}
-
-		form = null;
 	});
 
 	// Handle the form submission when an env file is selected
@@ -191,7 +185,7 @@
 				<div animate:flip={{ duration: 400 }}>
 					<Card
 						class={cn(
-							'grid grid-cols-3 items-center rounded-none border-0 p-5',
+							'grid grid-cols-3 items-center rounded-none border-0',
 							i !== 0 && 'border-t',
 							i === 0 && 'rounded-t',
 							i === environment.variables.length - 1 && 'rounded-b'
@@ -244,15 +238,7 @@
 								>
 							{/if}
 
-							<Action
-								onOpen={() => {
-									dropdownOpenIndex = i;
-								}}
-								open={dropdownOpenIndex === i}
-								{variable}
-								{environment}
-								{form}
-							/>
+							<Action {variable} {environment} {form} />
 						</div>
 					</Card>
 				</div>

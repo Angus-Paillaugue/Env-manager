@@ -10,8 +10,12 @@
 	});
 </script>
 
-<section class="mt-12 grid grid-cols-3 gap-4">
-	<Card href="/app/account/settings" class="group flex-row items-center gap-4 rounded">
+<section class="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+	<Card
+		href="/app/account/settings"
+		class="group flex-row items-center gap-4 rounded"
+		hoverEffect={true}
+	>
 		<div
 			class="border-border text-muted bg-background group-hover:bg-primary group-hover:text-primary-foreground rounded-full border p-1.5 font-mono text-base font-bold transition-colors"
 		>
@@ -20,7 +24,7 @@
 		Settings
 	</Card>
 
-	<Card href="/log-out" class="group flex-row items-center gap-4 rounded">
+	<Card href="/log-out" class="group flex-row items-center gap-4 rounded" hoverEffect={true}>
 		<div
 			class="border-border text-muted bg-background group-hover:bg-primary group-hover:text-primary-foreground rounded-full border p-1.5 font-mono text-base font-bold transition-colors"
 		>
