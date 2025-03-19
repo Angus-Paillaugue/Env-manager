@@ -6,7 +6,7 @@
 
 	let { form } = $props();
 	let isLoading = $state<boolean>(false);
-	let totpModalOpen = $state(true);
+	let totpModalOpen = $state(false);
 	let isSendingTOTP = $state(false);
 	let emailValue = $state<string>('');
 	let passwordValue = $state<string>('');
