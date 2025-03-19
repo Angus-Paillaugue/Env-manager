@@ -19,6 +19,8 @@ CREATE TABLE users (
     email TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     profile_picture TEXT DEFAULT NULL,
+    totp_secret TEXT DEFAULT NULL,
+    totp_enabled BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT NOW()
 );
 

@@ -5,12 +5,14 @@
 
 	interface MyProps {
 		variant?: 'danger' | 'success' | 'warning' | 'info';
+		icon?: any;
 	}
 
 	const {
 		children,
 		class: className,
-		variant: variant,
+		variant: variant = 'info',
+		icon,
 		...props
 	}: SvelteHTMLElements['div'] & MyProps = $props();
 	const baseClasses = 'border p-4 rounded flex flex-row items-center gap-4';
@@ -31,7 +33,7 @@
 </script>
 
 <div color="alert" class={cn(baseClasses, variantClasses.get(variant), className)} {...props}>
-	<svelte:component this={icons.get(variant)} class="size-6" />
+	<svelte:component this={icon ?? icons.get(variant)} class="size-6" />
 	<p class="text-base font-medium">
 		{@render children?.()}
 	</p>

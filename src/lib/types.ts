@@ -5,6 +5,8 @@ export type User = {
 	passwordHash: string;
 	createdAt: Date;
 	profilePicture: string;
+	totpEnabled: boolean;
+	totpSecret: string | null;
 };
 
 export type Project = {

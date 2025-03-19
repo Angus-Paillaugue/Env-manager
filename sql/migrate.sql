@@ -1,3 +1,5 @@
 \c env_manager;
 
-ALTER TABLE users ADD COLUMN profile_picture TEXT DEFAULT NULL;
+ALTER TABLE users ADD COLUMN totp_secret TEXT DEFAULT NULL;
+
+ALTER TABLE users ADD COLUMN totp_enabled BOOLEAN DEFAULT FALSE;

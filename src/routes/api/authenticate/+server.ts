@@ -4,18 +4,39 @@ import type { RequestHandler } from './$types';
 import { UserDAO } from '$lib/server/db/user';
 import bcrypt from 'bcryptjs';
 import { auth, generateAccessToken, tokenOptions } from '$lib/server/auth';
+import type { User } from '$lib/types';
+import { validateTOTP } from '$lib/server/totp';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
 	const bearer = request.headers.get('Authorization');
+
 	if (bearer) {
-		const user = await auth(bearer.replace('Bearer ', ''));
-		if (user) {
-			return json({ success: true, message: 'Logged in successfully!', token: bearer });
-		} else {
-			return json({ error: 'You must log in first!' }, { status: 401 });
+		try {
+			const user = await auth(bearer.replace('Bearer ', ''));
+			if (user) {
+				return json({ success: true, error: 'Logged in successfully!', token: bearer });
+			} else {
+				return json({ error: 'You must log in first!' }, { status: 401 });
+			}
+		} catch (error) {
+			console.error(error);
+			return json(
+				{ error: error instanceof Error ? error.message : 'An error occurred!' },
+				{ status: 500 }
+			);
 		}
 	} else {
-		const { email, password } = (await request.json()) as { email: string; password: string };
+		const {
+			email,
+			password,
+			setCookie = false,
+			totpCode
+		} = (await request.json()) as {
+			email: string;
+			password: string;
+			setCookie: boolean;
+			totpCode?: string;
+		};
 
 		// Check if username is provided
 		if (!email || !isEmailValid(email))
@@ -24,8 +45,9 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		// Check if password is provided
 		if (!password) return json({ error: 'Please enter a password!' }, { status: 400 });
 
+		let user: User | null = null;
 		try {
-			const user = await UserDAO.getUserByEmail(email);
+			user = await UserDAO.getUserByEmail(email);
 
 			// If user does not exist, return error
 			if (!user) return json({ error: 'No account with this email!' }, { status: 400 });
@@ -41,9 +63,30 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 				{ status: 500 }
 			);
 		}
-		const token = generateAccessToken(email);
-		cookies.set('token', token, tokenOptions);
+		if (user.totpEnabled && user.totpSecret) {
+			if (!totpCode) {
+				return json(
+					{
+						error: 'TOPT authentication required. Please provide the TOTP code.',
+						noTOTPCode: true
+					},
+					{ status: 400 }
+				);
+			}
 
-		return json({ success: true, message: 'Logged in successfully!', token: token });
+			try {
+				const result = await validateTOTP(user.totpSecret, totpCode);
+				if (!result) {
+					return json({ error: 'Invalid TOTP code.' }, { status: 400 });
+				}
+			} catch (error) {
+				console.error('Error validating TOTP:', error);
+				return json({ error: 'Error validating TOTP' }, { status: 500 });
+			}
+		}
+		const token = generateAccessToken(email);
+		if (setCookie) cookies.set('token', token, tokenOptions);
+
+		return json({ success: true, message: 'Logged in successfully!', token, user });
 	}
 };
