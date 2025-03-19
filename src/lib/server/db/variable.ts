@@ -13,10 +13,14 @@ export class VariableDAO {
 	}
 
 	static async createVariable(
+		userId: User['id'],
 		environmentId: Environment['id'],
 		name: Variable['name'],
 		value: Variable['value']
 	): Promise<Variable> {
+		if (!userId) {
+			throw new Error('User ID is required');
+		}
 		if (!environmentId) {
 			throw new Error('Environment ID is required');
 		}
@@ -26,6 +30,15 @@ export class VariableDAO {
 		if (!value) {
 			throw new Error('Variable value is required');
 		}
+		const isInProject = await pool.query(
+			'SELECT 1 FROM environments WHERE id = $1 AND project_id IN (SELECT project_id FROM project_members WHERE user_id = $2)',
+			[environmentId, userId]
+		);
+
+		if (!isInProject.rowCount) {
+			throw new Error('User does not have access to this environment');
+		}
+
 		const result = await pool.query(
 			`INSERT INTO variables (environment_id, name, value)
       VALUES ($1, $2, $3)

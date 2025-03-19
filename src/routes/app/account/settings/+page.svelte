@@ -45,7 +45,6 @@
 						const data = body as User;
 						user = data;
 						updatedUser = cloneObject(data) as User; // Update the derived state
-						console.log(data);
 						break;
 					}
 				}
@@ -55,8 +54,6 @@
 			}
 		});
 	});
-
-	// $inspect(form)
 
 	$effect(() => {
 		if (profilePictureInputFiles?.length) {
@@ -87,7 +84,13 @@
 			};
 		}}
 	>
-		<Input.Floating type="text" id="name" label="Username" bind:value={updatedUser.username} />
+		<Input.Floating
+			type="text"
+			id="name"
+			label="Username"
+			bind:value={updatedUser.username}
+			disabled
+		/>
 		<Input.Floating type="email" id="email" label="E-mail" bind:value={updatedUser.email} />
 
 		<div class="flex flex-row gap-4 lg:col-span-2">

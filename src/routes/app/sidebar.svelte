@@ -17,7 +17,6 @@
 		node.dataset.active = isActive ? 'true' : 'false';
 		return {
 			update(newHref: string) {
-				console.log(newHref);
 				node.dataset.active = newHref && pathname === newHref ? 'true' : 'false';
 			}
 		};

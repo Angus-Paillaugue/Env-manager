@@ -136,7 +136,7 @@
 				loading={isEditingEnvironment}
 				disabled={!isDeepEqual(environment, editedEnvironment)}
 			>
-				>Edit</Button
+				Edit</Button
 			>
 		</Modal.Actions>
 	</form>

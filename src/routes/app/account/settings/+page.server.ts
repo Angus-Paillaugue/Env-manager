@@ -8,19 +8,17 @@ export const actions: Actions = {
 	async saveGeneral({ request, locals, cookies }) {
 		const { user } = locals;
 		const formData = Object.fromEntries(await request.formData());
-		const { name, email } = formData as {
-			name: string;
+		const { email } = formData as {
 			email: string;
 		};
 
 		// Setting new values
-		user.username = name;
+		// user.username = name;
 		user.email = email;
 
 		try {
 			const updatedUser = await UserDAO.updateUser(user);
 			cookies.set('token', generateAccessToken(user.email), tokenOptions);
-			console.log(updatedUser);
 			return ErrorHandling.returnSuccess('saveGeneral', updatedUser);
 		} catch (error) {
 			return ErrorHandling.throwActionError(500, 'saveGeneral', error);

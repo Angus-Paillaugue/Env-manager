@@ -98,6 +98,8 @@
 				console.error(`Error in action ${action}:`, error);
 			}
 		});
+
+		form = null;
 	});
 
 	// Handle the form submission when an env file is selected
