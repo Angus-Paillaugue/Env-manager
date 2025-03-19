@@ -1,3 +1,4 @@
+import { tokenOptions } from '$lib/server/auth';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
@@ -17,11 +18,7 @@ export const actions: Actions = {
 		if (!res.ok) {
 			return fail(res.status, { error: data.error });
 		}
-		cookies.set('token', data.token, {
-			path: '/',
-			maxAge: 60 * 60 * 24,
-			secure: false
-		});
+		cookies.set('token', data.token, tokenOptions);
 
 		throw redirect(303, '/app');
 	}

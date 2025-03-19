@@ -1,4 +1,4 @@
-import { generateAccessToken } from '$lib/server/auth';
+import { generateAccessToken, tokenOptions } from '$lib/server/auth';
 import { UserDAO } from '$lib/server/db/user';
 import { isEmailValid } from '$lib/utils';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
@@ -28,11 +28,7 @@ export const actions: Actions = {
 			// Create user
 			await UserDAO.createUser(email, username, hash);
 
-			cookies.set('token', generateAccessToken(email), {
-				path: '/',
-				maxAge: 60 * 60 * 24,
-				secure: false
-			});
+			cookies.set('token', generateAccessToken(email), tokenOptions);
 		} catch (error) {
 			console.error(error);
 			return fail(400, { error: error instanceof Error ? error.message : 'An error occurred!' });

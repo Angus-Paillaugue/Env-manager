@@ -5,7 +5,7 @@
 	import { pageHeading } from '$lib/stores';
 	import type { User } from '$lib/types';
 	import { Upload } from 'lucide-svelte';
-	import { handleForm } from '$lib/utils/formHandler.svelte';
+	import { handleForm } from '$lib/utils/formHandler';
 	import { cloneObject, isDeepEqual } from '$lib/utils/';
 
 	let { data, form } = $props();
@@ -30,28 +30,33 @@
 		]
 	});
 
-	handleForm(form, {
-		onSuccess: (body, action) => {
-			switch (action) {
-				case 'updateProfilePicture': {
-					user.profilePicture = body + '?' + Date.now();
-					profilePicturePreview = null;
-					profilePictureInputFiles = null;
-					profilePictureModalOpen = false;
-					break;
+	$effect(() => {
+		handleForm(form, {
+			onSuccess: (body, action) => {
+				switch (action) {
+					case 'updateProfilePicture': {
+						user.profilePicture = body + '?' + Date.now();
+						profilePicturePreview = null;
+						profilePictureInputFiles = null;
+						profilePictureModalOpen = false;
+						break;
+					}
+					case 'saveGeneral': {
+						const data = body as User;
+						user = data;
+						updatedUser = cloneObject(data) as User; // Update the derived state
+						console.log(data);
+						break;
+					}
 				}
-				case 'saveGeneral': {
-					const data = body as User;
-					user = data;
-					updatedUser = cloneObject(data) as User; // Update the derived state
-					break;
-				}
+			},
+			onError: (error, action) => {
+				console.error(`Error in action ${action}:`, error);
 			}
-		},
-		onError: (error, action) => {
-			console.error(`Error in action ${action}:`, error);
-		}
+		});
 	});
+
+	// $inspect(form)
 
 	$effect(() => {
 		if (profilePictureInputFiles?.length) {
@@ -64,8 +69,6 @@
 			reader.readAsDataURL(profilePictureInputFiles[0]);
 		}
 	});
-
-	$inspect(user, updatedUser, isDeepEqual(user, updatedUser));
 </script>
 
 <!-- General -->
@@ -85,13 +88,7 @@
 		}}
 	>
 		<Input.Floating type="text" id="name" label="Username" bind:value={updatedUser.username} />
-		<Input.Floating
-			type="email"
-			id="email"
-			label="E-mail"
-			bind:value={updatedUser.email}
-			disabled
-		/>
+		<Input.Floating type="email" id="email" label="E-mail" bind:value={updatedUser.email} />
 
 		<div class="flex flex-row gap-4 lg:col-span-2">
 			<Button loading={isSavingGeneral} disabled={isDeepEqual(user, updatedUser)}>Save</Button>

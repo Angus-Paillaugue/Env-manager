@@ -3,7 +3,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { UserDAO } from '$lib/server/db/user';
 import bcrypt from 'bcryptjs';
-import { auth, generateAccessToken } from '$lib/server/auth';
+import { auth, generateAccessToken, tokenOptions } from '$lib/server/auth';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
 	const bearer = request.headers.get('Authorization');
@@ -42,11 +42,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 			);
 		}
 		const token = generateAccessToken(email);
-		cookies.set('token', token, {
-			path: '/',
-			maxAge: 60 * 60 * 24,
-			secure: false
-		});
+		cookies.set('token', token, tokenOptions);
 
 		return json({ success: true, message: 'Logged in successfully!', token: token });
 	}

@@ -2,20 +2,25 @@ import { UserDAO } from '$lib/server/db/user';
 import { ErrorHandling } from '$lib/server/errorHandling';
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
+import { generateAccessToken, tokenOptions } from '$lib/server/auth';
 
 export const actions: Actions = {
-	async saveGeneral({ request, locals }) {
+	async saveGeneral({ request, locals, cookies }) {
 		const { user } = locals;
 		const formData = Object.fromEntries(await request.formData());
-		const { name } = formData as {
+		const { name, email } = formData as {
 			name: string;
+			email: string;
 		};
 
 		// Setting new values
 		user.username = name;
+		user.email = email;
 
 		try {
 			const updatedUser = await UserDAO.updateUser(user);
+			cookies.set('token', generateAccessToken(user.email), tokenOptions);
+			console.log(updatedUser);
 			return ErrorHandling.returnSuccess('saveGeneral', updatedUser);
 		} catch (error) {
 			return ErrorHandling.throwActionError(500, 'saveGeneral', error);

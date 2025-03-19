@@ -110,11 +110,14 @@
 	</div>
 
 	<Card hoverEffect={true} href="/app/account" class="mt-auto flex-row items-center gap-4 rounded">
-		<div class="border-border size-8 overflow-hidden rounded-full border">
+		<div class="border-border size-12 overflow-hidden rounded-full border">
 			<!-- svelte-ignore a11y_img_redundant_alt -->
 			<img src={user.profilePicture} alt="Profile picture" class="object-cover object-center" />
 		</div>
-		<span class="text-sm font-medium">{user.username}</span>
+		<div class="flex flex-col">
+			<span class="text-sm font-medium">{user.username}</span>
+			<span class="text-muted font-mono text-xs">{user.email}</span>
+		</div>
 	</Card>
 </aside>
 
