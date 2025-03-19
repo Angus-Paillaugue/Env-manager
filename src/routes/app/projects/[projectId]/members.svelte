@@ -73,6 +73,7 @@
 			type="text"
 			id="memberUsername"
 			label="Username"
+			autocomplete="off"
 			onkeydown={autoComplete}
 		/>
 		{#if autoCompleteUsers.length > 0}

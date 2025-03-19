@@ -4,12 +4,22 @@
 
 	interface MyProps {
 		text?: string;
+		href?: string;
 	}
 
-	let { text, children, class: className }: SvelteHTMLElements['div'] & MyProps = $props();
+	type Props = (({ href: string } & SvelteHTMLElements['a']) | SvelteHTMLElements['div']) & MyProps;
+
+	let { text, children, class: className, href, ...restProps }: Props = $props();
+
+	const tagName = href ? 'a' : 'div';
 </script>
 
-<div class={cn('border-border my-4 flex flex-row items-center gap-2', className)}>
+<svelte:element
+	this={tagName}
+	{href}
+	class={cn('border-border my-4 flex flex-row items-center gap-2', className)}
+	{...restProps}
+>
 	<span class="w-full grow border-t border-inherit"></span>
 	{#if text || children}
 		<span class="shrink-0 text-base font-medium">
@@ -21,4 +31,4 @@
 		</span>
 	{/if}
 	<span class="w-full grow border-t border-inherit"></span>
-</div>
+</svelte:element>

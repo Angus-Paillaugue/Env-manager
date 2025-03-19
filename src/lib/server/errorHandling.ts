@@ -2,7 +2,7 @@ import { error, fail } from '@sveltejs/kit';
 
 export class ErrorHandling {
 	static throwActionError(code: number, action: string, error: unknown) {
-		const msg = error instanceof Error ? error.message : 'Unknown error';
+		const msg = error instanceof Error ? error.message : error;
 		console.error(`Error in action ${action}:`, msg);
 		return fail(code, {
 			ok: false,

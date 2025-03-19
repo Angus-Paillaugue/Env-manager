@@ -49,10 +49,16 @@
 	{@render trigger()}
 	{#if openMap.get(key)}
 		<div
-			class="bg-card border-border absolute top-full right-0 z-20 flex h-fit w-[200px] flex-col overflow-hidden rounded border text-base font-medium *:border-t first:!border-0"
+			class="bg-card border-border absolute top-full right-0 z-20 flex h-fit w-[200px] flex-col overflow-hidden rounded border text-base font-medium *:border-t"
 			transition:slide={{ axis: 'y', duration: 400 }}
 		>
 			{@render items()}
 		</div>
 	{/if}
 </div>
+
+<style>
+	:global(.dropdown .dropdown-item:first-child) {
+		border-top: none;
+	}
+</style>

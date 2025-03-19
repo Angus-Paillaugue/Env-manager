@@ -52,7 +52,7 @@
 	class="bg-background border-border hidden h-full w-full max-w-sm shrink-0 flex-col border-r p-4 transition-transform duration-300 lg:flex"
 >
 	<div class="flex flex-col gap-1">
-		<Hr text="Projects" />
+		<Hr text="Projects" href="/app" />
 		<!-- <Collapsible.Group> -->
 		{#each projects as project}
 			<!-- <Collapsible summary={project.name} open={currentProject?.id === project.id}>

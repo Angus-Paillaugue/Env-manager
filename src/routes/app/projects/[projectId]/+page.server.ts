@@ -90,6 +90,7 @@ export const actions: Actions = {
 		const { memberUsername } = formData as {
 			memberUsername: string;
 		};
+		console.log(memberUsername);
 		const role: ProjectMember['role'] = 'guest';
 
 		if (!memberUsername)
