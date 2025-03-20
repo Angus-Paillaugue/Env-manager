@@ -1,8 +1,6 @@
--- CREATE USER env_manager_user
--- WITH
---     ENCRYPTED PASSWORD 'env_manager_password';
+CREATE USER env_manager_user
+WITH ENCRYPTED PASSWORD 'env_manager_password';
 
-DROP DATABASE env_manager;
 
 CREATE DATABASE env_manager;
 

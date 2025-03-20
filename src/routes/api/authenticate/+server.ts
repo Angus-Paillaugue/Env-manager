@@ -14,7 +14,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		try {
 			const user = await auth(bearer.replace('Bearer ', ''));
 			if (user) {
-				return json({ success: true, error: 'Logged in successfully!', token: bearer });
+				return json({ success: true, message: 'Logged in successfully!', token: bearer });
 			} else {
 				return json({ error: 'You must log in first!' }, { status: 401 });
 			}

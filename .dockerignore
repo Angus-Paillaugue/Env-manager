@@ -1,0 +1,10 @@
+tests/
+.github/
+.svelte-kit/
+cli/
+node_modules/
+sql/
+Dockerfile
+docker-compose.yaml
+uploads/
+pg_data/

@@ -25,5 +25,7 @@ vite.config.ts.timestamp-*
 .github/*.txt
 
 # Profile pictures
-static/uploads/profile_pictures
-!static/uploads/profile_pictures/default.webp
+uploads/
+!uploads/profile_pictures/default.webp
+
+pg_data/

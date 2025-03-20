@@ -1,7 +1,7 @@
 import { tokenOptions } from '$lib/server/auth';
 import { UserDAO } from '$lib/server/db/user';
 import { ErrorHandling } from '$lib/server/errorHandling';
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { redirect, type Actions } from '@sveltejs/kit';
 
 export const load = async ({ locals, url }) => {
 	if (locals.user) {
@@ -37,7 +37,7 @@ export const actions: Actions = {
 			}
 		}
 		if (!res.ok) {
-			return fail(res.status, { error: data.error });
+			return ErrorHandling.throwActionError(res.status, 'logIn', data.error);
 		}
 		cookies.set('token', data.token, tokenOptions);
 
@@ -62,7 +62,7 @@ export const actions: Actions = {
 		const totpData = await totpRes.json();
 
 		if (!totpRes.ok) {
-			return ErrorHandling.throwActionError(totpRes.status, 'confirmTOTP', totpData.error);
+			return ErrorHandling.throwActionError(totpRes.status, 'confirmTOTP', totpData);
 		}
 		cookies.set('token', totpData.token, tokenOptions);
 
