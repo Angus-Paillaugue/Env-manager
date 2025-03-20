@@ -13,6 +13,11 @@ export default defineConfig({
 			]
 		}
 	},
+	server: {
+		fs: {
+			allow: ['uploads']
+		}
+	},
 	resolve: process.env.VITEST
 		? {
 				conditions: ['browser']

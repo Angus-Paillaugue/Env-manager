@@ -1,14 +1,18 @@
 import axios from 'axios';
 import keytar from 'keytar';
-import { API_URL } from './constants';
+import { ConfigManager } from './config';
+import { PROGRAM_NAME } from './constants';
 
-const SERVICE_NAME = 'env-manager';
 const ACCOUNT_NAME = 'auth-token';
-
 export class Auth {
 	static async login(email: string, password: string, totpCode?: string) {
+		const config = ConfigManager.getConfig();
 		try {
-			const response = await axios.post(`${API_URL}/authenticate`, { email, password, totpCode });
+			const response = await axios.post(`${config.apiUrl}/authenticate`, {
+				email,
+				password,
+				totpCode
+			});
 			const token = response.data.token;
 			Auth.saveToken(token);
 			return token;
@@ -18,11 +22,11 @@ export class Auth {
 	}
 
 	static async saveToken(token: string) {
-		await keytar.setPassword(SERVICE_NAME, ACCOUNT_NAME, token);
+		await keytar.setPassword(PROGRAM_NAME, ACCOUNT_NAME, token);
 	}
 
 	static async getToken(): Promise<string | null> {
-		return keytar.getPassword(SERVICE_NAME, ACCOUNT_NAME);
+		return keytar.getPassword(PROGRAM_NAME, ACCOUNT_NAME);
 	}
 
 	static async isLoggedIn(): Promise<boolean> {
@@ -31,6 +35,6 @@ export class Auth {
 	}
 
 	static async logOut() {
-		await keytar.deletePassword(SERVICE_NAME, ACCOUNT_NAME);
+		await keytar.deletePassword(PROGRAM_NAME, ACCOUNT_NAME);
 	}
 }

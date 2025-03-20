@@ -5,6 +5,7 @@ import { login } from './commands/login';
 import { pull } from './commands/pull';
 import { push } from './commands/push';
 import { logOut } from './commands/logOut';
+import { config } from './commands/config';
 
 const program = new Command();
 
@@ -22,6 +23,9 @@ program
 
 // Logout command
 program.command('logout').description('Log out of your current Env Manager account').action(logOut);
+
+// Config
+config(program);
 
 program.version('1.0.0');
 

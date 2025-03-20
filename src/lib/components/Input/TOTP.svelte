@@ -8,7 +8,6 @@
 	}
 
 	interface MyProps {
-		amount?: number;
 		class?: Classes;
 		name?: string;
 	}
@@ -16,10 +15,10 @@
 	let {
 		class: className,
 		name = 'totp',
-		amount = 6,
 		...restProps
 	}: SvelteHTMLElements['div'] & MyProps = $props();
 	let container = $state<HTMLDivElement | null>(null);
+	const nbInputs = 6;
 	const classes = {
 		container: cn('flex flex-row gap-4 items-center justify-between w-full', className?.container),
 		input: cn(
@@ -110,11 +109,11 @@
 		// Set the value of the hidden input
 		const hiddenInput = container.querySelector('input[type="hidden"]') as HTMLInputElement;
 		if (hiddenInput) {
-			hiddenInput.value = pastedData.slice(0, amount);
+			hiddenInput.value = pastedData.slice(0, nbInputs);
 		}
 
 		// Submit the form if all inputs are filled
-		if (pastedData.length === amount) {
+		if (pastedData.length === nbInputs) {
 			submitParentForm();
 		}
 	}
@@ -123,11 +122,11 @@
 <div
 	class={classes.container}
 	bind:this={container}
-	style="grid-template-columns: repeat({amount}, minmax(3rem, 1fr));"
+	style="grid-template-columns: repeat({nbInputs}, minmax(3rem, 1fr));"
 	{...restProps}
 >
 	<input type="hidden" {name} />
-	{#each new Array(amount) as _}
+	{#each new Array(nbInputs) as _, i}
 		<input
 			type="text"
 			onpaste={handlePaste}
@@ -142,5 +141,8 @@
 				(e.target as HTMLInputElement).select();
 			}}
 		/>
+		{#if nbInputs / 2 === i + 1}
+			<span class="text-muted text-2xl font-bold">-</span>
+		{/if}
 	{/each}
 </div>

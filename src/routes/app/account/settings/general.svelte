@@ -6,7 +6,7 @@
 	import { handleForm } from '$lib/utils/formHandler';
 	import { cloneObject, isDeepEqual } from '$lib/utils/';
 	import { page } from '$app/state';
-	import { Upload } from 'lucide-svelte';
+	import { Save, Upload } from 'lucide-svelte';
 
 	let user = $state<User>(page.data.user);
 	let isSavingGeneral = $state(false);
@@ -94,7 +94,10 @@
 						onclick={() => (profilePictureModalOpen = false)}
 						disabled={isUploadingProfilePicture}>Cancel</Button
 					>
-					<Button loading={isUploadingProfilePicture}>Save</Button>
+					<Button loading={isUploadingProfilePicture}>
+						<Save class="size-4" />
+						Save
+					</Button>
 				</Modal.Actions>
 			</form>
 		</Modal>
@@ -151,7 +154,10 @@
 			<Input type="email" id="email" label="E-mail" bind:value={updatedUser.email} />
 
 			<div class="flex flex-row gap-4 lg:col-span-2">
-				<Button loading={isSavingGeneral} disabled={isDeepEqual(user, updatedUser)}>Save</Button>
+				<Button loading={isSavingGeneral} disabled={isDeepEqual(user, updatedUser)}>
+					<Save class="size-4" />
+					Save
+				</Button>
 				{#if page.form && page.form.ok === false && page.form.action === 'saveGeneral'}
 					<Alert.Danger>{page.form.error}</Alert.Danger>
 				{/if}

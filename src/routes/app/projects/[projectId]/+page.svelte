@@ -3,7 +3,7 @@
 	import { enhance } from '$app/forms';
 	import { Alert, Button, Card, Input, Modal } from '$lib/components';
 	import { pageHeading } from '$lib/stores';
-	import { Code, Plus } from 'lucide-svelte';
+	import { Code, Plus, Save, Trash2 } from 'lucide-svelte';
 	import Action from './action.svelte';
 	import type { Environment, Project, ProjectMember } from '$lib/types';
 	import { handleForm } from '$lib/utils/formHandler';
@@ -205,7 +205,10 @@
 				{#if form && form.ok === false && form?.action === 'saveSettings' && form.error}
 					<Alert.Danger>{form.error}</Alert.Danger>
 				{/if}
-				<Button type="submit" loading={isSavingProjectGeneralSettings}>Save</Button>
+				<Button type="submit" loading={isSavingProjectGeneralSettings}>
+					<Save class="size-4" />
+					Save
+				</Button>
 			</form>
 		</Card>
 
@@ -217,8 +220,11 @@
 				variant="danger"
 				onclick={() => {
 					deleteProjectModalOpen = true;
-				}}>Delete project</Button
+				}}
 			>
+				<Trash2 class="size-4" />
+				Delete project
+			</Button>
 		</Card>
 	</section>
 {/if}

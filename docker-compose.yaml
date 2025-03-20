@@ -1,0 +1,29 @@
+services:
+  web:
+    build: .
+    image: anguspllg/env-manager:latest
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - POSTGRES_HOST=db
+      - ORIGIN=http://localhost:4173
+    ports:
+      - '4173:3000'
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      - db
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=mydatabase
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_PORT=5432
+    env_file:
+      - .env
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+      - ./sql/database.sql:/docker-entrypoint-initdb.d/database.sql

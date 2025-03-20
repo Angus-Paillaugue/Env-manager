@@ -2,11 +2,12 @@ import type { User } from '$lib/types';
 import sharp from 'sharp';
 import pool from '.';
 import { writeFile, unlink } from 'fs/promises';
+import { PWD } from '$env/static/private';
 
 export class UserDAO {
-	static UPLOAD_DIR = 'static';
+	static UPLOAD_DIR = PWD;
 	static PUBLIC_PROFILE_PICTURE_DIR = '/uploads/profile_pictures/';
-	static DEFAULT_PROFILE_PICTURE = '/uploads/profile_pictures/default.webp';
+	static DEFAULT_PROFILE_PICTURE = UserDAO.PUBLIC_PROFILE_PICTURE_DIR + 'default.webp';
 
 	static convertToUser(row: Record<string, never>): User {
 		return {
