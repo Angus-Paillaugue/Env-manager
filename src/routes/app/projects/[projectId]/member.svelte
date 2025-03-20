@@ -23,6 +23,8 @@
 	}
 </script>
 
+<svelte:window onclick={handlePageClick} />
+
 <!-- Remove member modal -->
 <Modal bind:open={removeMemberModalOpen}>
 	<Modal.Heading>
@@ -65,8 +67,6 @@
 		</Modal.Actions>
 	</form>
 </Modal>
-
-<svelte:window onclick={handlePageClick} />
 
 <Card class="group card flex-row items-center gap-4 rounded" onclick={() => (mobileHover = true)}>
 	<div

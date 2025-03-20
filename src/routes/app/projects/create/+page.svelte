@@ -30,7 +30,7 @@
 >
 	<Input.Floating type="text" id="name" label="Name" autofocus={true} autocomplete="off" />
 
-	{#if form && form.ok === false && form?.action === 'editEnvironment' && form.error}
+	{#if form && form.ok === false && form?.action === 'create' && form.error}
 		<Alert.Danger>{form.error}</Alert.Danger>
 	{/if}
 

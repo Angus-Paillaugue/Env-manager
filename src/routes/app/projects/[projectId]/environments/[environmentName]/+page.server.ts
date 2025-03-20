@@ -1,7 +1,5 @@
 import { error, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { VariableDAO } from '$lib/server/db/variable';
-import { EnvironmentDAO } from '$lib/server/db/environment';
 import { ErrorHandling } from '$lib/server/errorHandling';
 import type { Environment, Project, Variable } from '$lib/types';
 
@@ -28,8 +26,7 @@ export const load = (async ({ params, fetch }) => {
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
-	async createVariable({ request, params, locals, fetch }) {
-		const { user } = locals;
+	async createVariable({ request, params, fetch }) {
 		const formData = Object.fromEntries(await request.formData());
 		const { variableName, variableValue, envFile } = formData as {
 			variableName: string;
@@ -49,30 +46,37 @@ export const actions: Actions = {
 				})
 				.filter(({ name, value }) => name && value);
 
-			const environment = await EnvironmentDAO.getEnvironmentByName(
-				user.id,
-				params.projectId as string,
-				params.environmentName as string
-			);
-			if (!environment) return error(404, 'Environment not found');
-			// Insert each variable into the database
-			for (const { name, value } of variables) {
-				try {
-					await VariableDAO.createVariable(user.id, environment.id, name, value);
-				} catch (error) {
-					return ErrorHandling.throwActionError(400, 'createVariable', error);
+			try {
+				const res = await fetch(
+					`/api/projects/${params.projectId}/environments/${params.environmentName}/variables`,
+					{
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ variables })
+					}
+				);
+				const data = await res.json();
+				if (!res.ok) {
+					return new Error(data.error);
 				}
+			} catch (error) {
+				return ErrorHandling.throwActionError(400, 'createVariable', error);
 			}
 		} else {
 			// If no file is uploaded, create a single variable from the input fields
 			try {
-				const environment = await EnvironmentDAO.getEnvironmentByName(
-					user.id,
-					params.projectId as string,
-					params.environmentName as string
+				const res = await fetch(
+					`/api/projects/${params.projectId}/environments/${params.environmentName}/variables`,
+					{
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ name: variableName, value: variableValue })
+					}
 				);
-				if (!environment) return error(404, 'Environment not found');
-				await VariableDAO.createVariable(user.id, environment.id, variableName, variableValue);
+				const data = await res.json();
+				if (!res.ok) {
+					return Error(data.error);
+				}
 			} catch (error) {
 				return ErrorHandling.throwActionError(400, 'createVariable', error);
 			}
@@ -83,33 +87,33 @@ export const actions: Actions = {
 			params.environmentName as string,
 			fetch
 		);
-		return {
-			action: 'createVariable',
-			ok: true,
-			body: environment
-		};
+		return ErrorHandling.returnSuccess('createVariable', environment);
 	},
-	async deleteVariable({ locals, request }) {
-		const { user } = locals;
+	async deleteVariable({ request, params, fetch }) {
 		const formData = Object.fromEntries(await request.formData());
 		const { variableId } = formData as {
 			variableId: Variable['id'];
 		};
 
 		try {
-			await VariableDAO.deleteVariable(user.id, variableId);
+			const res = await fetch(
+				`/api/projects/${params.projectId}/environments/${params.environmentName}/variables`,
+				{
+					method: 'DELETE',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ id: variableId })
+				}
+			);
+			const data = await res.json();
+			if (!res.ok) {
+				throw new Error(data.error);
+			}
+			return ErrorHandling.returnSuccess('deleteVariable', variableId);
 		} catch (error) {
 			return ErrorHandling.throwActionError(400, 'deleteVariable', error);
 		}
-
-		return {
-			action: 'deleteVariable',
-			body: variableId,
-			ok: true
-		};
 	},
-	async editVariable({ locals, request }) {
-		const { user } = locals;
+	async editVariable({ request, fetch, params }) {
 		const formData = Object.fromEntries(await request.formData());
 		const { variableName, variableValue, variableId } = formData as {
 			variableName: string;
@@ -118,18 +122,19 @@ export const actions: Actions = {
 		};
 
 		try {
-			const editedVariable = await VariableDAO.editVariable(
-				user.id,
-				variableId,
-				variableName,
-				variableValue
+			const res = await fetch(
+				`/api/projects/${params.projectId}/environments/${params.environmentName}/variables`,
+				{
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ id: variableId, name: variableName, value: variableValue })
+				}
 			);
-			if (!editedVariable) return error(404, 'Variable not found');
-			return {
-				action: 'editVariable',
-				body: editedVariable,
-				ok: true
-			};
+			const data = await res.json();
+			if (!res.ok) {
+				return ErrorHandling.throwActionError(res.status, 'editVariable', data.error);
+			}
+			return ErrorHandling.returnSuccess('editVariable', data.variable);
 		} catch (error) {
 			return ErrorHandling.throwActionError(400, 'editVariable', error);
 		}

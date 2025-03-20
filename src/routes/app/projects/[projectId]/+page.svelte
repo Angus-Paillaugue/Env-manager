@@ -7,11 +7,15 @@
 	import Action from './action.svelte';
 	import type { Environment, Project, ProjectMember } from '$lib/types';
 	import { handleForm } from '$lib/utils/formHandler';
+	import { page } from '$app/state';
 
 	let { data, form } = $props();
 	let project = $derived<Project>(data.project);
 	let createEnvironmentModalOpen = $state(false);
 	let isCreatingEnvironment = $state(false);
+	let deleteProjectModalOpen = $state(false);
+	let isDeletingProject = $state(false);
+	let isSavingProjectGeneralSettings = $state(false);
 
 	$effect(() => {
 		pageHeading.set({
@@ -65,6 +69,11 @@
 						project.members = project.members.filter((member) => member.userId !== data);
 						break;
 					}
+					case 'saveSettings': {
+						const data = body as unknown as Project;
+						page.data.project = data;
+						break;
+					}
 				}
 			},
 			onError: (error, action) => {
@@ -105,6 +114,38 @@
 	</form>
 </Modal>
 
+<!-- Delete project modal -->
+<Modal bind:open={deleteProjectModalOpen}>
+	<Modal.Heading>
+		<Modal.Title>Delete Project</Modal.Title>
+		<Modal.Description>Are you sure you want to delete this project?</Modal.Description>
+	</Modal.Heading>
+	<form
+		method="POST"
+		action="?/deleteProject"
+		class="flex w-full flex-col gap-2"
+		use:enhance={() => {
+			isDeletingProject = true;
+			return async ({ update }) => {
+				isDeletingProject = false;
+				update({ reset: false });
+			};
+		}}
+	>
+		<p>Deleting this project will also delete all environments and variables associated with it.</p>
+		<p>This action is irreversible.</p>
+		{#if form && form.ok === false && form?.action === 'deleteProject' && form.error}
+			<Alert.Danger>{form.error}</Alert.Danger>
+		{/if}
+		<Modal.Actions>
+			<Button type="button" variant="secondary" onclick={() => (deleteProjectModalOpen = false)}
+				>Cancel</Button
+			>
+			<Button loading={isDeletingProject} variant="danger" type="submit">Delete</Button>
+		</Modal.Actions>
+	</form>
+</Modal>
+
 <section class="mt-12 flex flex-col gap-4">
 	<div class="flex flex-row items-center justify-between">
 		<h2 class="text-2xl font-medium">Environments</h2>
@@ -135,3 +176,49 @@
 </section>
 
 <Members {project} {form} />
+
+{#if project.members.find((u) => u.user.id === data.user.id)?.role === 'owner'}
+	<section class="mt-12 flex flex-col gap-4">
+		<h2 class="text-2xl font-medium">Settings</h2>
+
+		<!-- General settings -->
+		<Card>
+			<Card.Heading>General</Card.Heading>
+			<form
+				action="?/saveSettings"
+				class="mt-4 flex flex-col gap-2"
+				method="POST"
+				use:enhance={() => {
+					isSavingProjectGeneralSettings = true;
+					return async ({ update }) => {
+						isSavingProjectGeneralSettings = false;
+						update({ reset: false });
+					};
+				}}
+			>
+				<Input.Floating
+					type="text"
+					id="projectName"
+					label="Project Name"
+					bind:value={project.name}
+				/>
+				{#if form && form.ok === false && form?.action === 'saveSettings' && form.error}
+					<Alert.Danger>{form.error}</Alert.Danger>
+				{/if}
+				<Button type="submit" loading={isSavingProjectGeneralSettings}>Save</Button>
+			</form>
+		</Card>
+
+		<!-- Security settings -->
+		<Card class="gap-4">
+			<Card.Heading>Security</Card.Heading>
+			<Button
+				type="button"
+				variant="danger"
+				onclick={() => {
+					deleteProjectModalOpen = true;
+				}}>Delete project</Button
+			>
+		</Card>
+	</section>
+{/if}

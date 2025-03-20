@@ -1,5 +1,6 @@
 import type { Environment, Project, User } from '$lib/types';
 import pool from '.';
+import { ProjectMembersDAO } from './projectMember';
 import { VariableDAO } from './variable';
 
 export class EnvironmentDAO {
@@ -40,11 +41,16 @@ export class EnvironmentDAO {
 	}
 
 	static async createEnvironment(
+		userId: User['id'],
 		projectId: Project['id'],
 		name: Environment['name']
 	): Promise<Environment> {
 		name = name.trim();
-		if (name === '') throw new Error('Environment name cannot be empty');
+		const role = await ProjectMembersDAO.getUserRole(projectId, userId);
+		if (role !== 'owner') {
+			throw new Error('You do not have permission to create environments in this project');
+		}
+		if (!name) throw new Error('Environment name is required');
 		const alreadyExists = await pool.query(
 			'SELECT 1 FROM environments WHERE project_id = $1 AND name = $2',
 			[projectId, name]
@@ -84,12 +90,31 @@ export class EnvironmentDAO {
 	static async editEnvironment(
 		userId: User['id'],
 		environmentId: Environment['id'],
-		environment: Environment
+		environment: Partial<Environment>
 	): Promise<Environment> {
-		const result = await pool.query(
-			'UPDATE environments SET name = $1 WHERE id = $2 AND EXISTS (SELECT 1 FROM project_members WHERE project_id = (SELECT project_id FROM environments WHERE id = $2) AND user_id = $3) RETURNING *',
-			[environment.name, environmentId, userId]
+		const canEdit = await pool.query(
+			'SELECT 1 FROM project_members WHERE project_id = (SELECT project_id FROM environments WHERE id = $1) AND user_id = $2',
+			[environmentId, userId]
 		);
-		return EnvironmentDAO.transformEnvironment(result.rows[0]);
+		if (canEdit.rows.length === 0)
+			throw new Error('You do not have permission to edit this environment');
+
+		// Update name
+		if (environment.name) {
+			const alreadyExists = await pool.query(
+				'SELECT 1 FROM environments WHERE project_id = (SELECT project_id FROM environments WHERE id = $1) AND name = $2',
+				[environmentId, environment.name]
+			);
+			if (alreadyExists.rows.length > 0)
+				throw new Error('Environment "' + environment.name + '" already exists');
+			// Actual update
+			await pool.query('UPDATE environments SET name = $1 WHERE id = $2 RETURNING *', [
+				environment.name,
+				environmentId
+			]);
+		}
+
+		const newEnvironment = await EnvironmentDAO.getEnvironmentById(userId, environmentId);
+		return EnvironmentDAO.transformEnvironment(newEnvironment);
 	}
 }

@@ -11,14 +11,14 @@ async function auth(token: string): Promise<User | null> {
 		if (!token) reject({ error: 'No token was provided!' });
 		try {
 			jwt.verify(token, env.JWT_SECRET as string, async (err, decoded: unknown) => {
-				if (err) return reject({ error: err });
+				if (err) return reject(err);
 				try {
-					const user = await UserDAO.getUserByEmail(decoded as string);
-					if (!user) reject({ error: 'User not found' });
+					const user = await UserDAO.getUserById(decoded as string);
+					if (!user) return reject('User not found');
 					resolve(user);
 				} catch (error) {
 					console.error('Error finding user:', error);
-					reject({ error: 'User not found' });
+					reject('User not found');
 				}
 			});
 		} catch (error) {
@@ -28,8 +28,8 @@ async function auth(token: string): Promise<User | null> {
 	});
 }
 
-function generateAccessToken(email: string): string {
-	return jwt.sign(email, env.JWT_SECRET as string);
+function generateAccessToken(id: User['id']): string {
+	return jwt.sign(id, env.JWT_SECRET as string);
 }
 const tokenOptions = {
 	httpOnly: true,

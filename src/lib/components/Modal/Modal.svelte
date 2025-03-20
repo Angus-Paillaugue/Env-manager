@@ -41,7 +41,12 @@
 
 <Backdrop bind:open />
 
-<div use:portal class="portal" bind:this={portalElement}>
+<div
+	use:portal
+	class="portal"
+	bind:this={portalElement}
+	style="position: absolute; opacity: 0; pointer-events: none;"
+>
 	{#if isMobile.current}
 		<MobileModal bind:open {children} {fullScreen} />
 	{:else}

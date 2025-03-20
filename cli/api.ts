@@ -6,8 +6,9 @@ import type { Environment, Project, Variable } from '../src/lib/types';
 export class API {
 	static async getProjects() {
 		try {
+			const token = await Auth.getToken();
 			const response = await axios.get(`${API_URL}/projects`, {
-				headers: { Authorization: `Bearer ${Auth.getToken()}` }
+				headers: { Authorization: `Bearer ${token}` }
 			});
 			return response.data.projects;
 		} catch (error) {
@@ -17,8 +18,9 @@ export class API {
 
 	static async getEnvironments(projectId: Project['id']) {
 		try {
+			const token = await Auth.getToken();
 			const response = await axios.get(`${API_URL}/projects/${projectId}/environments`, {
-				headers: { Authorization: `Bearer ${Auth.getToken()}` }
+				headers: { Authorization: `Bearer ${token}` }
 			});
 			return response.data.environments;
 		} catch (error) {
@@ -31,10 +33,11 @@ export class API {
 		environementName: Environment['name']
 	): Promise<string> {
 		try {
+			const token = await Auth.getToken();
 			const response = await axios.get(
 				`${API_URL}/projects/${projectId}/environments/${environementName}/variables?raw`,
 				{
-					headers: { Authorization: `Bearer ${Auth.getToken()}` }
+					headers: { Authorization: `Bearer ${token}` }
 				}
 			);
 
@@ -50,11 +53,12 @@ export class API {
 		variables: Variable[]
 	) {
 		try {
+			const token = await Auth.getToken();
 			const response = await axios.patch(
 				`${API_URL}/projects/${projectId}/environments/${environmentName}/variables`,
 				{ variables },
 				{
-					headers: { Authorization: `Bearer ${Auth.getToken()}` }
+					headers: { Authorization: `Bearer ${token}` }
 				}
 			);
 			return response.data;

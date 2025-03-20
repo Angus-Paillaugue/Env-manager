@@ -2,12 +2,14 @@ import { UserDAO } from '$lib/server/db/user';
 import { ErrorHandling } from '$lib/server/errorHandling';
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
-import { generateAccessToken, tokenOptions } from '$lib/server/auth';
 import { validateTOTP } from '$lib/server/totp';
 import bcrypt from 'bcryptjs';
 
+// TODO: This page still use direct DAO calls instead od calling the internal API
+// We should move it sometime soon...
+
 export const actions: Actions = {
-	async saveGeneral({ request, locals, cookies }) {
+	async saveGeneral({ request, locals }) {
 		const { user } = locals;
 		const formData = Object.fromEntries(await request.formData());
 		const { email } = formData as {
@@ -20,7 +22,6 @@ export const actions: Actions = {
 
 		try {
 			const updatedUser = await UserDAO.updateUser(user);
-			cookies.set('token', generateAccessToken(user.email), tokenOptions);
 			return ErrorHandling.returnSuccess('saveGeneral', updatedUser);
 		} catch (error) {
 			return ErrorHandling.throwActionError(500, 'saveGeneral', error);

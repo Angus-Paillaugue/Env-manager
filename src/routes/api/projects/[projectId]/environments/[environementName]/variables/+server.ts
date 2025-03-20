@@ -24,7 +24,19 @@ export const GET: RequestHandler = async ({ params, locals, url, fetch }) => {
 	return json({ variables });
 };
 
-export const PATCH: RequestHandler = async ({ params, locals, request }) => {
+export const DELETE: RequestHandler = async ({ locals, request }) => {
+	const { user } = locals;
+	const { id } = await request.json();
+
+	try {
+		await VariableDAO.deleteVariable(user.id, id);
+		return json({ message: 'Variable deleted' });
+	} catch (error) {
+		return json({ error: error instanceof Error ? error.message : error }, { status: 400 });
+	}
+};
+
+export const POST: RequestHandler = async ({ params, locals, request }) => {
 	const { user } = locals;
 	const environment = await EnvironmentDAO.getEnvironmentByName(
 		user.id,
@@ -33,13 +45,36 @@ export const PATCH: RequestHandler = async ({ params, locals, request }) => {
 	);
 	if (!environment) return json({ message: 'Environment not found' }, { status: 404 });
 
-	const { variables }: { variables: Variable[] } = await request.json();
+	const data = await request.json();
 
-	await Promise.all(
-		variables.map((variable) =>
-			VariableDAO.createVariable(user.id, environment.id, variable.name, variable.value)
-		)
-	);
+	try {
+		if (data?.variables) {
+			// Is passing an array of variables
+			await Promise.all(
+				(data.variables as Variable[]).map((variable) =>
+					VariableDAO.createVariable(user.id, environment.id, variable.name, variable.value)
+				)
+			);
+		} else {
+			// Is passing a single variable
+			const variable = data as Variable;
+			await VariableDAO.createVariable(user.id, environment.id, variable.name, variable.value);
+		}
 
-	return json({ message: 'Variables created' });
+		return json({ message: 'Variables created' });
+	} catch (error) {
+		return json({ error: error instanceof Error ? error.message : error }, { status: 400 });
+	}
+};
+
+export const PUT: RequestHandler = async ({ locals, request }) => {
+	const { user } = locals;
+	const { id, name, value } = await request.json();
+
+	try {
+		const newVar = await VariableDAO.editVariable(user.id, id, name, value);
+		return json({ message: 'Variable updated', variable: newVar });
+	} catch (error) {
+		return json({ error: error instanceof Error ? error.message : error }, { status: 400 });
+	}
 };

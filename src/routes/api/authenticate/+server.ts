@@ -84,7 +84,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 				return json({ error: 'Error validating TOTP' }, { status: 500 });
 			}
 		}
-		const token = generateAccessToken(email);
+		const token = generateAccessToken(user.id);
 		if (setCookie) cookies.set('token', token, tokenOptions);
 
 		return json({ success: true, message: 'Logged in successfully!', token, user });
