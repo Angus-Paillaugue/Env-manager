@@ -5,7 +5,7 @@ import { API } from '../api';
 import { writeFileSync } from 'fs-extra';
 
 export async function pull() {
-	if (!Auth.isLoggedIn()) return console.error('You must log in first!');
+	if (!(await Auth.isLoggedIn())) return console.error('You must log in first!');
 
 	try {
 		const projects = await API.getProjects();

@@ -2,6 +2,7 @@ import { Auth } from '../auth';
 import http from 'http';
 import open from 'open';
 import { randomUUID } from 'crypto';
+import { FRONTEND_URL } from '../constants';
 
 async function auth() {
 	const state = randomUUID();
@@ -24,15 +25,13 @@ async function auth() {
 	server.listen(3001, () => console.log('Waiting for authentication...'));
 
 	// Open browser for authentication
-	await open(
-		`${process.env.FRONTEND_URL}/auth/callback?state=${state}`
-	);
+	await open(`${FRONTEND_URL}/auth/callback?state=${state}`);
 
 	console.log('Please complete authentication in your browser.');
 }
 
 export async function login() {
-	if (Auth.getToken()) {
+	if (await Auth.getToken()) {
 		console.log('You are already logged in');
 	} else {
 		await auth();

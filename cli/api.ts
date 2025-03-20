@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from './contants';
+import { API_URL } from './constants';
 import { Auth } from './auth';
 import type { Environment, Project, Variable } from '../src/lib/types';
 
