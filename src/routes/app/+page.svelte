@@ -16,7 +16,7 @@
 <section class="flex flex-col gap-4">
 	<div class="flex flex-row items-center justify-between">
 		<h2 class="text-2xl font-medium">Your projects</h2>
-		<Button href="/app/projects/create"><Plus class="size-5" />Create a project</Button>
+		<Button href="/app/projects/create"><Plus class="size-4" />Create a project</Button>
 	</div>
 	{#each projects as project}
 		<Card

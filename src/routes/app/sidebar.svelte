@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import { Card, Hr } from '$lib/components';
 	import { cn } from '$lib/utils';
-	import { ChevronDown, Folder, FolderOpen, User } from 'lucide-svelte';
+	import { ChevronDown, Code, Folder, FolderOpen, User } from 'lucide-svelte';
 
 	let projects = $derived(page.data.projects);
 	let currentProject = $derived(page.data?.project);
@@ -53,14 +53,7 @@
 >
 	<div class="flex flex-col gap-1">
 		<Hr text="Projects" href="/app" />
-		<!-- <Collapsible.Group> -->
 		{#each projects as project}
-			<!-- <Collapsible summary={project.name} open={currentProject?.id === project.id}>
-        {#each project.environments as environment}
-          <a href="/app/projects/{project.id}/environments/{environment.name}" class={cn("p-2 rounded border text-base font-normal border-background", currentEnvironment?.id === environment.id && "bg-card border-border")}>{environment.name}</a>
-        {/each}
-      </Collapsible> -->
-
 			{#if project.environments.length > 0}
 				<details open={currentProject?.id === project.id} class="group">
 					<summary
@@ -89,10 +82,13 @@
 							<a
 								href="/app/projects/{project.id}/environments/{environment.name}"
 								class={cn(
-									'border-background rounded border p-2 text-base font-normal',
+									'border-background flex flex-row items-center gap-2 rounded border p-2 text-base font-normal',
 									currentEnvironment?.id === environment.id && 'bg-card border-border'
-								)}>{environment.name}</a
+								)}
 							>
+								<Code class="size-4" />
+								{environment.name}
+							</a>
 						{/each}
 					</div>
 				</details>
@@ -105,7 +101,6 @@
 				</a>
 			{/if}
 		{/each}
-		<!-- </Collapsible.Group> -->
 	</div>
 
 	<Card hoverEffect={true} href="/app/account" class="mt-auto flex-row items-center gap-4 rounded">

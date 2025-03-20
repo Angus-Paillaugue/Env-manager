@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { pageHeading } from '$lib/stores';
 	import { Alert, Button, Input } from '$lib/components';
+	import { Plus } from 'lucide-svelte';
 
 	let { form } = $props();
 	let isLoading = $state<boolean>(false);
@@ -34,5 +35,8 @@
 		<Alert.Danger>{form.error}</Alert.Danger>
 	{/if}
 
-	<Button loading={isLoading}>Create</Button>
+	<Button loading={isLoading}>
+		<Plus class="size-4" />
+		Create
+	</Button>
 </form>

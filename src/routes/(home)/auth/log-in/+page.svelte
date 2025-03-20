@@ -60,7 +60,7 @@
 			};
 		}}
 	>
-		<Input.TOTP name="totp" id="totp" class={{ container: 'mx-auto max-w-sm' }} />
+		<Input.TOTP name="totp" id="totp" class={{ container: 'mx-auto w-fit' }} />
 
 		{#if form && form.ok === false && form.action === 'confirmTOTP'}
 			<Alert.Danger>{form.error}</Alert.Danger>

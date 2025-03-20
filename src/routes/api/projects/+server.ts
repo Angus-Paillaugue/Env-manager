@@ -4,7 +4,7 @@ import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ locals }) => {
 	const { user } = locals;
-	console.log(user);
+
 	try {
 		const projects = (await ProjectDAO.getProjectsByUser(user.id)) || [];
 		return json({ projects });

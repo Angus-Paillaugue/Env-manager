@@ -14,7 +14,6 @@ type RequireKeys<T extends object, K extends keyof T> = Required<Pick<T, K>> & O
 export const PATCH: RequestHandler = async ({ request, locals }) => {
 	const { user } = locals;
 	const environment: RequireKeys<Partial<Environment>, 'id'> = await request.json();
-	console.log(environment);
 
 	if (!environment.id) {
 		return json({ error: 'Environment id is required' }, { status: 400 });

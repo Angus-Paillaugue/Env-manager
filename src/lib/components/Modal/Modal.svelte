@@ -20,18 +20,22 @@
 	}: SvelteHTMLElements['div'] & MyProps = $props();
 	let portalElement = $state<HTMLElement | null>(null);
 
+	async function focusFirstModalInput() {
+		if (!portalElement) return;
+		const firstInput = portalElement.querySelector('input, textarea, select') as
+			| HTMLInputElement
+			| HTMLTextAreaElement
+			| HTMLSelectElement;
+		if (firstInput) {
+			firstInput.focus();
+		}
+	}
+
 	$effect(() => {
 		if (open) {
 			document.body.style.overflow = 'hidden';
 			// Focus the first input field in the modal
-			if (!portalElement) return;
-			const firstInput = portalElement.querySelector('input, textarea, select') as
-				| HTMLInputElement
-				| HTMLTextAreaElement
-				| HTMLSelectElement;
-			if (firstInput) {
-				firstInput.focus();
-			}
+			focusFirstModalInput();
 		} else {
 			document.body.style.overflow = 'auto';
 			if (onClose) onClose();

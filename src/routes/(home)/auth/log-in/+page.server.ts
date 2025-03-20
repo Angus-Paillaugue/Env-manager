@@ -6,7 +6,6 @@ import { fail, redirect, type Actions } from '@sveltejs/kit';
 export const load = async ({ locals, url }) => {
 	if (locals.user) {
 		const redirectUrl = url.searchParams.get('redirect') || '/app';
-		console.log('User is already logged-in, redirecting to:', redirectUrl);
 		throw redirect(302, redirectUrl);
 	}
 };

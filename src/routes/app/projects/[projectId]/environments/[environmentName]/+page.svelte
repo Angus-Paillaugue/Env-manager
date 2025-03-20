@@ -4,7 +4,7 @@
 	import { Alert, Button, Card, Hr, Input, Modal } from '$lib/components';
 	import { pageHeading } from '$lib/stores';
 	import type { Environment, Variable } from '$lib/types';
-	import { cn } from '$lib/utils';
+	import { cn, copyToClipboard } from '$lib/utils';
 	import { Eye, EyeClosed, Key, Plus } from 'lucide-svelte';
 	import { fade, slide } from 'svelte/transition';
 	import Action from './action.svelte';
@@ -98,10 +98,6 @@
 		if (envFileFiles.length === 0) return;
 		createVariableForm.submit();
 	});
-
-	function copyVariable(variable: Variable) {
-		navigator.clipboard.writeText(variable.value);
-	}
 
 	function toggleVariableVisibility(variable: HiddenVariable) {
 		if (!environment.variables) return;
@@ -228,7 +224,7 @@
 									in:slide={{ axis: 'x', duration: 400, delay: 400 }}
 									out:slide={{ axis: 'x', duration: 400 }}
 									class="bg-secondary-hover cursor-copy truncate rounded-sm border px-1 py-0.5 text-start font-mono text-sm"
-									onclick={() => copyVariable(variable)}>{variable.value}</button
+									onclick={() => copyToClipboard(variable)}>{variable.value}</button
 								>
 							{/if}
 
