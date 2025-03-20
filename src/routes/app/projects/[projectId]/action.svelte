@@ -69,7 +69,8 @@
 		method="POST"
 		action="?/deleteEnvironment"
 		class="flex w-full flex-col gap-2"
-		use:enhance={() => {
+		use:enhance={(e) => {
+			e.formData.append('environmentId', environment.id);
 			isDeletingEnvironment = true;
 			return async ({ update }) => {
 				isDeletingEnvironment = false;
@@ -106,7 +107,8 @@
 		method="POST"
 		action="?/editEnvironment"
 		class="flex w-full flex-col gap-2"
-		use:enhance={() => {
+		use:enhance={(e) => {
+			e.formData.append('environmentId', environment.id);
 			isEditingEnvironment = true;
 			return async ({ update }) => {
 				isEditingEnvironment = false;
@@ -114,8 +116,6 @@
 			};
 		}}
 	>
-		<input type="hidden" name="environmentId" value={environment.id} />
-
 		<Input.Floating
 			type="text"
 			id="environmentName"
@@ -134,7 +134,7 @@
 			<Button
 				variant="primary"
 				loading={isEditingEnvironment}
-				disabled={!isDeepEqual(environment, editedEnvironment)}
+				disabled={isDeepEqual(environment, editedEnvironment)}
 			>
 				Edit</Button
 			>

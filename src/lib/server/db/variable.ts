@@ -80,4 +80,15 @@ export class VariableDAO {
 		);
 		return VariableDAO.convertToVariable(result.rows[0]);
 	}
+
+	static async getVariable(userId: User['id'], variableId: Variable['id']): Promise<Variable> {
+		const result = await pool.query(
+			'SELECT * FROM variables WHERE id = $1 AND environment_id IN (SELECT id FROM environments WHERE project_id IN (SELECT project_id FROM project_members WHERE user_id = $2))',
+			[variableId, userId]
+		);
+		if (result.rowCount === 0) {
+			throw new Error('Variable not found');
+		}
+		return VariableDAO.convertToVariable(result.rows[0]);
+	}
 }

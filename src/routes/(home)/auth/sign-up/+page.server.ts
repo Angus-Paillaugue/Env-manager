@@ -33,9 +33,9 @@ export const actions: Actions = {
 			const hash = await bcrypt.hash(password, salt);
 
 			// Create user
-			await UserDAO.createUser(email, username, hash);
+			const user = await UserDAO.createUser(email, username, hash);
 
-			cookies.set('token', generateAccessToken(email), tokenOptions);
+			cookies.set('token', generateAccessToken(user.id), tokenOptions);
 		} catch (error) {
 			console.error(error);
 			return ErrorHandling.throwActionError(400, 'signUp', error);

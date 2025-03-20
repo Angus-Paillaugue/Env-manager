@@ -1,11 +1,9 @@
-import { ProjectDAO } from '$lib/server/db/project';
 import { ErrorHandling } from '$lib/server/errorHandling';
 import type { Project } from '$lib/types';
 import { redirect, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
-	async create({ locals, request }) {
-		const { user } = locals;
+	async create({ request, fetch }) {
 		const formData = Object.fromEntries(await request.formData());
 		const { name } = formData as { name: string };
 
@@ -19,13 +17,25 @@ export const actions: Actions = {
 
 		let project: Project | null = null;
 		try {
-			project = await ProjectDAO.createProject(user.id, name);
+			const res = await fetch('/api/projects', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ name })
+			});
+			const data = await res.json();
+			if (!res.ok) {
+				throw new Error(data?.error || 'Failed to create project');
+			}
+			project = data.project as Project;
 		} catch (error) {
 			return ErrorHandling.throwActionError(400, 'create', error);
 		}
 
-		if (project) throw redirect(303, '/app/projects/' + project.id);
-		else {
+		if (project) {
+			throw redirect(303, '/app/projects/' + project.id);
+		} else {
 			return ErrorHandling.throwActionError(
 				400,
 				'create',

@@ -54,7 +54,24 @@ export class ProjectDAO {
 		return project;
 	}
 
-	static async deleteProject(projectId: Project['id']): Promise<void> {
-		await pool.query('DELETE FROM projects WHERE id = $1', [projectId]);
+	static async deleteProject(userId: User['id'], projectId: Project['id']): Promise<void> {
+		const result = await pool.query(
+			'DELETE FROM projects WHERE id = $1 AND (SELECT role FROM project_members WHERE project_id = $1 AND user_id = $2) = $3',
+			[projectId, userId, 'owner']
+		);
+		if (result.rowCount === 0) {
+			throw new Error('Project not found or user does not have permission to delete.');
+		}
+	}
+
+	static async updateProject(userId: User['id'], project: Project): Promise<Project> {
+		const result = await pool.query(
+			'UPDATE projects SET name = $1 WHERE id = $2 AND (SELECT role FROM project_members WHERE project_id = $2 AND user_id = $3) = $4 RETURNING *',
+			[project.name, project.id, userId, 'owner']
+		);
+		if (result.rows.length === 0) {
+			throw new Error('Project not found or user does not have permission to update.');
+		}
+		return ProjectDAO.convertToProject(result.rows[0]);
 	}
 }

@@ -12,6 +12,7 @@ export class ProjectMembersDAO {
 			user: UserDAO.convertToUser(row)
 		};
 	}
+
 	static async addMember(
 		userId: User['id'],
 		projectId: Project['id'],
@@ -49,7 +50,7 @@ export class ProjectMembersDAO {
 			projectId
 		]);
 		if (parseInt(result.rows[0].count) === 0) {
-			await ProjectDAO.deleteProject(projectId);
+			await ProjectDAO.deleteProject(userId, projectId);
 		}
 	}
 

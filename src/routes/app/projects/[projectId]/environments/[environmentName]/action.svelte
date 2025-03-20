@@ -33,10 +33,21 @@
 						deleteVariableModalOpen = false;
 						break;
 					}
+					case 'editVariable': {
+						const newVar = body as Variable;
+						if (newVar.id === variable.id) {
+							// Optionally, you might want to update the variable in the environment after editing
+							environment.variables = environment.variables.map((v) => {
+								if (v.id === newVar.id) {
+									return { ...newVar, hidden: true };
+								}
+								return v;
+							});
+							editVariableModalOpen = false;
+						}
+						break;
+					}
 				}
-			},
-			onError: (error, action) => {
-				console.error(`Error in action ${action}:`, error);
 			}
 		});
 	});
@@ -90,7 +101,8 @@
 		method="POST"
 		action="?/editVariable"
 		class="flex w-full flex-col gap-2"
-		use:enhance={() => {
+		use:enhance={(e) => {
+			e.formData.append('variableId', variable.id);
 			isEditingVariable = true;
 			return async ({ update }) => {
 				isEditingVariable = false;
@@ -98,8 +110,6 @@
 			};
 		}}
 	>
-		<input type="hidden" name="variableId" value={variable.id} />
-
 		<div class="grid grid-cols-2 gap-4">
 			<Input
 				type="text"
@@ -111,7 +121,7 @@
 			<Input type="text" id="variableValue" label="Value" bind:value={editedVariable.value} />
 		</div>
 
-		{#if form && form.ok === false && form?.action === 'editVariable' && form.error}
+		{#if form && form.ok === false && form?.action === 'editVariable'}
 			<Alert.Danger>{form.error}</Alert.Danger>
 		{/if}
 		<Modal.Actions>
@@ -121,7 +131,7 @@
 			<Button
 				variant="primary"
 				loading={isEditingVariable}
-				disabled={!isDeepEqual(editedVariable, variable)}>Edit</Button
+				disabled={isDeepEqual(editedVariable, variable)}>Edit</Button
 			>
 		</Modal.Actions>
 	</form>

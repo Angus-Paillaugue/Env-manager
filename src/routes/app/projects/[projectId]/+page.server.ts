@@ -1,18 +1,15 @@
 import { redirect, type Actions, error } from '@sveltejs/kit';
-import { EnvironmentDAO } from '$lib/server/db/environment';
 import { ErrorHandling } from '$lib/server/errorHandling';
-import type { Environment, ProjectMember } from '$lib/types';
-import { UserDAO } from '$lib/server/db/user';
-import { ProjectMembersDAO } from '$lib/server/db/projectMember';
+import type { Environment } from '$lib/types';
 
-export const load = async ({ params, locals }) => {
-	const { user } = locals;
+export const load = async ({ params, fetch }) => {
 	const { projectId } = params;
 
 	try {
-		const role = await ProjectMembersDAO.getUserRole(projectId, user.id);
-		if (!role) {
-			throw new Error('Unauthorized');
+		const res = await fetch(`/api/projects/${projectId}/role`);
+		const data = await res.json();
+		if (!res.ok) {
+			throw new Error(data.error);
 		}
 	} catch (e) {
 		return error(401, e instanceof Error ? e.message : 'Unauthorized');
@@ -20,120 +17,169 @@ export const load = async ({ params, locals }) => {
 };
 
 export const actions: Actions = {
-	async createEnvironment({ request, params }) {
+	async createEnvironment({ request, params, fetch }) {
 		const formData = Object.fromEntries(await request.formData());
 		const { environmentName } = formData as { environmentName: string };
 
 		let environment: Environment | null = null;
 		try {
-			environment = await EnvironmentDAO.createEnvironment(
-				params.projectId as string,
-				environmentName
-			);
+			const res = await fetch(`/api/projects/${params.projectId}/environments`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ name: environmentName })
+			});
+			const data = await res.json();
+
+			if (!res.ok) {
+				throw new Error(data?.error || 'Failed to create environment');
+			}
+
+			environment = data.environment as Environment;
 		} catch (error) {
 			return ErrorHandling.throwActionError(400, 'createEnvironment', error);
 		}
 		throw redirect(303, `/app/projects/${params.projectId}/environments/${environment.name}`);
 	},
-	async deleteEnvironment({ request, locals }) {
-		const { user } = locals;
+	async deleteEnvironment({ request, params, fetch }) {
 		const formData = Object.fromEntries(await request.formData());
 		const { environmentId } = formData as {
 			environmentId: string;
 		};
 
 		try {
-			await EnvironmentDAO.deleteEnvironment(user.id, environmentId);
+			const res = await fetch(`/api/projects/${params.projectId}/environments/${environmentId}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ environmentId })
+			});
+			const data = await res.json();
+
+			if (!res.ok) {
+				throw new Error(data.error || 'Failed to delete environment');
+			}
 		} catch (error) {
 			return ErrorHandling.throwActionError(400, 'deleteEnvironment', error);
 		}
 
-		return {
-			ok: true,
-			body: environmentId,
-			action: 'deleteEnvironment'
-		};
+		return ErrorHandling.returnSuccess('deleteEnvironment', environmentId);
 	},
-	async editEnvironment({ request, locals }) {
-		const { user } = locals;
+	async editEnvironment({ request, params, fetch }) {
 		const formData = Object.fromEntries(await request.formData());
-		const { environmentId, environmentName } = formData as {
-			environmentId: string;
+		const { environmentName, environmentId } = formData as {
 			environmentName: string;
+			environmentId: string;
+		};
+
+		const newEnvironment: Partial<Environment> = {
+			id: environmentId,
+			name: environmentName.trim()
 		};
 
 		try {
-			// Get environment
-			const environment = await EnvironmentDAO.getEnvironmentById(user.id, environmentId);
-			if (!environment) throw new Error('Environment not found');
-			// Set new fields values
-			environment.name = environmentName.trim();
+			const res = await fetch(`/api/projects/${params.projectId}/environments/${environmentId}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(newEnvironment)
+			});
+			const data = await res.json();
 
-			// Update environment
-			const updatedEnvironment = await EnvironmentDAO.editEnvironment(
-				user.id,
-				environmentId,
-				environment
-			);
-			return {
-				ok: true,
-				body: updatedEnvironment,
-				action: 'editEnvironment'
-			};
+			if (!res.ok) {
+				throw new Error(data.error || 'Failed to edit environment');
+			}
+
+			return ErrorHandling.returnSuccess('editEnvironment', data);
 		} catch (error) {
 			return ErrorHandling.throwActionError(400, 'editEnvironment', error);
 		}
 	},
-	async addMember({ request, locals, params }) {
-		const { user } = locals;
+	async addMember({ request, params, fetch }) {
 		const formData = Object.fromEntries(await request.formData());
 		const { memberUsername } = formData as {
 			memberUsername: string;
 		};
-		const role: ProjectMember['role'] = 'guest';
-
 		if (!memberUsername)
 			return ErrorHandling.throwActionError(400, 'addMember', 'Member username is required');
-
-		const addedUser = await UserDAO.getUserByUsername(memberUsername);
-		if (!addedUser) return ErrorHandling.throwActionError(400, 'addMember', 'User not found');
 		try {
-			await ProjectMembersDAO.addMember(user.id, params.projectId as string, addedUser.id, role);
-			return {
-				ok: true,
-				body: {
-					projectId: params.projectId,
-					user: addedUser,
-					role: role,
-					userId: addedUser.id
-				} as ProjectMember,
-				action: 'addMember'
-			};
+			const res = await fetch(`/api/projects/${params.projectId}/members`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ memberUsername })
+			});
+			const data = await res.json();
+
+			if (!res.ok) {
+				throw new Error(data.error || 'Failed to add member');
+			}
+
+			return ErrorHandling.returnSuccess('addMember', data);
 		} catch (error) {
 			return ErrorHandling.throwActionError(400, 'addMember', error);
 		}
 	},
-	async removeMember({ request, locals, params }) {
-		const { user } = locals;
+	async removeMember({ request, params, fetch }) {
 		const formData = Object.fromEntries(await request.formData());
 		const { memberId } = formData as {
 			memberId: string;
 		};
 
 		try {
-			await ProjectMembersDAO.removeMember(user.id, params.projectId as string, memberId);
+			const res = await fetch(`/api/projects/${params.projectId}/members`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ memberId })
+			});
+			const data = await res.json();
+
+			if (!res.ok) {
+				throw new Error(data.error || 'Failed to remove member');
+			}
+
+			return ErrorHandling.returnSuccess('removeMember', data);
 		} catch (error) {
 			return ErrorHandling.throwActionError(400, 'removeMember', error);
 		}
+	},
+	async saveSettings({ request, params, fetch }) {
+		const formData = Object.fromEntries(await request.formData());
+		const { projectName } = formData as { projectName: string };
 
-		if (user.id === memberId) {
-			throw redirect(303, '/app');
+		try {
+			const res = await fetch(`/api/projects/${params.projectId}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ name: projectName })
+			});
+			const project = await res.json();
+			return ErrorHandling.returnSuccess('saveSettings', project);
+		} catch (error) {
+			return ErrorHandling.throwActionError(400, 'saveSettings', error);
+		}
+	},
+	async deleteProject({ params, fetch }) {
+		try {
+			const res = await fetch(`/api/projects/${params.projectId}`, {
+				method: 'DELETE'
+			});
+			if (!res.ok) {
+				const errorMsg = await res.json();
+				throw new Error(errorMsg.error || res.statusText);
+			}
+		} catch (error) {
+			return ErrorHandling.throwActionError(400, 'deleteProject', error);
 		}
 
-		return {
-			ok: true,
-			action: 'removeMember',
-			body: memberId
-		};
+		throw redirect(303, '/app');
 	}
 };

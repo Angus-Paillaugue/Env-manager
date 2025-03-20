@@ -82,16 +82,6 @@
 							(v) => v.id !== (body as Variable['id'])
 						);
 						break;
-					case 'editVariable':
-						const editedVariable = body as Variable;
-						const index = environment.variables.findIndex((v) => v.id === editedVariable.id);
-						environment.variables[index] = {
-							...editedVariable,
-							hidden: environment.variables[index].hidden
-						};
-						break;
-					default:
-						console.error('Unknown action', action);
 				}
 			},
 			onError: (error, action) => {
