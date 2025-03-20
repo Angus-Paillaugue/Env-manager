@@ -2,7 +2,7 @@ import inquirer from 'inquirer';
 import { Auth } from '../auth';
 import { input } from '@inquirer/prompts';
 import { API } from '../api';
-import { writeFileSync } from 'fs-extra';
+import fs from 'fs-extra';
 
 export async function pull() {
 	if (!(await Auth.isLoggedIn())) return console.error('You must log in first!');
@@ -37,7 +37,7 @@ export async function pull() {
 			message: 'Enter the filename to save the variables',
 			default: '.env.' + environmentName.toLowerCase().replace(/\s/g, '-')
 		});
-		writeFileSync(filenameAnswer, variables);
+		fs.writeFileSync(filenameAnswer, variables);
 	} catch (error) {
 		console.error('Failed to fetch:', error.response?.data?.error || error.message);
 	}

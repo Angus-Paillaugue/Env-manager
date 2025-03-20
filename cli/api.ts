@@ -1,13 +1,14 @@
 import axios from 'axios';
-import { API_URL } from './constants';
 import { Auth } from './auth';
 import type { Environment, Project, Variable } from '../src/lib/types';
+import { ConfigManager } from './config';
 
 export class API {
 	static async getProjects() {
+		const config = ConfigManager.getConfig();
 		try {
 			const token = await Auth.getToken();
-			const response = await axios.get(`${API_URL}/projects`, {
+			const response = await axios.get(`${config.apiUrl}/projects`, {
 				headers: { Authorization: `Bearer ${token}` }
 			});
 			return response.data.projects;
@@ -17,9 +18,10 @@ export class API {
 	}
 
 	static async getEnvironments(projectId: Project['id']) {
+		const config = ConfigManager.getConfig();
 		try {
 			const token = await Auth.getToken();
-			const response = await axios.get(`${API_URL}/projects/${projectId}/environments`, {
+			const response = await axios.get(`${config.apiUrl}/projects/${projectId}/environments`, {
 				headers: { Authorization: `Bearer ${token}` }
 			});
 			return response.data.environments;
@@ -32,10 +34,11 @@ export class API {
 		projectId: Project['id'],
 		environementName: Environment['name']
 	): Promise<string> {
+		const config = ConfigManager.getConfig();
 		try {
 			const token = await Auth.getToken();
 			const response = await axios.get(
-				`${API_URL}/projects/${projectId}/environments/${environementName}/variables?raw`,
+				`${config.apiUrl}/projects/${projectId}/environments/${environementName}/variables?raw`,
 				{
 					headers: { Authorization: `Bearer ${token}` }
 				}
@@ -52,10 +55,11 @@ export class API {
 		environmentName: Environment['name'],
 		variables: Variable[]
 	) {
+		const config = ConfigManager.getConfig();
 		try {
 			const token = await Auth.getToken();
 			const response = await axios.patch(
-				`${API_URL}/projects/${projectId}/environments/${environmentName}/variables`,
+				`${config.apiUrl}/projects/${projectId}/environments/${environmentName}/variables`,
 				{ variables },
 				{
 					headers: { Authorization: `Bearer ${token}` }

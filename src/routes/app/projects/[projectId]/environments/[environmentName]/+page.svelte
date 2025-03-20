@@ -224,7 +224,7 @@
 									in:slide={{ axis: 'x', duration: 400, delay: 400 }}
 									out:slide={{ axis: 'x', duration: 400 }}
 									class="bg-secondary-hover cursor-copy truncate rounded-sm border px-1 py-0.5 text-start font-mono text-sm"
-									onclick={() => copyToClipboard(variable)}>{variable.value}</button
+									onclick={() => copyToClipboard(variable.value)}>{variable.value}</button
 								>
 							{/if}
 

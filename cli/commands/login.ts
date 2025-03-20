@@ -2,7 +2,7 @@ import { Auth } from '../auth';
 import http from 'http';
 import open from 'open';
 import { randomUUID } from 'crypto';
-import { FRONTEND_URL } from '../constants';
+import { ConfigManager } from '../config';
 
 async function auth() {
 	const state = randomUUID();
@@ -25,7 +25,8 @@ async function auth() {
 	server.listen(3001, () => console.log('Waiting for authentication...'));
 
 	// Open browser for authentication
-	await open(`${FRONTEND_URL}/auth/callback?state=${state}`);
+	const config = ConfigManager.getConfig();
+	await open(`${config.frontendUrl}/auth/callback?state=${state}`);
 
 	console.log('Please complete authentication in your browser.');
 }
@@ -35,5 +36,7 @@ export async function login() {
 		console.log('You are already logged in');
 	} else {
 		await auth();
+
+		console.log('Login process completed.');
 	}
 }
