@@ -1,36 +1,42 @@
 import { Auth } from '../auth';
-import TOTPInput from '../components/TOTPInput';
-import { password as passwordInput, input } from '@inquirer/prompts';
+import http from 'http';
+import open from 'open';
+import { randomUUID } from 'crypto';
+
+async function auth() {
+	const state = randomUUID();
+
+	const server = http.createServer((req, res) => {
+		if (req.url.startsWith('/auth/callback')) {
+			const url = new URL(req.url, 'http://localhost:3001');
+			const token = url.searchParams.get('token');
+
+			if (token) {
+				Auth.saveToken(token);
+				res.end('Authentication successful!');
+				server.close();
+			} else {
+				res.end('Authentication failed.');
+			}
+		}
+	});
+
+	server.listen(3001, () => console.log('Waiting for authentication...'));
+
+	// Open browser for authentication
+	await open(
+		process.env.DEVELOPEMENT
+			? `http://localhost:5173/auth/callback?state=${state}`
+			: `https://your-app.com/auth/callback?state=${state}`
+	);
+
+	console.log('Please complete authentication in your browser.');
+}
 
 export async function login() {
-	const askCredentials = async () => {
-		const email = await input({ message: 'Enter your email' });
-		const password = await passwordInput({
-			message: 'Enter your password'
-		});
-		const res = await Auth.login(email, password);
-		return { error: res, email, password };
-	};
-
-	let { error, email, password } = await askCredentials();
-	while (error) {
-		if (error === 'TOTP') {
-			// Need TOTP code
-			const totpCode = await TOTPInput({
-				message: 'Enter your TOTP code'
-			});
-			try {
-				await Auth.loginWithTOTP(email, password, totpCode);
-				error = null;
-			} catch (error) {
-				console.error('Login failed:', error.message || error);
-			}
-		} else {
-			// Other error (related to email or password)
-			// Ask for email and password again
-			console.error('Login failed:', error);
-			({ error, email, password } = await askCredentials());
-		}
+	if (Auth.getToken()) {
+		console.log('You are already logged in');
+	} else {
+		await auth();
 	}
-	console.log('Login successful!');
 }

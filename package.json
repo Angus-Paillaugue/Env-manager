@@ -14,7 +14,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"cli": "DEVELOPPEMENT=true bun run cli/cli.ts"
+		"cli": "DEVELOPEMENT=true bun run cli/cli.ts"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
@@ -50,6 +50,7 @@
 		"@inquirer/prompts": "^7.4.0",
 		"@inquirer/type": "^3.0.5",
 		"@types/jsonwebtoken": "^9.0.9",
+		"@types/open": "^6.2.1",
 		"@types/pg": "^8.11.11",
 		"@types/qrcode": "^1.5.5",
 		"@types/speakeasy": "^2.0.10",
@@ -61,7 +62,7 @@
 		"inquirer": "^12.4.3",
 		"jsonwebtoken": "^9.0.2",
 		"lucide-svelte": "^0.479.0",
-		"mysql2": "^3.13.0",
+		"open": "^10.1.0",
 		"pg": "^8.14.0",
 		"qrcode": "^1.5.4",
 		"sharp": "^0.33.5",

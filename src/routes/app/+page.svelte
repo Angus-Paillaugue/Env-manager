@@ -8,7 +8,8 @@
 	const { projects } = data;
 
 	pageHeading.set({
-		title: ''
+		title: 'Projects',
+		description: 'Manage your projects and tasks.'
 	});
 </script>
 

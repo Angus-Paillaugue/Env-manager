@@ -3,10 +3,19 @@ import { UserDAO } from '$lib/server/db/user';
 import { ErrorHandling } from '$lib/server/errorHandling';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 
+export const load = async ({ locals, url }) => {
+	if (locals.user) {
+		const redirectUrl = url.searchParams.get('redirect') || '/app';
+		console.log('User is already logged-in, redirecting to:', redirectUrl);
+		throw redirect(302, redirectUrl);
+	}
+};
+
 export const actions: Actions = {
-	async logIn({ cookies, request, fetch }) {
+	async logIn({ cookies, request, fetch, url }) {
 		const formData = Object.fromEntries(await request.formData());
 		const { email, password } = formData as { email: string; password: string };
+		const actualUrl = new URL(request.headers.get('referer') || url.origin);
 
 		const res = await fetch('/api/authenticate', {
 			method: 'POST',
@@ -33,11 +42,15 @@ export const actions: Actions = {
 		}
 		cookies.set('token', data.token, tokenOptions);
 
-		throw redirect(303, '/app');
+		if (actualUrl.searchParams.has('redirect')) {
+			throw redirect(303, actualUrl.searchParams.get('redirect') as string);
+		}
+		throw redirect(302, '/app');
 	},
-	async confirmTOTP({ cookies, request, fetch }) {
+	async confirmTOTP({ cookies, request, fetch, url }) {
 		const formData = Object.fromEntries(await request.formData());
 		const { totp, email, password } = formData as { totp: string; email: string; password: string };
+		const actualUrl = new URL(request.headers.get('referer') || url.origin);
 
 		// Check TOTP
 		const totpRes = await fetch('/api/authenticate', {
@@ -53,6 +66,10 @@ export const actions: Actions = {
 			return ErrorHandling.throwActionError(totpRes.status, 'confirmTOTP', totpData.error);
 		}
 		cookies.set('token', totpData.token, tokenOptions);
-		throw redirect(303, '/app');
+
+		if (actualUrl.searchParams.has('redirect')) {
+			throw redirect(303, actualUrl.searchParams.get('redirect') as string);
+		}
+		throw redirect(302, '/app');
 	}
 };

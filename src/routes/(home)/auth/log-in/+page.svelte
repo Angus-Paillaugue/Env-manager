@@ -3,6 +3,12 @@
 	import { Alert, Button, Card, Input, Modal } from '$lib/components';
 	import Link from '$lib/components/Link/Link.svelte';
 	import { handleForm } from '$lib/utils/formHandler.js';
+	import { pageHeading } from '$lib/stores';
+
+	$pageHeading = {
+		title: 'Log-in',
+		description: 'Please enter your credentials to log in.'
+	};
 
 	let { form } = $props();
 	let isLoading = $state<boolean>(false);
