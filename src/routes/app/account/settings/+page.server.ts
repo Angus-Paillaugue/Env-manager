@@ -4,6 +4,7 @@ import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { generateAccessToken, tokenOptions } from '$lib/server/auth';
 import { validateTOTP } from '$lib/server/totp';
+import bcrypt from 'bcryptjs';
 
 export const actions: Actions = {
 	async saveGeneral({ request, locals, cookies }) {
@@ -74,6 +75,43 @@ export const actions: Actions = {
 			return ErrorHandling.returnSuccess('setUpTOTP', { success });
 		} catch (error) {
 			return ErrorHandling.throwActionError(500, 'setUpTOTP', error);
+		}
+	},
+	async updatePassword({ locals, request }) {
+		const { user } = locals;
+		const formData = Object.fromEntries(await request.formData());
+		const { currentPassword, newPassword } = formData as {
+			currentPassword: string;
+			newPassword: string;
+		};
+
+		if (!user) {
+			return ErrorHandling.throwActionError(401, 'updatePassword', 'User not authenticated');
+		}
+		if (!currentPassword || !newPassword) {
+			return ErrorHandling.throwActionError(400, 'updatePassword', 'Missing required fields');
+		}
+		try {
+			// Checking current password
+			const compare = bcrypt.compareSync(currentPassword, user.passwordHash);
+			if (!compare) {
+				return ErrorHandling.throwActionError(400, 'updatePassword', 'Incorrect current password');
+			}
+
+			// Hashing new password
+			const salt = bcrypt.genSaltSync(10);
+			const hash = bcrypt.hashSync(newPassword, salt);
+			// Updating password in database
+			const updatedUser = await UserDAO.updateUser({
+				...user,
+				passwordHash: hash
+			});
+			// Updating user in locals
+			locals.user = updatedUser;
+
+			return ErrorHandling.returnSuccess('updatePassword', { success: true });
+		} catch (error) {
+			return ErrorHandling.throwActionError(500, 'updatePassword', error);
 		}
 	}
 };

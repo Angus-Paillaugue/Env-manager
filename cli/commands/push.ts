@@ -5,7 +5,8 @@ import fs from 'fs-extra';
 import { input } from '@inquirer/prompts';
 
 export async function push() {
-	if (!Auth.isLoggedIn()) return console.error('You must log in first!');
+	if (!(await Auth.isLoggedIn())) return console.error('You must log in first!');
+
 	try {
 		const projects = await API.getProjects();
 		if (!projects || projects.length === 0) return console.error('No projects found!');

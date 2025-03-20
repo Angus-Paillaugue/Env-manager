@@ -35,61 +35,52 @@
 		{
 			title: 'General',
 			icon: User,
-			description: 'Update your profile information.',
 			component: General
 		},
 		{
 			title: 'Security',
-			description: 'Add an extra layer of security to your account.',
 			icon: Shield,
 			component: Security
 		},
 		{
 			title: 'Danger Zone',
-			description: 'Irreversible and destructive actions.',
 			icon: OctagonAlert,
 			component: DangerZone
 		}
 	];
 </script>
 
-<div
-	class="bg-card border-border mt-12 grid w-full grid-cols-3 items-center justify-center overflow-hidden rounded border"
->
-	{#each sections as section, i}
-		<button
-			class={cn(
-				'flex w-full cursor-pointer flex-row items-center justify-center gap-2 bg-transparent p-2 font-medium transition-colors',
-				i === currentTabIndex && 'bg-card-hover'
-			)}
-			onclick={() => changeTab(i)}
-		>
-			<section.icon class="size-5" />
-			{section.title}
-		</button>
-	{/each}
-</div>
-
-<div class="border-border bg-card mt-6 flex w-full flex-col overflow-hidden rounded border">
+<div class="relative p-4">
 	<div
-		class="grid transition-transform duration-300"
-		style="width: {sections.length *
-			100}%;grid-template-columns: repeat({sections.length}, minmax(0, 1fr));transform: translateX(-{(currentTabIndex /
-			sections.length) *
-			100}%)"
+		class="bg-card border-border mt-12 grid w-full grid-cols-3 items-center justify-center overflow-hidden rounded border"
 	>
-		{#each sections as section}
-			<div class="flex w-full flex-col gap-4 p-4">
-				<!-- Heading -->
-				<div class="flex flex-col gap-1">
-					<h2 class="text-xl font-medium">{section.title}</h2>
-					<p class="text-muted text-sm">{section.description}</p>
-				</div>
-				<!-- Content -->
-				<div class="flex flex-col gap-4">
+		{#each sections as section, i}
+			<button
+				class={cn(
+					'flex w-full cursor-pointer flex-row items-center justify-center gap-2 bg-transparent p-2 font-medium transition-colors',
+					i === currentTabIndex && 'bg-card-hover'
+				)}
+				onclick={() => changeTab(i)}
+			>
+				<section.icon class="size-5" />
+				{section.title}
+			</button>
+		{/each}
+	</div>
+
+	<div class="mt-6 flex w-full flex-col overflow-hidden">
+		<div
+			class="grid transition-transform duration-300"
+			style="width: {sections.length *
+				100}%;grid-template-columns: repeat({sections.length}, minmax(0, 1fr));transform: translateX(-{(currentTabIndex /
+				sections.length) *
+				100}%)"
+		>
+			{#each sections as section}
+				<div class="flex w-full flex-col gap-4">
 					<section.component />
 				</div>
-			</div>
-		{/each}
+			{/each}
+		</div>
 	</div>
 </div>
