@@ -25,9 +25,7 @@ async function auth() {
 
 	// Open browser for authentication
 	await open(
-		process.env.DEVELOPEMENT
-			? `http://localhost:5173/auth/callback?state=${state}`
-			: `https://your-app.com/auth/callback?state=${state}`
+		`${process.env.FRONTEND_URL}/auth/callback?state=${state}`
 	);
 
 	console.log('Please complete authentication in your browser.');
