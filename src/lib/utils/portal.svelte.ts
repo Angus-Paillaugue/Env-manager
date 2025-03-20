@@ -2,7 +2,12 @@ import { tick } from 'svelte';
 
 export function portal(el: HTMLElement, target?: HTMLElement | string) {
 	target ??= 'body';
-	let targetEl = $state<HTMLElement | null>(null);
+	let targetEl: HTMLElement | null = null;
+
+	// Temporarily hide the element to prevent layout shift
+	el.style.position = 'absolute';
+	el.style.opacity = '0';
+	el.style.pointerEvents = 'none';
 
 	async function update(newTarget: HTMLElement | string) {
 		target = newTarget;
@@ -24,7 +29,12 @@ export function portal(el: HTMLElement, target?: HTMLElement | string) {
 				}. Allowed types: string (CSS selector) or HTMLElement.`
 			);
 		}
+
+		// Append the element to the target and restore its visibility
 		targetEl.appendChild(el);
+		el.style.position = '';
+		el.style.opacity = '';
+		el.style.pointerEvents = '';
 		el.hidden = false;
 	}
 

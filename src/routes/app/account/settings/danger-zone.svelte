@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Modal } from '$lib/components';
+	import { Card, Modal } from '$lib/components';
 	import Button from '$lib/components/Button/Button.svelte';
 	import { Trash2 } from 'lucide-svelte';
 
@@ -45,7 +45,14 @@
 	</form>
 </Modal>
 
-<Button variant="danger" onclick={() => (deleteAccountConfirmModalOpen = true)}>
-	<Trash2 class="size-5" />
-	Delete account
-</Button>
+<Card>
+	<Card.Heading>Danger Zone</Card.Heading>
+	<p class="text-muted text-sm">Irreversible and destructive actions.</p>
+
+	<div class="mt-4 flex flex-col gap-4">
+		<Button variant="danger" onclick={() => (deleteAccountConfirmModalOpen = true)}>
+			<Trash2 class="size-5" />
+			Delete account
+		</Button>
+	</div>
+</Card>
