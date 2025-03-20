@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { RequiredFields } from '$lib/types';
 	import { cn } from '$lib/utils';
 	import { Check } from 'lucide-svelte';
 	import { onMount } from 'svelte';
@@ -8,6 +7,7 @@
 
 	interface MyProps {
 		inverted?: boolean;
+		id: string;
 	}
 
 	let {
@@ -16,7 +16,7 @@
 		class: className,
 		inverted = false,
 		...restProps
-	}: RequiredFields<SvelteHTMLElements['input'] & MyProps, 'id'> = $props();
+	}: SvelteHTMLElements['input'] & MyProps = $props();
 	let mounted = $state(false);
 
 	onMount(() => {

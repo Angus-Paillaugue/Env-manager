@@ -14,15 +14,13 @@ interface FormHandlerOptions {
  * @param options - Configuration for form handling.
  */
 export function handleForm(form: unknown, { onSuccess, onError }: FormHandlerOptions) {
-	$effect(() => {
-		if (!form) return;
+	if (!form) return;
 
-		const { body, ok, action } = form as FormReturn;
+	const { body, ok, action } = form as FormReturn;
 
-		if (ok && action && body) {
-			onSuccess?.(body, action);
-		} else if (!ok && action && body) {
-			onError?.(body, action);
-		}
-	});
+	if (ok && action && body) {
+		onSuccess?.(body, action);
+	} else if (!ok && action && body) {
+		onError?.(body, action);
+	}
 }

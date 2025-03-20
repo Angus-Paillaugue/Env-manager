@@ -7,7 +7,7 @@
 
 <button
 	class={cn(
-		'hover:bg-card-hover text-foreground border-border flex w-full grow cursor-pointer flex-row items-center gap-2 px-2 py-1 text-left font-sans text-base transition-colors',
+		'hover:bg-card-hover text-foreground border-border dropdown-item flex w-full grow cursor-pointer flex-row items-center gap-2 px-2 py-1 text-left font-sans text-base transition-colors',
 		className
 	)}
 	{...restProps}

@@ -8,6 +8,21 @@ export class Auth {
 			const response = await axios.post(`${API_URL}/authenticate`, { email, password });
 			const token = response.data.token;
 			Auth.saveToken(token);
+			return null;
+		} catch (error) {
+			if (error.response?.data?.noTOTPCode) {
+				return 'TOTP';
+			} else {
+				return error.response?.data?.error || error.message;
+			}
+		}
+	}
+
+	static async loginWithTOTP(email: string, password: string, totpCode: string) {
+		try {
+			const response = await axios.post(`${API_URL}/authenticate`, { email, password, totpCode });
+			const token = response.data.token;
+			Auth.saveToken(token);
 		} catch (error) {
 			throw new Error(error.response?.data?.error || error.message);
 		}
@@ -25,5 +40,10 @@ export class Auth {
 
 	static isLoggedIn(): boolean {
 		return !!Auth.getToken();
+	}
+
+	static async logOut() {
+		if (!fs.existsSync(CONFIG_PATH)) return;
+		fs.removeSync(CONFIG_PATH);
 	}
 }

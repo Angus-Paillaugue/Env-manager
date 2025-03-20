@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Card } from '$lib/components';
+	import { Alert, Button, Card } from '$lib/components';
 	import { FolderOpen, Plus } from 'lucide-svelte';
 	import type { PageProps } from './$types';
 	import { pageHeading } from '$lib/stores';
@@ -8,7 +8,8 @@
 	const { projects } = data;
 
 	pageHeading.set({
-		title: ''
+		title: 'Projects',
+		description: 'Manage your projects and tasks.'
 	});
 </script>
 
@@ -30,5 +31,10 @@
 			</div>
 			{project.name}
 		</Card>
+	{:else}
+		<Alert icon={FolderOpen}>
+			No projects found
+			<p class="text-muted text-sm font-normal">Create a project to get started</p>
+		</Alert>
 	{/each}
 </section>

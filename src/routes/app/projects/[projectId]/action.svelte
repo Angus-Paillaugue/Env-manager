@@ -3,7 +3,7 @@
 	import { Alert, Button, Input, Modal, Dropdown } from '$lib/components';
 	import type { Environment } from '$lib/types';
 	import { cloneObject, isDeepEqual } from '$lib/utils';
-	import { handleForm } from '$lib/utils/formHandler.svelte';
+	import { handleForm } from '$lib/utils/formHandler';
 	import { EllipsisVertical, Pen, Trash2 } from 'lucide-svelte';
 
 	interface MyPros {
@@ -35,23 +35,25 @@
 		}
 	});
 
-	handleForm(form, {
-		onSuccess: (body, action) => {
-			switch (action) {
-				case 'editEnvironment': {
-					editEnvironmentModalOpen = false;
-					deleteEnvironmentModalOpen = false;
-					break;
+	$effect(() => {
+		handleForm(form, {
+			onSuccess: (body, action) => {
+				switch (action) {
+					case 'editEnvironment': {
+						editEnvironmentModalOpen = false;
+						deleteEnvironmentModalOpen = false;
+						break;
+					}
+					case 'deleteEnvironment': {
+						deleteEnvironmentModalOpen = false;
+						break;
+					}
 				}
-				case 'deleteEnvironment': {
-					deleteEnvironmentModalOpen = false;
-					break;
-				}
+			},
+			onError: (error, action) => {
+				console.error(`Error in action ${action}:`, error);
 			}
-		},
-		onError: (error, action) => {
-			console.error(`Error in action ${action}:`, error);
-		}
+		});
 	});
 </script>
 
@@ -134,7 +136,7 @@
 				loading={isEditingEnvironment}
 				disabled={!isDeepEqual(environment, editedEnvironment)}
 			>
-				>Edit</Button
+				Edit</Button
 			>
 		</Modal.Actions>
 	</form>

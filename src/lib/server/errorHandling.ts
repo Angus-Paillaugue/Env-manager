@@ -2,11 +2,12 @@ import { error, fail } from '@sveltejs/kit';
 
 export class ErrorHandling {
 	static throwActionError(code: number, action: string, error: unknown) {
-		console.error(`Error in action ${action}:`, error);
+		const msg = error instanceof Error ? error.message : error;
+		console.error(`Error in action ${action}:`, msg);
 		return fail(code, {
 			ok: false,
 			action: action,
-			error: error instanceof Error ? error.message : error
+			error: msg
 		});
 	}
 

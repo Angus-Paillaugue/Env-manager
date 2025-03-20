@@ -17,7 +17,9 @@ export class UserDAO {
 			createdAt: row.created_at,
 			profilePicture: row.profile_picture
 				? UserDAO.PUBLIC_PROFILE_PICTURE_DIR + row.profile_picture
-				: UserDAO.DEFAULT_PROFILE_PICTURE
+				: UserDAO.DEFAULT_PROFILE_PICTURE,
+			totpEnabled: row.totp_enabled,
+			totpSecret: row.totp_secret
 		};
 	}
 
@@ -93,7 +95,7 @@ export class UserDAO {
 		// Compress and resize the new image
 		const buffer = await file.arrayBuffer();
 		const ext = 'webp';
-		const resizedImage = await sharp(buffer).resize(60, 60).webp({ quality: 80 }).toBuffer();
+		const resizedImage = await sharp(buffer).resize(96, 96).webp({ quality: 80 }).toBuffer();
 		const filename = `${userId}.${ext}`;
 		const publicPath = UserDAO.PUBLIC_PROFILE_PICTURE_DIR + filename;
 		const path = UserDAO.UPLOAD_DIR + publicPath;
@@ -123,5 +125,18 @@ export class UserDAO {
 
 	static async deleteUser(user: User): Promise<void> {
 		await pool.query('DELETE FROM users WHERE id = $1', [user.id]);
+	}
+
+	static async setTOTPSecret(userId: User['id'], secret: string): Promise<void> {
+		await pool.query('UPDATE users SET totp_enabled = TRUE, totp_secret = $1 WHERE id = $2', [
+			secret,
+			userId
+		]);
+	}
+
+	static async unlinkTOTP(userId: User['id']): Promise<void> {
+		await pool.query('UPDATE users SET totp_enabled = FALSE, totp_secret = NULL WHERE id = $1', [
+			userId
+		]);
 	}
 }

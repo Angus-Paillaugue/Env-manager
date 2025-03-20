@@ -17,7 +17,6 @@
 		node.dataset.active = isActive ? 'true' : 'false';
 		return {
 			update(newHref: string) {
-				console.log(newHref);
 				node.dataset.active = newHref && pathname === newHref ? 'true' : 'false';
 			}
 		};
@@ -53,7 +52,7 @@
 	class="bg-background border-border hidden h-full w-full max-w-sm shrink-0 flex-col border-r p-4 transition-transform duration-300 lg:flex"
 >
 	<div class="flex flex-col gap-1">
-		<Hr text="Projects" />
+		<Hr text="Projects" href="/app" />
 		<!-- <Collapsible.Group> -->
 		{#each projects as project}
 			<!-- <Collapsible summary={project.name} open={currentProject?.id === project.id}>
@@ -110,11 +109,14 @@
 	</div>
 
 	<Card hoverEffect={true} href="/app/account" class="mt-auto flex-row items-center gap-4 rounded">
-		<div class="border-border size-8 overflow-hidden rounded-full border">
+		<div class="border-border size-12 overflow-hidden rounded-full border">
 			<!-- svelte-ignore a11y_img_redundant_alt -->
 			<img src={user.profilePicture} alt="Profile picture" class="object-cover object-center" />
 		</div>
-		<span class="text-sm font-medium">{user.username}</span>
+		<div class="flex flex-col">
+			<span class="text-sm font-medium">{user.username}</span>
+			<span class="text-muted font-mono text-xs">{user.email}</span>
+		</div>
 	</Card>
 </aside>
 

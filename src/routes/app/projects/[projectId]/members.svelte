@@ -6,7 +6,7 @@
 	import { Plus } from 'lucide-svelte';
 	import Member from './member.svelte';
 	import { cn } from '$lib/utils';
-	import { handleForm } from '$lib/utils/formHandler.svelte';
+	import { handleForm } from '$lib/utils/formHandler';
 
 	interface MyProps {
 		project: Project;
@@ -38,13 +38,15 @@
 		autoCompleteUsers = data.users;
 	}
 
-	handleForm(form, {
-		onSuccess: (body, action) => {
-			switch (action) {
-				case 'addMember':
-					addMemberModalOpen = false;
+	$effect(() => {
+		handleForm(form, {
+			onSuccess: (body, action) => {
+				switch (action) {
+					case 'addMember':
+						addMemberModalOpen = false;
+				}
 			}
-		}
+		});
 	});
 </script>
 
@@ -71,6 +73,7 @@
 			type="text"
 			id="memberUsername"
 			label="Username"
+			autocomplete="off"
 			onkeydown={autoComplete}
 		/>
 		{#if autoCompleteUsers.length > 0}

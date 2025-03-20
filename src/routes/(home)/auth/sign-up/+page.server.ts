@@ -1,7 +1,8 @@
-import { generateAccessToken } from '$lib/server/auth';
+import { generateAccessToken, tokenOptions } from '$lib/server/auth';
 import { UserDAO } from '$lib/server/db/user';
+import { ErrorHandling } from '$lib/server/errorHandling';
 import { isEmailValid } from '$lib/utils';
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { redirect, type Actions } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
 
 export const actions: Actions = {
@@ -14,11 +15,17 @@ export const actions: Actions = {
 		};
 
 		// Check if username is provided
-		if (!email || !isEmailValid(email)) return fail(400, { error: 'Please enter a email!' });
+		if (!email || !isEmailValid(email))
+			return ErrorHandling.throwActionError(400, 'signUp', { error: 'Please enter a email!' });
 
 		// Check if password is provided
 		if (password.length < 6)
-			return fail(400, { error: 'Password must be at least 6 characters long!' });
+			return ErrorHandling.throwActionError(400, 'signUp', {
+				error: 'Password must be at least 6 characters long!'
+			});
+
+		if (!username)
+			return ErrorHandling.throwActionError(400, 'signUp', { error: 'Please enter a username!' });
 
 		try {
 			// Hash password
@@ -28,14 +35,10 @@ export const actions: Actions = {
 			// Create user
 			await UserDAO.createUser(email, username, hash);
 
-			cookies.set('token', generateAccessToken(email), {
-				path: '/',
-				maxAge: 60 * 60 * 24,
-				secure: false
-			});
+			cookies.set('token', generateAccessToken(email), tokenOptions);
 		} catch (error) {
 			console.error(error);
-			return fail(400, { error: error instanceof Error ? error.message : 'An error occurred!' });
+			return ErrorHandling.throwActionError(400, 'signUp', error);
 		}
 
 		throw redirect(303, '/app');

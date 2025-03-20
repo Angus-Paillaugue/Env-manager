@@ -6,7 +6,7 @@
 	import { Code, Plus } from 'lucide-svelte';
 	import Action from './action.svelte';
 	import type { Environment, Project, ProjectMember } from '$lib/types';
-	import { handleForm } from '$lib/utils/formHandler.svelte';
+	import { handleForm } from '$lib/utils/formHandler';
 
 	let { data, form } = $props();
 	let project = $derived<Project>(data.project);
@@ -27,46 +27,50 @@
 		});
 	});
 
-	handleForm(form, {
-		onSuccess: (body, action) => {
-			switch (action) {
-				case 'deleteEnvironment': {
-					project.environments = project.environments.filter((env: Environment) => env.id !== body);
-					break;
-				}
-				case 'addMember': {
-					const data = body as unknown as ProjectMember;
-					if (!project.members.some((member) => member.userId === data.userId)) {
-						project.members.push(data);
-					} else {
-						form = {
-							ok: false,
-							action: 'addMember',
-							error: 'User is already a member'
-						};
+	$effect(() => {
+		handleForm(form, {
+			onSuccess: (body, action) => {
+				switch (action) {
+					case 'deleteEnvironment': {
+						project.environments = project.environments.filter(
+							(env: Environment) => env.id !== body
+						);
+						break;
 					}
-					break;
-				}
-				case 'editEnvironment': {
-					const data = body as unknown as Environment;
-					project.environments = project.environments.map((env) => {
-						if (env.id === data.id) {
-							return data;
+					case 'addMember': {
+						const data = body as unknown as ProjectMember;
+						if (!project.members.some((member) => member.userId === data.userId)) {
+							project.members.push(data);
+						} else {
+							form = {
+								ok: false,
+								action: 'addMember',
+								error: 'User is already a member'
+							};
 						}
-						return env;
-					});
-					break;
+						break;
+					}
+					case 'editEnvironment': {
+						const data = body as unknown as Environment;
+						project.environments = project.environments.map((env) => {
+							if (env.id === data.id) {
+								return data;
+							}
+							return env;
+						});
+						break;
+					}
+					case 'removeMember': {
+						const data = body as unknown as ProjectMember['userId'];
+						project.members = project.members.filter((member) => member.userId !== data);
+						break;
+					}
 				}
-				case 'removeMember': {
-					const data = body as unknown as ProjectMember['userId'];
-					project.members = project.members.filter((member) => member.userId !== data);
-					break;
-				}
+			},
+			onError: (error, action) => {
+				console.error(`Error in action ${action}:`, error);
 			}
-		},
-		onError: (error, action) => {
-			console.error(`Error in action ${action}:`, error);
-		}
+		});
 	});
 </script>
 

@@ -28,8 +28,14 @@ async function auth(token: string): Promise<User | null> {
 	});
 }
 
-function generateAccessToken(username: string): string {
-	return jwt.sign(username, env.JWT_SECRET as string);
+function generateAccessToken(email: string): string {
+	return jwt.sign(email, env.JWT_SECRET as string);
 }
+const tokenOptions = {
+	httpOnly: true,
+	secure: true,
+	path: '/',
+	maxAge: 60 * 60 * 24 // 1 day
+};
 
-export { auth, generateAccessToken };
+export { auth, generateAccessToken, tokenOptions };

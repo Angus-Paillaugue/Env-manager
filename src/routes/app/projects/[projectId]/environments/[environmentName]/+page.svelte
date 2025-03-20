@@ -9,7 +9,7 @@
 	import { fade, slide } from 'svelte/transition';
 	import Action from './action.svelte';
 	import { flip } from 'svelte/animate';
-	import { handleForm } from '$lib/utils/formHandler.svelte';
+	import { handleForm } from '$lib/utils/formHandler';
 
 	interface HiddenVariable extends Variable {
 		hidden: boolean;
@@ -65,37 +65,41 @@
 		});
 	}
 
-	handleForm(form, {
-		onSuccess: (body, action) => {
-			switch (action) {
-				case 'createVariable':
-					const newEnv = body as unknown as Environment;
-					environment = {
-						...newEnv,
-						variables: transformEnvVariables(newEnv)
-					};
-					createVariableModalOpen = false;
-					break;
-				case 'deleteVariable':
-					environment.variables = environment.variables.filter(
-						(v) => v.id !== (body as Variable['id'])
-					);
-					break;
-				case 'editVariable':
-					const editedVariable = body as Variable;
-					const index = environment.variables.findIndex((v) => v.id === editedVariable.id);
-					environment.variables[index] = {
-						...editedVariable,
-						hidden: environment.variables[index].hidden
-					};
-					break;
-				default:
-					console.error('Unknown action', action);
+	$effect(() => {
+		handleForm(form, {
+			onSuccess: (body, action) => {
+				switch (action) {
+					case 'createVariable':
+						const newEnv = body as unknown as Environment;
+						environment = {
+							...newEnv,
+							variables: transformEnvVariables(newEnv)
+						};
+						createVariableModalOpen = false;
+						break;
+					case 'deleteVariable':
+						environment.variables = environment.variables.filter(
+							(v) => v.id !== (body as Variable['id'])
+						);
+						break;
+					case 'editVariable':
+						const editedVariable = body as Variable;
+						const index = environment.variables.findIndex((v) => v.id === editedVariable.id);
+						environment.variables[index] = {
+							...editedVariable,
+							hidden: environment.variables[index].hidden
+						};
+						break;
+					default:
+						console.error('Unknown action', action);
+				}
+			},
+			onError: (error, action) => {
+				console.error(`Error in action ${action}:`, error);
 			}
-		},
-		onError: (error, action) => {
-			console.error(`Error in action ${action}:`, error);
-		}
+		});
+
+		form = null;
 	});
 
 	// Handle the form submission when an env file is selected

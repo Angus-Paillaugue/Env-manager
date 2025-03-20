@@ -1,18 +1,15 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { Alert, Button, Card, Input, Link } from '$lib/components';
+	import { pageHeading } from '$lib/stores';
+
+	$pageHeading = {
+		title: 'Sign-up',
+		description: 'Create a new account.'
+	};
 
 	let { form } = $props();
 	let isLoading = $state<boolean>(false);
-	let error = $state<string | null>(null);
-
-	$effect(() => {
-		if (!form) return;
-
-		if (form.error) {
-			error = form.error;
-		}
-	});
 </script>
 
 <div class="mx-auto w-full max-w-lg p-2">
@@ -33,12 +30,12 @@
 			<Input.Floating type="text" id="email" label="Email" />
 			<Input.Floating type="text" id="username" label="Username" />
 			<Input.Floating type="password" id="password" label="Password" />
-			{#if error}
-				<Alert.Danger>{error}</Alert.Danger>
+			{#if form && form.ok === false && form.action === 'signUp'}
+				<Alert.Danger>{form.error}</Alert.Danger>
 			{/if}
 			<Button variant="primary" class="w-full" loading={isLoading}>Submit</Button>
 
-			<p>Already an account ? <Link href="/auth/log-in">Log in.</Link></p>
+			<p>Already have an account? <Link href="/auth/log-in">Log in.</Link></p>
 		</form>
 	</Card>
 </div>

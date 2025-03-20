@@ -58,7 +58,7 @@ export const actions: Actions = {
 			// Insert each variable into the database
 			for (const { name, value } of variables) {
 				try {
-					await VariableDAO.createVariable(environment.id, name, value);
+					await VariableDAO.createVariable(user.id, environment.id, name, value);
 				} catch (error) {
 					return ErrorHandling.throwActionError(400, 'createVariable', error);
 				}
@@ -72,7 +72,7 @@ export const actions: Actions = {
 					params.environmentName as string
 				);
 				if (!environment) return error(404, 'Environment not found');
-				await VariableDAO.createVariable(environment.id, variableName, variableValue);
+				await VariableDAO.createVariable(user.id, environment.id, variableName, variableValue);
 			} catch (error) {
 				return ErrorHandling.throwActionError(400, 'createVariable', error);
 			}

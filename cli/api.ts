@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { API_URL } from './contants';
 import { Auth } from './auth';
-import type { Environment, Project } from '../src/lib/types';
+import type { Environment, Project, Variable } from '../src/lib/types';
 
 export class API {
 	static async getProjects() {
@@ -38,6 +38,25 @@ export class API {
 				}
 			);
 
+			return response.data;
+		} catch (error) {
+			throw new Error(error.response?.data?.error || error.message);
+		}
+	}
+
+	static async pushVariables(
+		projectId: Project['id'],
+		environmentName: Environment['name'],
+		variables: Variable[]
+	) {
+		try {
+			const response = await axios.patch(
+				`${API_URL}/projects/${projectId}/environments/${environmentName}/variables`,
+				{ variables },
+				{
+					headers: { Authorization: `Bearer ${Auth.getToken()}` }
+				}
+			);
 			return response.data;
 		} catch (error) {
 			throw new Error(error.response?.data?.error || error.message);
