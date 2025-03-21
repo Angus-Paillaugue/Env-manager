@@ -2,14 +2,26 @@ import path from 'path';
 import fs from 'fs-extra';
 import envPaths from 'env-paths';
 import { PROGRAM_NAME } from './constants';
+import type { Environment, Project } from '../src/lib/types';
 
 const CONFIG_PATH = path.join(envPaths(PROGRAM_NAME).config, 'config.json');
+
+export interface LinkedProject {
+	projectId: Project['id'];
+	absPath: string;
+	environmentId: Environment['id'];
+}
 
 export type ValidConfig = {
 	apiUrl: string;
 	frontendUrl: string;
+	linkedProject: LinkedProject[];
 };
 export type ConfigData = Partial<ValidConfig>;
+
+const DEFAULT_CONFIG = {
+	linkedProject: []
+};
 
 export class ConfigManager {
 	private static loadConfig(): ConfigData {
@@ -25,7 +37,7 @@ export class ConfigManager {
 		}
 	}
 
-	private static saveConfig(data: ConfigData) {
+	static saveConfig(data: ConfigData) {
 		const oldConfig = this.loadConfig() ?? {};
 		const newConfig = { ...oldConfig, ...data };
 		if (newConfig.frontendUrl) {
@@ -48,7 +60,12 @@ export class ConfigManager {
 			process.exit(1);
 		}
 
-		return config as ValidConfig;
+		const mergedConfig = {
+			...DEFAULT_CONFIG,
+			...config
+		};
+
+		return mergedConfig as ValidConfig;
 	}
 
 	static setConfig(data: Partial<ConfigData>) {

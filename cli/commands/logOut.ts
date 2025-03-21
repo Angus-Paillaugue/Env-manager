@@ -1,5 +1,6 @@
 import { Auth } from '../auth';
 import inquirer from 'inquirer';
+import { log } from '../utils/logger';
 
 export async function logOut() {
 	const { confirm } = await inquirer.prompt({
@@ -12,11 +13,11 @@ export async function logOut() {
 	if (confirm) {
 		try {
 			await Auth.logOut();
-			console.log('Logged out successfully!');
+			log.success('Logged out successfully!');
 		} catch (error) {
-			console.error('Failed to log out:', error.message || error);
+			log.error('Failed to log out:', error.message || error);
 		}
 	} else {
-		console.log('Logout cancelled.');
+		log.info('Logout cancelled.');
 	}
 }

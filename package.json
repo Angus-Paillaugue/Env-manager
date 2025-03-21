@@ -56,6 +56,7 @@
 		"@types/speakeasy": "^2.0.10",
 		"axios": "^1.8.3",
 		"bcryptjs": "^3.0.2",
+		"chalk": "^5.4.1",
 		"clsx": "^2.1.1",
 		"commander": "^13.1.0",
 		"env-paths": "^3.0.0",

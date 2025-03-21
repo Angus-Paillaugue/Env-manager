@@ -125,7 +125,7 @@ export const actions: Actions = {
 			const res = await fetch(
 				`/api/projects/${params.projectId}/environments/${params.environmentName}/variables`,
 				{
-					method: 'PUT',
+					method: 'PATCH',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ id: variableId, name: variableName, value: variableValue })
 				}
