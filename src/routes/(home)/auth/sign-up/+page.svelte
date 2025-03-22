@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { Alert, Button, Card, Input, Link } from '$lib/components';
 	import { pageHeading } from '$lib/stores';
+	import { SECTION_HEIGHT } from '../../layout';
 
 	$pageHeading = {
 		title: 'Sign-up',
@@ -12,8 +13,8 @@
 	let isLoading = $state<boolean>(false);
 </script>
 
-<div class="mx-auto w-full max-w-lg p-2">
-	<Card>
+<div class="w-full p-2 flex flex-col items-center justify-center" style="height: {SECTION_HEIGHT};">
+	<Card class="max-w-lg  w-full">
 		<Card.Heading>Sign-up</Card.Heading>
 		<form
 			action="?/signUp"

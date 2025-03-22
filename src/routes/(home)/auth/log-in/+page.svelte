@@ -2,8 +2,9 @@
 	import { enhance } from '$app/forms';
 	import { Alert, Button, Card, Input, Modal } from '$lib/components';
 	import Link from '$lib/components/Link/Link.svelte';
-	import { handleForm } from '$lib/utils/formHandler.js';
+	import { handleForm } from '$lib/utils/formHandler';
 	import { pageHeading } from '$lib/stores';
+	import { SECTION_HEIGHT } from '../../layout';
 
 	$pageHeading = {
 		title: 'Log-in',
@@ -71,8 +72,8 @@
 	</form>
 </Modal>
 
-<div class="mx-auto w-full max-w-lg p-2">
-	<Card>
+<div class="w-full p-2 flex flex-col items-center justify-center" style="height: {SECTION_HEIGHT};">
+  <Card class="max-w-lg w-full">
 		<Card.Heading>Log-in</Card.Heading>
 		<form
 			action="?/logIn"

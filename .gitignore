@@ -29,3 +29,4 @@ uploads/
 !uploads/profile_pictures/default.webp
 
 pg_data/
+dist/
