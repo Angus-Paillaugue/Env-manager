@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { page } from '$app/state';
 	import { Alert, Button, Card, Hr, Input, Modal } from '$lib/components';
 	import { pageHeading } from '$lib/stores';
 	import type { Environment, Variable } from '$lib/types';
 	import { cn, copyToClipboard } from '$lib/utils';
-	import { Eye, EyeClosed, Key, Plus } from 'lucide-svelte';
+	import { Download, Eye, EyeClosed, Key, Plus } from 'lucide-svelte';
 	import { fade, slide } from 'svelte/transition';
 	import Action from './action.svelte';
 	import { flip } from 'svelte/animate';
@@ -20,6 +19,7 @@
 	}
 
 	let { data, form } = $props();
+  let project = $state(data.project);
 	let environment = $state<MyEnvironment>({
 		...data.environment,
 		variables: transformEnvVariables(data.environment)
@@ -32,13 +32,13 @@
 	$effect(() => {
 		pageHeading.set({
 			title: environment.name + ' environment',
-			description: `Manage variables in the <b>${environment.name}</b> environment of the <b>${page.data.project.name}</b> project`,
+			description: `Manage variables in the <b>${environment.name}</b> environment of the <b>${project.name}</b> project`,
 			breadcrumbs: [
 				{ title: 'Projects', href: '/app' },
-				{ title: page.data.project.name, href: '/app/projects/' + page.data.project.id },
+				{ title: project.name, href: '/app/projects/' + project.id },
 				{
 					title: environment.name,
-					href: '/app/projects/' + page.data.project.id + '/environments/' + environment.name
+					href: '/app/projects/' + project.id + '/environments/' + environment.name
 				}
 			],
 			seo: {
@@ -108,6 +108,17 @@
 		environment.variables?.forEach((v) => (v.hidden = true));
 		variable.hidden = !variable.hidden;
 	}
+
+  function downloadVariables() {
+    const textContent = environment.variables.map(v => v.name+'='+v.value).join('\n');
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(textContent));
+    element.setAttribute('download', '.env.'+environment.name.toLowerCase());
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  }
 </script>
 
 <!-- Create variable modal -->
@@ -161,7 +172,13 @@
 
 <section class="mt-12 flex flex-col gap-4">
 	<div class="flex flex-row items-center justify-between">
-		<h2 class="text-2xl font-medium">Variables</h2>
+    <div class="flex flex-row items-center gap-2">
+      <h2 class="text-2xl font-medium">Variables</h2>
+
+      <Button variant="secondary" onclick={downloadVariables} class="p-2 size-8" title="Download variables">
+        <Download class="size-full" />
+      </Button>
+    </div>
 		<Button onclick={() => (createVariableModalOpen = true)}>
 			<Plus class="size-4" />
 			Create a variable
