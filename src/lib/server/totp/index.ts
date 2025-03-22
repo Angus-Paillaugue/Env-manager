@@ -33,3 +33,10 @@ export const registerTOTP = async (user: User) => {
 		throw new Error('Error generating TOTP');
 	}
 };
+
+export interface UnlinkTOTPRequest {
+	user: User;
+	timestamp: number;
+}
+
+export const unlinkTOTPEmailRequestTokens = new Map<string, UnlinkTOTPRequest>();

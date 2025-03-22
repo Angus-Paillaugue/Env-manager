@@ -1,4 +1,4 @@
-import { isMobile } from "$lib/utils";
+import { isMobile } from '$lib/utils';
 
 // 16px for the page's padding bottom on desktop and 8px on mobile
 // 72px for the navbar's height

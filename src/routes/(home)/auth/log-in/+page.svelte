@@ -72,8 +72,8 @@
 	</form>
 </Modal>
 
-<div class="w-full p-2 flex flex-col items-center justify-center" style="height: {SECTION_HEIGHT};">
-  <Card class="max-w-lg w-full">
+<div class="flex w-full flex-col items-center justify-center p-2" style="height: {SECTION_HEIGHT};">
+	<Card class="w-full max-w-lg">
 		<Card.Heading>Log-in</Card.Heading>
 		<form
 			action="?/logIn"

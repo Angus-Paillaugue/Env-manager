@@ -9,7 +9,7 @@
 	};
 </script>
 
-<div class="p-2 flex flex-col items-center justify-center" style="height: {SECTION_HEIGHT};">
+<div class="flex flex-col items-center justify-center p-2" style="height: {SECTION_HEIGHT};">
 	<Card class="w-full max-w-lg" hoverEffect={true}>
 		<Card.Heading>Success</Card.Heading>
 		<div class="mt-4 flex flex-col">

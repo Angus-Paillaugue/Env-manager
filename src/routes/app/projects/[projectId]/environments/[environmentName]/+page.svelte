@@ -19,7 +19,7 @@
 	}
 
 	let { data, form } = $props();
-  let project = $state(data.project);
+	let project = $state(data.project);
 	let environment = $state<MyEnvironment>({
 		...data.environment,
 		variables: transformEnvVariables(data.environment)
@@ -109,16 +109,19 @@
 		variable.hidden = !variable.hidden;
 	}
 
-  function downloadVariables() {
-    const textContent = environment.variables.map(v => v.name+'='+v.value).join('\n');
-    const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(textContent));
-    element.setAttribute('download', '.env.'+environment.name.toLowerCase());
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-  }
+	function downloadVariables() {
+		const textContent = environment.variables.map((v) => v.name + '=' + v.value).join('\n');
+		const element = document.createElement('a');
+		element.setAttribute(
+			'href',
+			'data:text/plain;charset=utf-8,' + encodeURIComponent(textContent)
+		);
+		element.setAttribute('download', '.env.' + environment.name.toLowerCase());
+		element.style.display = 'none';
+		document.body.appendChild(element);
+		element.click();
+		document.body.removeChild(element);
+	}
 </script>
 
 <!-- Create variable modal -->
@@ -172,13 +175,18 @@
 
 <section class="mt-12 flex flex-col gap-4">
 	<div class="flex flex-row items-center justify-between">
-    <div class="flex flex-row items-center gap-2">
-      <h2 class="text-2xl font-medium">Variables</h2>
+		<div class="flex flex-row items-center gap-2">
+			<h2 class="text-2xl font-medium">Variables</h2>
 
-      <Button variant="secondary" onclick={downloadVariables} class="p-2 size-8" title="Download variables">
-        <Download class="size-full" />
-      </Button>
-    </div>
+			<Button
+				variant="secondary"
+				onclick={downloadVariables}
+				class="size-8 p-2"
+				title="Download variables"
+			>
+				<Download class="size-full" />
+			</Button>
+		</div>
 		<Button onclick={() => (createVariableModalOpen = true)}>
 			<Plus class="size-4" />
 			Create a variable

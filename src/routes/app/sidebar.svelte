@@ -49,7 +49,7 @@
 </div>
 
 <aside
-	class="bg-card rounded-lg border-border hidden w-full max-w-sm shrink-0 flex-col border p-4 transition-transform duration-300 lg:flex"
+	class="bg-card border-border hidden w-full max-w-sm shrink-0 flex-col rounded-lg border p-4 transition-transform duration-300 lg:flex"
 >
 	<div class="flex flex-col gap-1">
 		<Hr text="Projects" href="/app" />
@@ -59,7 +59,9 @@
 					<summary
 						class={cn(
 							'border-background flex cursor-pointer flex-row items-center justify-between rounded border p-2 text-lg font-medium',
-							currentProject?.id === project.id && !currentEnvironment && 'bg-card-hover border-border'
+							currentProject?.id === project.id &&
+								!currentEnvironment &&
+								'bg-card-hover border-border'
 						)}
 					>
 						<a href="/app/projects/{project.id}" class="flex grow flex-row items-center gap-2">
