@@ -74,5 +74,6 @@
 
 body {
 	scrollbar-gutter: stable;
+	overscroll-behavior: none;
 	@apply bg-background text-foreground;
 }

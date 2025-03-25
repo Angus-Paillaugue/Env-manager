@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { Alert, Button, Card, Input, Link } from '$lib/components';
 	import { pageHeading } from '$lib/stores';
-	import { SECTION_HEIGHT } from '../../layout';
+	import { SECTION_HEIGHT } from '$lib/components/home/utils';
 
 	$pageHeading = {
 		title: 'Sign-up',

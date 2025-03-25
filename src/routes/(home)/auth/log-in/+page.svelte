@@ -4,7 +4,7 @@
 	import Link from '$lib/components/Link/Link.svelte';
 	import { handleForm } from '$lib/utils/formHandler';
 	import { pageHeading } from '$lib/stores';
-	import { SECTION_HEIGHT } from '../../layout';
+	import { SECTION_HEIGHT } from '$lib/components/home/utils';
 
 	$pageHeading = {
 		title: 'Log-in',

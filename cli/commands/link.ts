@@ -1,4 +1,3 @@
-import { input } from '@inquirer/prompts';
 import { API } from '../api';
 import { ConfigManager, LinkedProject } from '../config';
 import { PROGRAM_NAME } from '../constants';
@@ -21,15 +20,31 @@ export async function link() {
 			return;
 		}
 
-		const newProjectId = await input({
-			message: 'Enter the project ID to link:'
+		const projects = await API.getProjects();
+		if (!projects || projects.length === 0) {
+			log.error('No projects found');
+			return;
+		}
+
+		const { projectId } = await inquirer.prompt({
+			type: 'list',
+			name: 'projectId',
+			choices: projects.map((project) => ({
+				name: project.name,
+				value: project.id
+			})),
+			message: 'Select the project to link:'
 		});
-		const project = await API.getProject(newProjectId);
+		if (!projectId) {
+			log.error('Project not found');
+			return;
+		}
+		const project = await API.getProject(projectId);
 		if (!project) {
 			log.error('Project not found');
 			return;
 		}
-		const environments = await API.getEnvironments(newProjectId);
+		const environments = await API.getEnvironments(projectId);
 		if (!environments || environments.length === 0) {
 			log.error('No environments found for the selected project');
 			return;
@@ -51,7 +66,7 @@ export async function link() {
 		}
 
 		const newProject: LinkedProject = {
-			projectId: newProjectId,
+			projectId: projectId,
 			absPath: currentDir,
 			environmentId: environment.id
 		};

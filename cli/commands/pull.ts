@@ -6,8 +6,11 @@ import chalk from 'chalk';
 import { log } from '../utils/logger';
 import { checkIfHasLinkedProject } from '../utils/linkedProject';
 
-export async function pull(projectId?: string, environmentId?: string) {
+export async function pull() {
 	if (!(await Auth.isLoggedIn())) return log.error('You must log in first!');
+	const project = checkIfHasLinkedProject(process.cwd());
+	const projectId = project.projectId;
+	const environmentId = project.environmentId;
 
 	if (projectId && environmentId) {
 		const projects = await API.getProjects();

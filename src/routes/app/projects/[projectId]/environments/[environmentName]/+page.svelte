@@ -178,14 +178,16 @@
 		<div class="flex flex-row items-center gap-2">
 			<h2 class="text-2xl font-medium">Variables</h2>
 
-			<Button
-				variant="secondary"
-				onclick={downloadVariables}
-				class="size-8 p-2"
-				title="Download variables"
-			>
-				<Download class="size-full" />
-			</Button>
+			{#if environment?.variables && environment.variables.length > 0}
+				<Button
+					variant="secondary"
+					onclick={downloadVariables}
+					class="size-8 p-2"
+					title="Download variables"
+				>
+					<Download class="size-full" />
+				</Button>
+			{/if}
 		</div>
 		<Button onclick={() => (createVariableModalOpen = true)}>
 			<Plus class="size-4" />

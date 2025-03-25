@@ -5,11 +5,11 @@
 	let { children } = $props();
 </script>
 
-<div class="flex h-svh w-full flex-col-reverse lg:flex-row lg:gap-4 lg:p-4">
+<div class="flex h-svh w-full flex-col-reverse lg:flex-row">
 	<Sidebar />
-	<div class="lg:border-border flex w-full grow flex-col overflow-auto lg:rounded-lg lg:border">
+	<div class="flex w-full grow flex-col overflow-auto">
 		<Header />
-		<main class="max-w-screen-bp mx-auto mt-4 w-full px-2">
+		<main class="max-w-screen-bp mx-auto w-full p-2 lg:p-4">
 			{@render children?.()}
 		</main>
 	</div>

@@ -5,6 +5,13 @@ import { isEmailValid } from '$lib/utils';
 import { redirect, type Actions } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
 
+export const load = async ({ locals, url }) => {
+	if (locals.user) {
+		const redirectUrl = url.searchParams.get('redirect') || '/app';
+		throw redirect(302, redirectUrl);
+	}
+};
+
 export const actions: Actions = {
 	async signUp({ cookies, request }) {
 		const formData = Object.fromEntries(await request.formData());

@@ -4,6 +4,8 @@
 	import { Menu } from 'lucide-svelte';
 	import { slide } from 'svelte/transition';
 	import type { Variant as ButtonVariant } from '$lib/components/Button/Button.svelte';
+	import { onMount } from 'svelte';
+	import { cn, isMobile } from '$lib/utils';
 
 	$pageHeading = {
 		title: 'Home',
@@ -11,6 +13,8 @@
 	};
 
 	let mobileNavOpen = $state(false);
+	let scrollDirection = $state<'up' | 'down'>('up');
+	let previousScroll = $state(0);
 
 	interface NavItem {
 		main: {
@@ -35,6 +39,32 @@
 			{ label: 'Sign Up', href: '/auth/sign-up', variant: 'primary' }
 		]
 	};
+
+	function handleScroll(e: Event) {
+		const target = e.target as HTMLElement;
+		const currentScroll = target.scrollTop;
+
+		// Check if there is enough scroll to retract navbar without causing scroll stutter
+		const navHeight = 72;
+		const spaceLeft = target.scrollHeight - target.clientHeight - currentScroll;
+		if (spaceLeft > navHeight) {
+			scrollDirection = currentScroll > previousScroll ? 'down' : 'up';
+		}
+		previousScroll = currentScroll;
+	}
+
+	onMount(() => {
+		const main = document.querySelector('main');
+
+		if (main) {
+			main.addEventListener('scroll', handleScroll);
+		}
+		return () => {
+			if (main) {
+				main.removeEventListener('scroll', handleScroll);
+			}
+		};
+	});
 </script>
 
 <Modal.Backdrop bind:open={mobileNavOpen} />
@@ -58,7 +88,12 @@
 	</div>
 {/if}
 
-<nav class="flex h-18 w-full shrink-0 flex-row items-center justify-between px-2 lg:px-4">
+<nav
+	class={cn(
+		'flex w-full shrink-0 flex-row items-center justify-between overflow-hidden px-2 transition-all duration-300 lg:px-4',
+		!isMobile.current && scrollDirection === 'up' ? 'h-18' : 'mb-2 h-0 lg:mb-4'
+	)}
+>
 	<div class="flex flex-row items-center justify-between gap-4 max-lg:grow">
 		<a href="/">ENV-MANAGER</a>
 		<Button

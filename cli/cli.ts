@@ -9,6 +9,7 @@ import { config } from './commands/config';
 import { link } from './commands/link';
 import { unlink } from './commands/unlink';
 import { changeEnv } from './commands/changeEnv';
+import { status } from './commands/status';
 
 const program = new Command();
 
@@ -41,6 +42,8 @@ program
 // Config
 config(program);
 
+// Status
+program.command('status').description('Get the status of the current project').action(status);
 program.version('1.0.0');
 
 program.parse();

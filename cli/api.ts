@@ -26,6 +26,9 @@ export class API {
 			});
 			return response.data.project;
 		} catch (error) {
+			if (error?.response?.status === 404) {
+				throw new Error('API is not joinable');
+			}
 			throw new Error(error.response?.data?.error || error.message);
 		}
 	}
