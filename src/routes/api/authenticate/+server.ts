@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import { auth, generateAccessToken, tokenOptions } from '$lib/server/auth';
 import type { User } from '$lib/types';
 import { validateTOTP } from '$lib/server/totp';
+import { Logger } from '$lib/utils/logger';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
 	const bearer = request.headers.get('Authorization');
@@ -19,7 +20,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 				return json({ error: 'You must log in first!' }, { status: 401 });
 			}
 		} catch (error) {
-			console.error(error);
+			Logger.error(error);
 			return json(
 				{ error: error instanceof Error ? error.message : 'An error occurred!' },
 				{ status: 500 }
@@ -57,7 +58,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 			// If password is incorrect, return error
 			if (!compare) return json({ error: 'Incorrect password!' }, { status: 400 });
 		} catch (error) {
-			console.error(error);
+			Logger.error(error);
 			return json(
 				{ error: error instanceof Error ? error.message : 'An error occurred!' },
 				{ status: 500 }
@@ -80,7 +81,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 					return json({ error: 'Invalid TOTP code.' }, { status: 400 });
 				}
 			} catch (error) {
-				console.error('Error validating TOTP:', error);
+				Logger.error('Error validating TOTP:', error);
 				return json({ error: 'Error validating TOTP' }, { status: 500 });
 			}
 		}

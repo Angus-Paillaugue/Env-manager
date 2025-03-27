@@ -3,6 +3,7 @@ import sharp from 'sharp';
 import pool from '.';
 import { writeFile, unlink } from 'fs/promises';
 import { PWD } from '$env/static/private';
+import { Logger } from '$lib/utils/logger';
 
 export class UserDAO {
 	static UPLOAD_DIR = PWD;
@@ -90,7 +91,7 @@ export class UserDAO {
 			try {
 				await unlink(oldPath);
 			} catch (error) {
-				console.error('Error deleting old profile picture:', error);
+				Logger.error('Error deleting old profile picture:', error);
 			}
 		}
 		// Compress and resize the new image

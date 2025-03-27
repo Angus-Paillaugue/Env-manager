@@ -69,7 +69,7 @@
 		handleForm(form, {
 			onSuccess: (body, action) => {
 				switch (action) {
-					case 'createVariable':
+					case 'createVariable': {
 						const newEnv = body as unknown as Environment;
 						environment = {
 							...newEnv,
@@ -77,11 +77,13 @@
 						};
 						createVariableModalOpen = false;
 						break;
-					case 'deleteVariable':
+					}
+					case 'deleteVariable': {
 						environment.variables = environment.variables.filter(
 							(v) => v.id !== (body as Variable['id'])
 						);
 						break;
+					}
 				}
 			},
 			onError: (error, action) => {

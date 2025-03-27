@@ -37,7 +37,7 @@ export const actions: Actions = {
 			}
 		}
 		if (!res.ok) {
-			return ErrorHandling.throwActionError(res.status, 'logIn', data.error);
+			return ErrorHandling.throwActionError(res.status, 'logIn', data.error, true);
 		}
 		cookies.set('token', data.token, tokenOptions);
 

@@ -1,6 +1,7 @@
 import { auth } from '$lib/server/auth';
 import { redirect } from '@sveltejs/kit';
 import { urlStartsWith } from '$lib/utils';
+import { Logger } from '$lib/utils/logger';
 
 const NEED_AUTH_ROUTES = ['/app', '/api/project'];
 
@@ -22,7 +23,7 @@ export const handle = async ({ event, resolve }) => {
 				delete locals.user;
 			}
 		} catch (error) {
-			console.error('Error verifying token:', error);
+			Logger.error('Error verifying token:', error);
 			delete locals.user;
 			cookies.delete('token', { path: '/' });
 		}

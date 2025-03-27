@@ -26,7 +26,7 @@ export const actions: Actions = {
 			const updatedUser = await UserDAO.updateUser(user);
 			return ErrorHandling.returnSuccess('saveGeneral', updatedUser);
 		} catch (error) {
-			return ErrorHandling.throwActionError(500, 'saveGeneral', error);
+			return ErrorHandling.throwActionError(500, 'saveGeneral', error, true);
 		}
 	},
 	async updateProfilePicture({ request, locals }) {
@@ -40,7 +40,7 @@ export const actions: Actions = {
 			const path = await UserDAO.uploadProfilePicture(user.id, profilePicture);
 			return ErrorHandling.returnSuccess('updateProfilePicture', path);
 		} catch (error) {
-			return ErrorHandling.throwActionError(500, 'updateProfilePicture', error);
+			return ErrorHandling.throwActionError(500, 'updateProfilePicture', error, true);
 		}
 	},
 	async deleteAccount({ locals }) {
@@ -49,7 +49,7 @@ export const actions: Actions = {
 		try {
 			await UserDAO.deleteUser(user);
 		} catch (error) {
-			return ErrorHandling.throwActionError(500, 'deleteAccount', error);
+			return ErrorHandling.throwActionError(500, 'deleteAccount', error, true);
 		}
 
 		throw redirect(303, '/log-out');
@@ -70,7 +70,7 @@ export const actions: Actions = {
 				await UserDAO.unlinkTOTP(user.id);
 				return ErrorHandling.returnSuccess('unlinkTOTP', { success: true, method });
 			} catch (error) {
-				return ErrorHandling.throwActionError(500, 'unlinkTOTP', error);
+				return ErrorHandling.throwActionError(500, 'unlinkTOTP', error, true);
 			}
 		} else {
 			// Unused section because we do not provide a SMTP server yet
@@ -88,7 +88,7 @@ export const actions: Actions = {
 				const { success } = await sendMail({ to: user.email, subject: 'Unlink TOTP', body });
 				return ErrorHandling.returnSuccess('unlinkTOTP', { success, method });
 			} catch (error) {
-				return ErrorHandling.throwActionError(500, 'unlinkTOTP', error);
+				return ErrorHandling.throwActionError(500, 'unlinkTOTP', error, true);
 			}
 		}
 	},
@@ -106,7 +106,7 @@ export const actions: Actions = {
 			await UserDAO.setTOTPSecret(user.id, TOTPsecret);
 			return ErrorHandling.returnSuccess('setUpTOTP', { success });
 		} catch (error) {
-			return ErrorHandling.throwActionError(500, 'setUpTOTP', error);
+			return ErrorHandling.throwActionError(500, 'setUpTOTP', error, true);
 		}
 	},
 	async updatePassword({ locals, request }) {
@@ -143,7 +143,7 @@ export const actions: Actions = {
 
 			return ErrorHandling.returnSuccess('updatePassword', { success: true });
 		} catch (error) {
-			return ErrorHandling.throwActionError(500, 'updatePassword', error);
+			return ErrorHandling.throwActionError(500, 'updatePassword', error, true);
 		}
 	}
 };

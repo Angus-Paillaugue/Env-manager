@@ -22,7 +22,6 @@
 	let currentLine = $state<string>('');
 	let cursor = $state<boolean>(true);
 	let typingComplete = $state<boolean>(false);
-	let typingCatCommand = $state<boolean>(false);
 	let animationActive = $state<boolean>(false);
 	let typingInterval = $state<ReturnType<typeof setInterval> | null>(null);
 	let timeoutIds = $state<ReturnType<typeof setTimeout>[]>([]);
@@ -136,11 +135,8 @@
 		return new Promise(async (resolve) => {
 			if (!animationActive) return resolve();
 
-			typingCatCommand = true;
 			await typeCommand(catCommand);
 			if (!animationActive) return resolve();
-
-			typingCatCommand = false;
 
 			// Display the env file content as if cat command output
 			envFileLines.forEach((line) => {
@@ -160,7 +156,6 @@
 		currentLine = '';
 		cursor = true;
 		typingComplete = false;
-		typingCatCommand = false;
 		animationActive = true;
 
 		await typeCommand(commandToType);
@@ -197,7 +192,6 @@
 		currentLine = '';
 		cursor = true;
 		typingComplete = false;
-		typingCatCommand = false;
 	}
 
 	// Keep track of the last value to prevent redundant calls

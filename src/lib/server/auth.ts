@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { env } from '$env/dynamic/private';
 import { UserDAO } from './db/user';
 import type { User } from '$lib/types';
+import { Logger } from '$lib/utils/logger';
 
 /**
  * Authenticates a user based on the provided JWT token.
@@ -17,12 +18,12 @@ async function auth(token: string): Promise<User | null> {
 					if (!user) return reject('User not found');
 					resolve(user);
 				} catch (error) {
-					console.error('Error finding user:', error);
+					Logger.error('Error finding user:', error);
 					reject('User not found');
 				}
 			});
 		} catch (error) {
-			console.error('Error verifying token:', error);
+			Logger.error('Error verifying token:', error);
 			reject({ error: 'Error verifying token' });
 		}
 	});
