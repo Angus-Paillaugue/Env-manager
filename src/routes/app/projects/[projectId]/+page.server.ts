@@ -38,7 +38,7 @@ export const actions: Actions = {
 
 			environment = data.environment as Environment;
 		} catch (error) {
-			return ErrorHandling.throwActionError(400, 'createEnvironment', error);
+			return ErrorHandling.throwActionError(400, 'createEnvironment', error, true);
 		}
 		throw redirect(303, `/app/projects/${params.projectId}/environments/${environment.name}`);
 	},
@@ -62,7 +62,7 @@ export const actions: Actions = {
 				throw new Error(data.error || 'Failed to delete environment');
 			}
 		} catch (error) {
-			return ErrorHandling.throwActionError(400, 'deleteEnvironment', error);
+			return ErrorHandling.throwActionError(400, 'deleteEnvironment', error, true);
 		}
 
 		return ErrorHandling.returnSuccess('deleteEnvironment', environmentId);
@@ -95,7 +95,7 @@ export const actions: Actions = {
 
 			return ErrorHandling.returnSuccess('editEnvironment', data);
 		} catch (error) {
-			return ErrorHandling.throwActionError(400, 'editEnvironment', error);
+			return ErrorHandling.throwActionError(400, 'editEnvironment', error, true);
 		}
 	},
 	async addMember({ request, params, fetch }) {
@@ -121,7 +121,7 @@ export const actions: Actions = {
 
 			return ErrorHandling.returnSuccess('addMember', data);
 		} catch (error) {
-			return ErrorHandling.throwActionError(400, 'addMember', error);
+			return ErrorHandling.throwActionError(400, 'addMember', error, true);
 		}
 	},
 	async removeMember({ request, params, fetch }) {
@@ -146,7 +146,7 @@ export const actions: Actions = {
 
 			return ErrorHandling.returnSuccess('removeMember', data);
 		} catch (error) {
-			return ErrorHandling.throwActionError(400, 'removeMember', error);
+			return ErrorHandling.throwActionError(400, 'removeMember', error, true);
 		}
 	},
 	async saveSettings({ request, params, fetch }) {
@@ -164,7 +164,7 @@ export const actions: Actions = {
 			const project = await res.json();
 			return ErrorHandling.returnSuccess('saveSettings', project);
 		} catch (error) {
-			return ErrorHandling.throwActionError(400, 'saveSettings', error);
+			return ErrorHandling.throwActionError(400, 'saveSettings', error, true);
 		}
 	},
 	async deleteProject({ params, fetch }) {
@@ -177,7 +177,7 @@ export const actions: Actions = {
 				throw new Error(errorMsg.error || res.statusText);
 			}
 		} catch (error) {
-			return ErrorHandling.throwActionError(400, 'deleteProject', error);
+			return ErrorHandling.throwActionError(400, 'deleteProject', error, true);
 		}
 
 		throw redirect(303, '/app');

@@ -4,7 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import Spinner from '../Spinner';
 
-	type Variant = 'primary' | 'secondary' | 'danger';
+	export type Variant = 'primary' | 'secondary' | 'danger';
 
 	interface MyProps {
 		loading?: boolean;

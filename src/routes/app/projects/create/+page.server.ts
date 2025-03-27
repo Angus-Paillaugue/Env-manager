@@ -30,7 +30,7 @@ export const actions: Actions = {
 			}
 			project = data.project as Project;
 		} catch (error) {
-			return ErrorHandling.throwActionError(400, 'create', error);
+			return ErrorHandling.throwActionError(400, 'create', error, true);
 		}
 
 		if (project) {
@@ -39,7 +39,8 @@ export const actions: Actions = {
 			return ErrorHandling.throwActionError(
 				400,
 				'create',
-				'An error occurred while creating the project!'
+				'An error occurred while creating the project!',
+				true
 			);
 		}
 	}

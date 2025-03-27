@@ -2,10 +2,12 @@ import { UserDAO } from '$lib/server/db/user';
 import { ErrorHandling } from '$lib/server/errorHandling';
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
-import { validateTOTP } from '$lib/server/totp';
+import { unlinkTOTPEmailRequestTokens, validateTOTP } from '$lib/server/totp';
 import bcrypt from 'bcryptjs';
+import { sendMail } from '$lib/server/mail';
+import { randomUUID } from 'crypto';
 
-// TODO: This page still use direct DAO calls instead od calling the internal API
+// TODO: This page still use direct DAO calls instead of calling the internal API
 // We should move it sometime soon...
 
 export const actions: Actions = {
@@ -24,7 +26,7 @@ export const actions: Actions = {
 			const updatedUser = await UserDAO.updateUser(user);
 			return ErrorHandling.returnSuccess('saveGeneral', updatedUser);
 		} catch (error) {
-			return ErrorHandling.throwActionError(500, 'saveGeneral', error);
+			return ErrorHandling.throwActionError(500, 'saveGeneral', error, true);
 		}
 	},
 	async updateProfilePicture({ request, locals }) {
@@ -38,7 +40,7 @@ export const actions: Actions = {
 			const path = await UserDAO.uploadProfilePicture(user.id, profilePicture);
 			return ErrorHandling.returnSuccess('updateProfilePicture', path);
 		} catch (error) {
-			return ErrorHandling.throwActionError(500, 'updateProfilePicture', error);
+			return ErrorHandling.throwActionError(500, 'updateProfilePicture', error, true);
 		}
 	},
 	async deleteAccount({ locals }) {
@@ -47,18 +49,47 @@ export const actions: Actions = {
 		try {
 			await UserDAO.deleteUser(user);
 		} catch (error) {
-			return ErrorHandling.throwActionError(500, 'deleteAccount', error);
+			return ErrorHandling.throwActionError(500, 'deleteAccount', error, true);
 		}
 
 		throw redirect(303, '/log-out');
 	},
-	async unlinkTOTP({ locals }) {
+	async unlinkTOTP({ locals, request, url }) {
 		const { user } = locals;
-		try {
-			await UserDAO.unlinkTOTP(user.id);
-			return ErrorHandling.returnSuccess('unlinkTOTP', { success: true });
-		} catch (error) {
-			return ErrorHandling.throwActionError(500, 'unlinkTOTP', error);
+		const formData = Object.fromEntries(await request.formData());
+		const { totp, method } = formData as {
+			totp: string;
+			method: 'TOTP' | 'mail';
+		};
+
+		if (method === 'TOTP') {
+			try {
+				if (!user.totpSecret) throw new Error('User does not have TOTP enabled');
+				const success = await validateTOTP(user.totpSecret, totp);
+				if (!success) throw new Error('Invalid TOTP code');
+				await UserDAO.unlinkTOTP(user.id);
+				return ErrorHandling.returnSuccess('unlinkTOTP', { success: true, method });
+			} catch (error) {
+				return ErrorHandling.throwActionError(500, 'unlinkTOTP', error, true);
+			}
+		} else {
+			// Unused section because we do not provide a SMTP server yet
+			const token = randomUUID();
+			unlinkTOTPEmailRequestTokens.set(token, { user, timestamp: Date.now() });
+			const confirmEmail = url.origin + '/app/account/settings/totp/unlink?token=' + token;
+			const body = `
+        <p>Dear ${user.username},</p>
+        <p>We have received a request to unlink your TOTP from your account.</p>
+        <p>If you did not make this request, please contact us immediately.</p>
+        <p>Thank you.</p>
+        <p>Please confirm your request by clicking <a href="${confirmEmail}">here</a>.</p>
+      `;
+			try {
+				const { success } = await sendMail({ to: user.email, subject: 'Unlink TOTP', body });
+				return ErrorHandling.returnSuccess('unlinkTOTP', { success, method });
+			} catch (error) {
+				return ErrorHandling.throwActionError(500, 'unlinkTOTP', error, true);
+			}
 		}
 	},
 	async setUpTOTP({ locals, request }) {
@@ -75,7 +106,7 @@ export const actions: Actions = {
 			await UserDAO.setTOTPSecret(user.id, TOTPsecret);
 			return ErrorHandling.returnSuccess('setUpTOTP', { success });
 		} catch (error) {
-			return ErrorHandling.throwActionError(500, 'setUpTOTP', error);
+			return ErrorHandling.throwActionError(500, 'setUpTOTP', error, true);
 		}
 	},
 	async updatePassword({ locals, request }) {
@@ -112,7 +143,7 @@ export const actions: Actions = {
 
 			return ErrorHandling.returnSuccess('updatePassword', { success: true });
 		} catch (error) {
-			return ErrorHandling.throwActionError(500, 'updatePassword', error);
+			return ErrorHandling.throwActionError(500, 'updatePassword', error, true);
 		}
 	}
 };

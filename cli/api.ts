@@ -17,6 +17,22 @@ export class API {
 		}
 	}
 
+	static async getProject(projectId: Project['id']) {
+		const config = ConfigManager.getConfig();
+		try {
+			const token = await Auth.getToken();
+			const response = await axios.get(`${config.apiUrl}/projects/${projectId}`, {
+				headers: { Authorization: `Bearer ${token}` }
+			});
+			return response.data.project;
+		} catch (error) {
+			if (error?.response?.status === 404) {
+				throw new Error('API is not joinable');
+			}
+			throw new Error(error.response?.data?.error || error.message);
+		}
+	}
+
 	static async getEnvironments(projectId: Project['id']) {
 		const config = ConfigManager.getConfig();
 		try {
@@ -58,7 +74,7 @@ export class API {
 		const config = ConfigManager.getConfig();
 		try {
 			const token = await Auth.getToken();
-			const response = await axios.patch(
+			const response = await axios.put(
 				`${config.apiUrl}/projects/${projectId}/environments/${environmentName}/variables`,
 				{ variables },
 				{

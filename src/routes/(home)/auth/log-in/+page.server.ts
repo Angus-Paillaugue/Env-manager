@@ -37,7 +37,7 @@ export const actions: Actions = {
 			}
 		}
 		if (!res.ok) {
-			return ErrorHandling.throwActionError(res.status, 'logIn', data.error);
+			return ErrorHandling.throwActionError(res.status, 'logIn', data.error, true);
 		}
 		cookies.set('token', data.token, tokenOptions);
 
@@ -62,7 +62,7 @@ export const actions: Actions = {
 		const totpData = await totpRes.json();
 
 		if (!totpRes.ok) {
-			return ErrorHandling.throwActionError(totpRes.status, 'confirmTOTP', totpData);
+			return ErrorHandling.throwActionError(totpRes.status, 'confirmTOTP', totpData.error);
 		}
 		cookies.set('token', totpData.token, tokenOptions);
 

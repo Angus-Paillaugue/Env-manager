@@ -4,6 +4,7 @@ import { EnvironmentDAO } from '$lib/server/db/environment';
 import type { Variable } from '$lib/types';
 import { VariableDAO } from '$lib/server/db/variable';
 
+// Get all variables of an environment
 export const GET: RequestHandler = async ({ params, locals, url, fetch }) => {
 	const { user } = locals;
 	const environment = await EnvironmentDAO.getEnvironmentByName(
@@ -24,6 +25,7 @@ export const GET: RequestHandler = async ({ params, locals, url, fetch }) => {
 	return json({ variables });
 };
 
+// Delete a variable
 export const DELETE: RequestHandler = async ({ locals, request }) => {
 	const { user } = locals;
 	const { id } = await request.json();
@@ -36,6 +38,7 @@ export const DELETE: RequestHandler = async ({ locals, request }) => {
 	}
 };
 
+// Create variables that does not exist and overwrite the ones that already exist
 export const POST: RequestHandler = async ({ params, locals, request }) => {
 	const { user } = locals;
 	const environment = await EnvironmentDAO.getEnvironmentByName(
@@ -67,13 +70,35 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
 	}
 };
 
-export const PUT: RequestHandler = async ({ locals, request }) => {
+// Update a variable
+export const PATCH: RequestHandler = async ({ locals, request }) => {
 	const { user } = locals;
 	const { id, name, value } = await request.json();
 
 	try {
 		const newVar = await VariableDAO.editVariable(user.id, id, name, value);
 		return json({ message: 'Variable updated', variable: newVar });
+	} catch (error) {
+		return json({ error: error instanceof Error ? error.message : error }, { status: 400 });
+	}
+};
+
+// Replace all of a project's variables with the given ones
+export const PUT: RequestHandler = async ({ locals, request, params }) => {
+	const { user } = locals;
+	const { variables } = await request.json();
+
+	try {
+		const environment = await EnvironmentDAO.getEnvironmentByName(
+			user.id,
+			params.projectId,
+			params.environementName
+		);
+		if (!environment) return json({ message: 'Environment not found' }, { status: 404 });
+
+		await VariableDAO.replaceVariables(user.id, environment.id, variables);
+
+		return json({ message: 'Variables updated' });
 	} catch (error) {
 		return json({ error: error instanceof Error ? error.message : error }, { status: 400 });
 	}

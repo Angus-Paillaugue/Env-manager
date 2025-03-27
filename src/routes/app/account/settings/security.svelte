@@ -14,8 +14,8 @@
 		Fingerprint,
 		Pen,
 		Shield,
-		ShieldBan,
-		Trash2
+		ShieldBan
+		// Trash2
 	} from 'lucide-svelte';
 	import { fade, slide } from 'svelte/transition';
 	import { copyToClipboard } from '$lib/utils';
@@ -27,17 +27,23 @@
 	let TOTPsecret = $state('');
 	let isChangingPassword = $state(false);
 	let manualTOPTKeyVisible = $state(false);
+	let unlinkTOTPSecondStepModalOpen = $state(false);
+	// let unlinkTOTPSecondStepSuccessModalOpen = $state(false);
 
 	$effect(() => {
 		handleForm(page.form, {
 			onSuccess: (body, action) => {
 				switch (action) {
 					case 'unlinkTOTP': {
-						const data = body as { success: boolean };
+						const data = body as { success: boolean; method: 'mail' | 'TOTP' };
 						if (data.success) {
 							user.totpEnabled = false;
 							user.totpSecret = null;
+							unlinkTOTPSecondStepModalOpen = false;
 							setUpTOTPModalOpen = false;
+							// if (data.method === 'mail') {
+							// 	unlinkTOTPSecondStepSuccessModalOpen = true;
+							// }
 						}
 						break;
 					}
@@ -126,6 +132,91 @@
 	</div>
 </Card>
 
+<!-- Unused modal because we do not provide a SMTP server yet -->
+<!-- <Modal bind:open={unlinkTOTPSecondStepSuccessModalOpen}>
+  <Modal.Heading>
+    <Modal.Title>Success</Modal.Title>
+    <Modal.Description>Go check your main</Modal.Description>
+  </Modal.Heading>
+
+  <p>
+    We have sent you an email with instructions to unlink 2FA. Please check your inbox.
+  </p>
+
+  <Modal.Actions>
+    <Button onclick={() => (unlinkTOTPSecondStepSuccessModalOpen = false)}>
+      <CheckCheck class="size-4" />
+      Close
+    </Button>
+  </Modal.Actions>
+</Modal> -->
+
+<!-- Set up/Unlink 2FA -->
+<Modal bind:open={unlinkTOTPSecondStepModalOpen}>
+	<Modal.Heading>
+		<Modal.Title>Unlink 2FA</Modal.Title>
+	</Modal.Heading>
+
+	<form
+		action="?/unlinkTOTP"
+		class="mt-6 flex flex-col gap-4"
+		method="POST"
+		use:enhance={(e) => {
+			e.formData.append('TOTPsecret', TOTPsecret);
+			e.formData.append('method', 'TOTP');
+			isSettingUpTOTP = true;
+			return async ({ update }) => {
+				isSettingUpTOTP = false;
+				update({ reset: false });
+			};
+		}}
+	>
+		<p>To unlink 2FA, please enter the code from your authenticator app.</p>
+		<Input.TOTP id="totp" class={{ container: 'mx-auto w-fit' }} />
+		{#if page.form && page.form.ok == false && page.form.action === 'unlinkTOTP'}
+			<Alert.Danger>
+				{page.form.error}
+			</Alert.Danger>
+		{/if}
+		<Modal.Actions>
+			<Button
+				variant="secondary"
+				type="button"
+				onclick={() => (unlinkTOTPSecondStepModalOpen = false)}>Cancel</Button
+			>
+			<Button loading={isSettingUpTOTP}>
+				Disable
+				<ArrowRight class="size-4" />
+			</Button>
+		</Modal.Actions>
+	</form>
+
+	<!-- Unused section because we do not provide a SMTP server yet -->
+	<!-- <Hr text="Or" />
+  <p>
+    If you have lost access to your authenticator app, you can unlink 2FA by verifying your email.
+  </p>
+
+  <form action="?/unlinkTOTP" class="mt-6 flex flex-col gap-4" method="POST" use:enhance={(e) => {
+    e.formData.append('method', 'mail');
+    isSettingUpTOTP = true;
+    return async ({ update }) => {
+      isSettingUpTOTP = false;
+      update({ reset: false });
+    };
+  }}>
+    {#if page.form && page.form.ok == false && page.form.action === 'unlinkTOTP'}
+      <Alert.Danger>
+        {page.form.error}
+      </Alert.Danger>
+    {/if}
+    <Button variant="primary" onclick={() => (unlinkTOTPSecondStepModalOpen = false)}>
+      Send verification email
+      <ArrowRight class="size-4" />
+    </Button>
+  </form> -->
+</Modal>
+
 <!-- Set up/Unlink 2FA -->
 <Modal bind:open={setUpTOTPModalOpen}>
 	<Modal.Heading>
@@ -136,28 +227,21 @@
 	{#if user.totpEnabled}
 		<p>2FA is already set up for your account. You can disable it by clicking the button below.</p>
 
-		<form
-			action="?/unlinkTOTP"
-			class="mt-6 flex flex-col gap-4"
-			method="POST"
-			use:enhance={() => {
-				isSettingUpTOTP = true;
-				return async ({ update }) => {
-					isSettingUpTOTP = false;
-					update({ reset: false });
-				};
-			}}
-		>
-			<Modal.Actions>
-				<Button variant="secondary" type="button" onclick={() => (setUpTOTPModalOpen = false)}
-					>Close</Button
-				>
-				<Button loading={isSettingUpTOTP} variant="danger">
-					<Trash2 class="size-4" />
-					Unlink 2FA
-				</Button>
-			</Modal.Actions>
-		</form>
+		<Modal.Actions>
+			<Button variant="secondary" type="button" onclick={() => (setUpTOTPModalOpen = false)}
+				>Close</Button
+			>
+			<Button
+				variant="danger"
+				onclick={() => {
+					unlinkTOTPSecondStepModalOpen = true;
+					setUpTOTPModalOpen = false;
+				}}
+			>
+				Disable
+				<ArrowRight class="size-4" />
+			</Button>
+		</Modal.Actions>
 	{:else}
 		<!-- Set up TOTP -->
 		<p>To enhance your account security, please set up Time-based One-Time Password (2FA).</p>

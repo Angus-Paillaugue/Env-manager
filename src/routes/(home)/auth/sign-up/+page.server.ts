@@ -2,8 +2,16 @@ import { generateAccessToken, tokenOptions } from '$lib/server/auth';
 import { UserDAO } from '$lib/server/db/user';
 import { ErrorHandling } from '$lib/server/errorHandling';
 import { isEmailValid } from '$lib/utils';
+import { Logger } from '$lib/utils/logger';
 import { redirect, type Actions } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
+
+export const load = async ({ locals, url }) => {
+	if (locals.user) {
+		const redirectUrl = url.searchParams.get('redirect') || '/app';
+		throw redirect(302, redirectUrl);
+	}
+};
 
 export const actions: Actions = {
 	async signUp({ cookies, request }) {
@@ -37,8 +45,8 @@ export const actions: Actions = {
 
 			cookies.set('token', generateAccessToken(user.id), tokenOptions);
 		} catch (error) {
-			console.error(error);
-			return ErrorHandling.throwActionError(400, 'signUp', error);
+			Logger.error(error);
+			return ErrorHandling.throwActionError(400, 'signUp', error, true);
 		}
 
 		throw redirect(303, '/app');

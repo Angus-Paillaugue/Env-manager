@@ -49,7 +49,7 @@
 </div>
 
 <aside
-	class="bg-background border-border hidden h-full w-full max-w-sm shrink-0 flex-col border-r p-4 transition-transform duration-300 lg:flex"
+	class="bg-card border-border hidden w-full max-w-sm shrink-0 flex-col border-r p-4 transition-transform duration-300 lg:flex"
 >
 	<div class="flex flex-col gap-1">
 		<Hr text="Projects" href="/app" />
@@ -58,8 +58,10 @@
 				<details open={currentProject?.id === project.id} class="group">
 					<summary
 						class={cn(
-							'border-background flex cursor-pointer flex-row items-center justify-between rounded border p-2 text-lg font-medium',
-							currentProject?.id === project.id && !currentEnvironment && 'bg-card border-border'
+							'flex cursor-pointer flex-row items-center justify-between rounded border border-transparent p-2 text-lg font-medium',
+							currentProject?.id === project.id &&
+								!currentEnvironment &&
+								'bg-card-hover border-border'
 						)}
 					>
 						<a href="/app/projects/{project.id}" class="flex grow flex-row items-center gap-2">
@@ -82,8 +84,8 @@
 							<a
 								href="/app/projects/{project.id}/environments/{environment.name}"
 								class={cn(
-									'border-background flex flex-row items-center gap-2 rounded border p-2 text-base font-normal',
-									currentEnvironment?.id === environment.id && 'bg-card border-border'
+									'flex flex-row items-center gap-2 rounded border border-transparent p-2 text-base font-normal',
+									currentEnvironment?.id === environment.id && 'bg-card-hover border-border'
 								)}
 							>
 								<Code class="size-4" />
@@ -95,7 +97,7 @@
 			{:else}
 				<a
 					href="/app/projects/{project.id}"
-					class="border-background flex cursor-pointer flex-row items-center justify-between rounded border p-2 text-lg font-medium"
+					class="flex cursor-pointer flex-row items-center justify-between rounded p-2 text-lg font-medium"
 				>
 					{project.name}
 				</a>

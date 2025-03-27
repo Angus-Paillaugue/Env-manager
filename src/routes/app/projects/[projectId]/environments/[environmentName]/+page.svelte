@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { page } from '$app/state';
 	import { Alert, Button, Card, Hr, Input, Modal } from '$lib/components';
 	import { pageHeading } from '$lib/stores';
 	import type { Environment, Variable } from '$lib/types';
 	import { cn, copyToClipboard } from '$lib/utils';
-	import { Eye, EyeClosed, Key, Plus } from 'lucide-svelte';
+	import { Download, Eye, EyeClosed, Key, Plus } from 'lucide-svelte';
 	import { fade, slide } from 'svelte/transition';
 	import Action from './action.svelte';
 	import { flip } from 'svelte/animate';
@@ -20,6 +19,7 @@
 	}
 
 	let { data, form } = $props();
+	let project = $state(data.project);
 	let environment = $state<MyEnvironment>({
 		...data.environment,
 		variables: transformEnvVariables(data.environment)
@@ -32,13 +32,13 @@
 	$effect(() => {
 		pageHeading.set({
 			title: environment.name + ' environment',
-			description: `Manage variables in the <b>${environment.name}</b> environment of the <b>${page.data.project.name}</b> project`,
+			description: `Manage variables in the <b>${environment.name}</b> environment of the <b>${project.name}</b> project`,
 			breadcrumbs: [
 				{ title: 'Projects', href: '/app' },
-				{ title: page.data.project.name, href: '/app/projects/' + page.data.project.id },
+				{ title: project.name, href: '/app/projects/' + project.id },
 				{
 					title: environment.name,
-					href: '/app/projects/' + page.data.project.id + '/environments/' + environment.name
+					href: '/app/projects/' + project.id + '/environments/' + environment.name
 				}
 			],
 			seo: {
@@ -69,7 +69,7 @@
 		handleForm(form, {
 			onSuccess: (body, action) => {
 				switch (action) {
-					case 'createVariable':
+					case 'createVariable': {
 						const newEnv = body as unknown as Environment;
 						environment = {
 							...newEnv,
@@ -77,11 +77,13 @@
 						};
 						createVariableModalOpen = false;
 						break;
-					case 'deleteVariable':
+					}
+					case 'deleteVariable': {
 						environment.variables = environment.variables.filter(
 							(v) => v.id !== (body as Variable['id'])
 						);
 						break;
+					}
 				}
 			},
 			onError: (error, action) => {
@@ -107,6 +109,20 @@
 		}
 		environment.variables?.forEach((v) => (v.hidden = true));
 		variable.hidden = !variable.hidden;
+	}
+
+	function downloadVariables() {
+		const textContent = environment.variables.map((v) => v.name + '=' + v.value).join('\n');
+		const element = document.createElement('a');
+		element.setAttribute(
+			'href',
+			'data:text/plain;charset=utf-8,' + encodeURIComponent(textContent)
+		);
+		element.setAttribute('download', '.env.' + environment.name.toLowerCase());
+		element.style.display = 'none';
+		document.body.appendChild(element);
+		element.click();
+		document.body.removeChild(element);
 	}
 </script>
 
@@ -161,7 +177,20 @@
 
 <section class="mt-12 flex flex-col gap-4">
 	<div class="flex flex-row items-center justify-between">
-		<h2 class="text-2xl font-medium">Variables</h2>
+		<div class="flex flex-row items-center gap-2">
+			<h2 class="text-2xl font-medium">Variables</h2>
+
+			{#if environment?.variables && environment.variables.length > 0}
+				<Button
+					variant="secondary"
+					onclick={downloadVariables}
+					class="size-8 p-2"
+					title="Download variables"
+				>
+					<Download class="size-full" />
+				</Button>
+			{/if}
+		</div>
 		<Button onclick={() => (createVariableModalOpen = true)}>
 			<Plus class="size-4" />
 			Create a variable

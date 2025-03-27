@@ -91,4 +91,41 @@ export class VariableDAO {
 		}
 		return VariableDAO.convertToVariable(result.rows[0]);
 	}
+
+	static async replaceVariables(
+		userId: User['id'],
+		environmentId: Environment['id'],
+		variables: Variable[]
+	): Promise<void> {
+		if (!userId) {
+			throw new Error('User ID is required');
+		}
+		if (!environmentId) {
+			throw new Error('Environment ID is required');
+		}
+		if (!variables) {
+			throw new Error('Variables are required');
+		}
+
+		const isInProject = await pool.query(
+			'SELECT 1 FROM environments WHERE id = $1 AND project_id IN (SELECT project_id FROM project_members WHERE user_id = $2)',
+			[environmentId, userId]
+		);
+
+		if (!isInProject.rowCount) {
+			throw new Error('User does not have access to this environment');
+		}
+
+		await pool.query('DELETE FROM variables WHERE environment_id = $1', [environmentId]);
+
+		await Promise.all(
+			variables.map((variable) =>
+				pool.query('INSERT INTO variables (environment_id, name, value) VALUES ($1, $2, $3)', [
+					environmentId,
+					variable.name,
+					variable.value
+				])
+			)
+		);
+	}
 }

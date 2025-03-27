@@ -1,5 +1,6 @@
 import { json, redirect } from '@sveltejs/kit';
 import { generateAccessToken, auth } from '$lib/server/auth';
+import { Logger } from '$lib/utils/logger';
 
 export async function GET({ url, cookies }) {
 	const state = url.searchParams.get('state');
@@ -29,10 +30,10 @@ export async function GET({ url, cookies }) {
 		try {
 			await fetch(cliCallbackUrl);
 		} catch (error) {
-			console.error('Failed to notify CLI:', error);
+			Logger.error('Failed to notify CLI:', error);
 		}
 	} catch (error) {
-		console.error('Authentication error:', error);
+		Logger.error('Authentication error:', error);
 		return json({ error: 'Authentication failed' }, { status: 401 });
 	}
 

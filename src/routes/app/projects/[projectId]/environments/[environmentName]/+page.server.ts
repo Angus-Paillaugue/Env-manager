@@ -60,7 +60,7 @@ export const actions: Actions = {
 					return new Error(data.error);
 				}
 			} catch (error) {
-				return ErrorHandling.throwActionError(400, 'createVariable', error);
+				return ErrorHandling.throwActionError(400, 'createVariable', error, true);
 			}
 		} else {
 			// If no file is uploaded, create a single variable from the input fields
@@ -78,7 +78,7 @@ export const actions: Actions = {
 					return Error(data.error);
 				}
 			} catch (error) {
-				return ErrorHandling.throwActionError(400, 'createVariable', error);
+				return ErrorHandling.throwActionError(400, 'createVariable', error, true);
 			}
 		}
 
@@ -110,7 +110,7 @@ export const actions: Actions = {
 			}
 			return ErrorHandling.returnSuccess('deleteVariable', variableId);
 		} catch (error) {
-			return ErrorHandling.throwActionError(400, 'deleteVariable', error);
+			return ErrorHandling.throwActionError(400, 'deleteVariable', error, true);
 		}
 	},
 	async editVariable({ request, fetch, params }) {
@@ -125,18 +125,18 @@ export const actions: Actions = {
 			const res = await fetch(
 				`/api/projects/${params.projectId}/environments/${params.environmentName}/variables`,
 				{
-					method: 'PUT',
+					method: 'PATCH',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ id: variableId, name: variableName, value: variableValue })
 				}
 			);
 			const data = await res.json();
 			if (!res.ok) {
-				return ErrorHandling.throwActionError(res.status, 'editVariable', data.error);
+				return ErrorHandling.throwActionError(res.status, 'editVariable', data.error, true);
 			}
 			return ErrorHandling.returnSuccess('editVariable', data.variable);
 		} catch (error) {
-			return ErrorHandling.throwActionError(400, 'editVariable', error);
+			return ErrorHandling.throwActionError(400, 'editVariable', error, true);
 		}
 	}
 };

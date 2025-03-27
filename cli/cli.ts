@@ -6,6 +6,10 @@ import { pull } from './commands/pull';
 import { push } from './commands/push';
 import { logOut } from './commands/logOut';
 import { config } from './commands/config';
+import { link } from './commands/link';
+import { unlink } from './commands/unlink';
+import { changeEnv } from './commands/changeEnv';
+import { status } from './commands/status';
 
 const program = new Command();
 
@@ -24,9 +28,22 @@ program
 // Logout command
 program.command('logout').description('Log out of your current Env Manager account').action(logOut);
 
+// Link project to current directory
+program.command('link').description('Link a project to the current directory').action(link);
+// Unlink project from current directory
+program.command('unlink').description('Unlink a project from the current directory').action(unlink);
+
+// Change environment
+program
+	.command('changeEnv')
+	.description('Change the environment for the current project')
+	.action(changeEnv);
+
 // Config
 config(program);
 
+// Status
+program.command('status').description('Get the status of the current project').action(status);
 program.version('1.0.0');
 
 program.parse();
