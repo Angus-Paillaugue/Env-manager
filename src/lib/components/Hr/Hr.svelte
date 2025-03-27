@@ -17,12 +17,12 @@
 <svelte:element
 	this={tagName}
 	{href}
-	class={cn('border-border my-4 flex flex-row items-center gap-2', className)}
+	class={cn('border-border my-4 flex flex-row items-center', className)}
 	{...restProps}
 >
 	<span class="w-full grow border-t border-inherit"></span>
 	{#if text || children}
-		<span class="shrink-0 text-base font-medium">
+		<span class="mx-2 shrink-0 text-base font-medium">
 			{#if text}
 				{text}
 			{:else if children}

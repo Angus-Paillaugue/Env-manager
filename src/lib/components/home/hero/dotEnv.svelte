@@ -16,7 +16,7 @@
 </script>
 
 <button
-	class="border-border bg-card hover:bg-card-hover focus:bg-card-hover group absolute top-1/6 -right-10 z-0 w-[450px] -rotate-12 cursor-pointer rounded-lg rounded-tl-none border transition-all duration-300 hover:-right-2 hover:scale-105 hover:rotate-[-17deg] focus:-right-2 focus:scale-105 focus:rotate-[-17deg]"
+	class="border-border bg-card hover:bg-card-hover focus:bg-card-hover group absolute top-1/6 -right-10 z-0 w-[450px] -rotate-12 cursor-pointer rounded-lg rounded-tl-none border transition-all duration-300 hover:-right-2 hover:scale-105 hover:rotate-[-17deg] focus:-right-2 focus:scale-105 focus:rotate-[-17deg] max-lg:hidden"
 >
 	<div class="relative flex flex-col p-6">
 		<!-- File name -->

@@ -12,6 +12,7 @@
 	let characters =
 		"!@#$%^&*()_+-=[]{}|;':,.<>?/~0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	let scrambleInterval: ReturnType<typeof setTimeout> | null = null;
+	let continuousScrambleInterval: ReturnType<typeof setTimeout> | null = null;
 	let targetIndices: [number, number][] = []; // Store indices of target letters
 
 	function getRandomChar() {
@@ -36,20 +37,46 @@
 		});
 	}
 
-	function scrambleEffect(reveal = false) {
-		let steps = 15;
-		let currentStep = 0;
-		if (scrambleInterval) clearInterval(scrambleInterval);
+	function startContinuousScrambling() {
+		// Clear existing interval if it exists
+		if (continuousScrambleInterval) clearInterval(continuousScrambleInterval);
 
-		// Reset revealed state when starting a new scramble effect
+		// Set a slow interval to change random letters
+		continuousScrambleInterval = setInterval(() => {
+			grid = grid.map((row, rowIndex) =>
+				row.map((colChar, colIndex) => {
+					// Don't change revealed target letters
+					if (isTarget[rowIndex][colIndex] && isRevealed[rowIndex][colIndex]) {
+						let targetIdx = colIndex - Math.floor((cols - targetText.length) / 2);
+						return targetText[targetIdx];
+					} else {
+						// Randomly change about 5% of non-revealed letters
+						return Math.random() < 0.05 ? getRandomChar() : colChar;
+					}
+				})
+			);
+		}, 150);
+	}
+
+	function scrambleEffect(reveal = false) {
+		let steps = 10;
+		let currentStep = 0;
+
+		// Clear both intervals when starting a new effect
+		if (scrambleInterval) clearInterval(scrambleInterval);
+		if (continuousScrambleInterval) clearInterval(continuousScrambleInterval);
+
+		// Reset revealed state when starting a hide effect
 		if (!reveal) {
 			isRevealed = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false));
 		}
 
 		// Clone target indices for random selection
 		let unrevealed = [...targetIndices];
+		// Filter out indices that are already revealed
+		unrevealed = unrevealed.filter(([row, col]) => !isRevealed[row][col]);
 		let revealedCount = 0;
-		let totalToReveal = targetIndices.length;
+		let totalToReveal = unrevealed.length;
 
 		// Calculate how many letters to reveal per step
 		let revealPerStep = Math.ceil(totalToReveal / steps);
@@ -102,14 +129,16 @@
 					});
 				}
 
-				if (!hovered) {
-					generateGrid();
-				}
+				// Always return to continuous scrambling after the effect completes
+				startContinuousScrambling();
 			}
-		}, 50);
+		}, 90);
 	}
 
-	onMount(generateGrid);
+	onMount(() => {
+		generateGrid();
+		startContinuousScrambling();
+	});
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->

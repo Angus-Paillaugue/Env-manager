@@ -5,7 +5,7 @@
 	import { slide } from 'svelte/transition';
 	import type { Variant as ButtonVariant } from '$lib/components/Button/Button.svelte';
 	import { onMount } from 'svelte';
-	import { cn, isMobile } from '$lib/utils';
+	import { cn } from '$lib/utils';
 
 	$pageHeading = {
 		title: 'Home',
@@ -91,7 +91,7 @@
 <nav
 	class={cn(
 		'flex w-full shrink-0 flex-row items-center justify-between overflow-hidden px-2 transition-all duration-300 lg:px-4',
-		!isMobile.current && scrollDirection === 'up' ? 'h-18' : 'mb-2 h-0 lg:mb-4'
+		scrollDirection === 'up' ? 'h-18' : 'mb-2 h-0 lg:mb-4'
 	)}
 >
 	<div class="flex flex-row items-center justify-between gap-4 max-lg:grow">
