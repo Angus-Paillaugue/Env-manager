@@ -1,7 +1,7 @@
 {
 	"name": "env-manager",
-	"private": true,
-	"version": "0.0.1",
+	"private": false,
+	"version": "1.0.0",
 	"type": "module",
 	"scripts": {
 		"test": "vitest",
