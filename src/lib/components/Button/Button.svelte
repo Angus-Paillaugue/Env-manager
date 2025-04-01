@@ -9,6 +9,7 @@
 	interface MyProps {
 		loading?: boolean;
 		variant?: Variant | Variant[];
+		href?: string;
 	}
 
 	export type ButtonProps = MyProps &
@@ -43,9 +44,21 @@
 	);
 
 	let tagName = 'href' in restProps ? 'a' : 'button';
+
+	let href = $state('href' in restProps ? restProps.href : undefined);
+	if ('href' in restProps) {
+		if (restProps.href) {
+			href = restProps.href;
+		}
+	}
 </script>
 
-<svelte:element this={tagName} class={finalClasses} {...restProps}>
+<svelte:element
+	this={tagName}
+	class={finalClasses}
+	{...restProps}
+	{...tagName === 'a' ? { href } : {}}
+>
 	{#if loading}
 		<span in:fade={{ duration: 200 }}>
 			<Spinner class="size-5" />

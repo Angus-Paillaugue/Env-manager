@@ -14,7 +14,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"cli": "bun run cli/cli.ts"
+		"cli": "bun run cli/cli.ts",
+		"machine-translate": "inlang machine translate --project project.inlang"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
@@ -69,6 +70,7 @@
 		"qrcode": "^1.5.4",
 		"sharp": "^0.33.5",
 		"speakeasy": "^2.0.0",
+		"sveltekit-i18n": "^2.4.2",
 		"tailwind-merge": "^3.0.2"
 	}
 }

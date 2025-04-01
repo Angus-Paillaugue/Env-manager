@@ -52,6 +52,13 @@
 			card?.removeEventListener('mouseleave', handleMouseLeave);
 		};
 	});
+
+	let href = $state('href' in restProps ? restProps.href : undefined);
+	if ('href' in restProps) {
+		if (restProps.href) {
+			href = restProps.href;
+		}
+	}
 </script>
 
 <svelte:element
@@ -63,6 +70,7 @@
 		className
 	)}
 	{...restProps}
+	{...tagName === 'a' ? { href } : {}}
 >
 	<div class="pointer-events-none absolute inset-0 overflow-hidden">
 		{#if show}

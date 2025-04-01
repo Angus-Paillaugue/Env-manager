@@ -9,16 +9,22 @@
 
 	type Props = (({ href: string } & SvelteHTMLElements['a']) | SvelteHTMLElements['div']) & MyProps;
 
-	let { text, children, class: className, href, ...restProps }: Props = $props();
+	let { text, children, class: className, ...restProps }: Props = $props();
 
-	const tagName = href ? 'a' : 'div';
+	const tagName = 'href' in restProps ? 'a' : 'div';
+	let href = $state(restProps.href);
+	if ('href' in restProps) {
+		if (restProps.href) {
+			href = restProps.href;
+		}
+	}
 </script>
 
 <svelte:element
 	this={tagName}
-	{href}
 	class={cn('border-border my-4 flex flex-row items-center', className)}
 	{...restProps}
+	{...tagName === 'a' ? { href } : {}}
 >
 	<span class="w-full grow border-t border-inherit"></span>
 	{#if text || children}

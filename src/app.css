@@ -70,6 +70,10 @@
 		scrollbar-width: none;
 		/* Firefox */
 	}
+
+	* {
+		@apply scroll-smooth;
+	}
 }
 
 body {

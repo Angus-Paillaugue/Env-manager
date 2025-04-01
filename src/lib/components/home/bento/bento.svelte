@@ -8,7 +8,7 @@
 	import Pill from '../pill.svelte';
 </script>
 
-<section class="px-2 py-12 lg:px-10 lg:py-24" style="min-height: {SECTION_HEIGHT};">
+<section class="px-2 py-12 lg:px-10 lg:py-24" style="min-height: {SECTION_HEIGHT};" id="features">
 	<div
 		class="mx-auto flex w-full max-w-screen-2xl grow flex-col items-center justify-center gap-10"
 	>
