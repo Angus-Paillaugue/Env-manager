@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Card } from '$lib/components';
 	import { pageHeading } from '$lib/stores';
-	import { t } from '$lib/translations';
+	import { localizeHref, t } from '$lib/translations';
 	import { DoorOpen, Settings } from 'lucide-svelte';
 
 	pageHeading.set({
@@ -25,7 +25,12 @@
 		{$t('app.account.settings.title')}
 	</Card>
 
-	<Card href="/log-out" class="group flex-row items-center gap-4 rounded" hoverEffect={true}>
+	<Card
+		href="/log-out"
+		overrideHref={false}
+		class="group flex-row items-center gap-4 rounded"
+		hoverEffect={true}
+	>
 		<div
 			class="border-border text-muted bg-background group-hover:bg-primary group-hover:text-primary-foreground rounded-full border p-1.5 font-mono text-base font-bold transition-colors"
 		>

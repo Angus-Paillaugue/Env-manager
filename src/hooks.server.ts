@@ -1,11 +1,10 @@
 import { auth } from '$lib/server/auth';
-import type { Handle } from '@sveltejs/kit';
+import { redirect, type Handle } from '@sveltejs/kit';
 import { urlStartsWith } from '$lib/utils';
 import { Logger } from '$lib/utils/logger';
 import { sequence } from '@sveltejs/kit/hooks';
-import { defaultLocale, locales } from '$lib/translations/';
-
-const NEED_AUTH_ROUTES = ['/app', '/api/project'];
+import { defaultLocale, locales, origin } from '$lib/translations/';
+import { NEED_AUTH_ROUTES, NO_I18N_OVERRIDES_ROUTES } from '$lib/utils/constants';
 
 const authHandler: Handle = async ({ event, resolve }) => {
 	const { url, cookies, locals } = event;
@@ -33,10 +32,7 @@ const authHandler: Handle = async ({ event, resolve }) => {
 
 	// Redirect to login page if user is not logged in and trying to access a protected route
 	if (!locals.user && urlStartsWith(url.pathname, NEED_AUTH_ROUTES)) {
-		return new Response(undefined, {
-			headers: { location: '/auth/log-in' },
-			status: 307
-		});
+		redirect(303, '/auth/log-in'); //! This is the line that's causing the issue
 	}
 
 	const response = await resolve(event);
@@ -52,7 +48,9 @@ export const i18nHandler: Handle = async ({ event, resolve }) => {
 	const { url, request } = event;
 	const { pathname } = url;
 
-	if (pathname.startsWith('/api')) {
+	origin.set(url.origin);
+
+	if (NO_I18N_OVERRIDES_ROUTES.some((route) => urlStartsWith(pathname, route))) {
 		return resolve(event);
 	}
 
@@ -80,7 +78,7 @@ export const i18nHandler: Handle = async ({ event, resolve }) => {
 	return resolve(
 		{ ...event, locals: { lang: locale } },
 		{
-			transformPageChunk: ({ html }) => html.replace(/<html.*>/, `<html lang="${locale}">`)
+			transformPageChunk: ({ html }) => html.replace('%lang%', locale)
 		}
 	);
 };

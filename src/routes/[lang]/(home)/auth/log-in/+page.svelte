@@ -42,7 +42,7 @@
 </script>
 
 <!-- TOTP input modal -->
-<Modal bind:open={totpModalOpen}>
+<Modal bind:open={totpModalOpen} noBackdropClose={true}>
 	<Modal.Heading>
 		<Modal.Title>TOTP confirm</Modal.Title>
 		<Modal.Description>Confirm your TOTP code</Modal.Description>

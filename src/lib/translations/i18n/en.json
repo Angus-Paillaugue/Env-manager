@@ -1,7 +1,4 @@
 {
-	"account": {
-		"title": "Account"
-	},
 	"labels": {
 		"username": "Username",
 		"email": "Email",
@@ -284,7 +281,7 @@
 			}
 		},
 		"navbar": {
-			"navTitems": {
+			"navItems": {
 				"main": {
 					"features": "Features",
 					"docs": "Docs",

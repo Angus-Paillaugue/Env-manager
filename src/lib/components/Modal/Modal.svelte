@@ -10,13 +10,15 @@
 		open: boolean;
 		fullScreen?: boolean;
 		onClose?: () => void;
+		noBackdropClose?: boolean;
 	}
 
 	let {
 		open = $bindable(false),
 		fullScreen = false,
 		onClose,
-		children
+		children,
+		noBackdropClose = false
 	}: SvelteHTMLElements['div'] & MyProps = $props();
 	let portalElement = $state<HTMLElement | null>(null);
 
@@ -49,7 +51,7 @@
 	bind:this={portalElement}
 	style="position: absolute; opacity: 0; pointer-events: none;"
 >
-	<Backdrop bind:open />
+	<Backdrop bind:open {noBackdropClose} />
 	{#if isMobile.current}
 		<MobileModal bind:open {children} {fullScreen} />
 	{:else}

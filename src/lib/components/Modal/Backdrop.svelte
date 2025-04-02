@@ -7,16 +7,18 @@
 	interface MyProps {
 		open: boolean;
 		duration?: number;
+		noBackdropClose?: boolean;
 	}
 	let {
 		open = $bindable(false),
 		duration = TRANSITION_DURATION,
 		class: className,
+		noBackdropClose = false,
 		...restProps
 	}: SvelteHTMLElements['div'] & MyProps = $props();
 
 	function handleWindowKeyDown(event: KeyboardEvent) {
-		if (event.key === 'Escape') {
+		if (event.key === 'Escape' && !noBackdropClose) {
 			open = false;
 		}
 	}
@@ -29,7 +31,9 @@
 	<div
 		aria-label="Close sidebar"
 		class={cn('bg-background/50 fixed inset-0 z-40 backdrop-blur-xs', className)}
-		onclick={() => (open = false)}
+		onclick={() => {
+			if (!noBackdropClose) open = false;
+		}}
 		transition:fade={{ duration }}
 		aria-hidden="true"
 		role="button"

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Footer from './footer.svelte';
 	import Navbar from './navbar.svelte';
 
 	let { children } = $props();
@@ -12,6 +13,7 @@
 			class="border-border no-scrollbar grow overflow-x-hidden overflow-y-auto rounded-lg border"
 		>
 			{@render children?.()}
+			<Footer />
 		</main>
 	</div>
 </div>

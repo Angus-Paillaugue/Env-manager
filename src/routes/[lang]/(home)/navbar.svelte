@@ -5,7 +5,7 @@
 	import type { Variant as ButtonVariant } from '$lib/components/Button/Button.svelte';
 	import { onMount } from 'svelte';
 	import { cn } from '$lib/utils';
-	import { t } from '$lib/translations';
+	import { localizeHref, t } from '$lib/translations';
 
 	let mobileNavOpen = $state(false);
 	let scrollDirection = $state<'up' | 'down'>('up');
@@ -22,15 +22,15 @@
 			variant: ButtonVariant;
 		}[];
 	}
-	const navItems: NavItem = {
+	let navItems: NavItem = {
 		main: [
-			{ label: $t('home.navbar.navTitems.main.features'), href: '/#features' },
-			{ label: $t('home.navbar.navTitems.main.docs'), href: '/docs' },
-			{ label: $t('home.navbar.navTitems.main.pricing'), href: '/pricing' }
+			{ label: 'home.navbar.navItems.main.features', href: '/#features' },
+			{ label: 'home.navbar.navItems.main.docs', href: '/docs' },
+			{ label: 'home.navbar.navItems.main.pricing', href: '/pricing' }
 		],
 		cta: [
-			{ label: $t('home.navbar.navTitems.cta.logIn'), href: '/auth/log-in', variant: 'secondary' },
-			{ label: $t('home.navbar.navTitems.cta.signUp'), href: '/auth/sign-up', variant: 'primary' }
+			{ label: 'home.navbar.navItems.cta.logIn', href: '/auth/log-in', variant: 'secondary' },
+			{ label: 'home.navbar.navItems.cta.signUp', href: '/auth/sign-up', variant: 'primary' }
 		]
 	};
 
@@ -70,13 +70,13 @@
 	>
 		<div class="flex flex-col gap-4">
 			{#each navItems.main as item}
-				<a href={item.href} class="text-center text-base">{item.label}</a>
+				<a href={localizeHref(item.href)} class="text-center text-base">{$t(item.label)}</a>
 			{/each}
 		</div>
 
 		<div class="flex flex-row gap-4">
 			{#each navItems.cta as item}
-				<Button href={item.href} variant={item.variant} class="w-full">{item.label}</Button>
+				<Button href={item.href} variant={item.variant} class="w-full">{$t(item.label)}</Button>
 			{/each}
 		</div>
 	</div>
@@ -89,7 +89,7 @@
 	)}
 >
 	<div class="flex flex-row items-center justify-between gap-4 max-lg:grow">
-		<a href={'/'}>{$t('home.navbar.projectName')}</a>
+		<a href={localizeHref('/')}>{$t('home.navbar.projectName')}</a>
 		<Button
 			class="size-10 p-2 lg:hidden"
 			variant="secondary"
@@ -103,9 +103,9 @@
 	<div class="hidden flex-row gap-4 lg:flex">
 		{#each navItems.main as item}
 			<a
-				href={item.href}
+				href={localizeHref(item.href)}
 				class="text-foreground after:bg-foreground relative font-mono font-bold after:absolute after:top-full after:left-1/2 after:mt-1 after:h-[2px] after:w-0 after:-translate-x-1/2 after:rounded-full after:transition-all after:duration-300 after:content-[''] hover:after:w-full"
-				>{item.label}</a
+				>{$t(item.label)}</a
 			>
 		{/each}
 	</div>
@@ -113,7 +113,7 @@
 	<!-- CTA's -->
 	<div class="hidden flex-row items-center gap-2 lg:flex">
 		{#each navItems.cta as item}
-			<Button href={item.href} variant={item.variant}>{item.label}</Button>
+			<Button href={item.href} variant={item.variant}>{$t(item.label)}</Button>
 		{/each}
 	</div>
 </nav>

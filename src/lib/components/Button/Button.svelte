@@ -3,6 +3,7 @@
 	import type { SvelteHTMLElements } from 'svelte/elements';
 	import { fade } from 'svelte/transition';
 	import Spinner from '../Spinner';
+	import { localizeHref } from '$lib/translations';
 
 	export type Variant = 'primary' | 'secondary' | 'danger';
 
@@ -48,7 +49,7 @@
 	let href = $state('href' in restProps ? restProps.href : undefined);
 	if ('href' in restProps) {
 		if (restProps.href) {
-			href = restProps.href;
+			href = localizeHref(restProps.href);
 		}
 	}
 </script>

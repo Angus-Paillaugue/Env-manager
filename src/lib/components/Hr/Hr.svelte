@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { localizeHref } from '$lib/translations';
 	import { cn } from '$lib/utils';
 	import type { SvelteHTMLElements } from 'svelte/elements';
 
@@ -15,7 +16,7 @@
 	let href = $state(restProps.href);
 	if ('href' in restProps) {
 		if (restProps.href) {
-			href = restProps.href;
+			href = localizeHref(restProps.href);
 		}
 	}
 </script>

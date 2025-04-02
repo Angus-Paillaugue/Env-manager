@@ -3,7 +3,7 @@
 	import { Card, Hr } from '$lib/components';
 	import { cn } from '$lib/utils';
 	import { ChevronDown, Code, Folder, FolderOpen, User } from 'lucide-svelte';
-	import { t } from '$lib/translations';
+	import { localizeHref, t } from '$lib/translations';
 
 	let projects = $derived(page.data.projects);
 	let currentProject = $derived(page.data?.project);
@@ -28,7 +28,7 @@
 	<div class="border-border bg-card grid h-12 w-full grid-cols-2 rounded-full border">
 		<a
 			class="flex h-full w-full flex-row items-center justify-center gap-2 font-mono text-base font-medium"
-			href={`/app`}
+			href={localizeHref(`/app`)}
 			use:isActive
 		>
 			{#if pathname.startsWith('/app/projects')}
@@ -40,7 +40,7 @@
 		</a>
 		<a
 			class="flex h-full w-full flex-row items-center justify-center gap-2 font-mono text-base font-medium"
-			href={`/app/account`}
+			href={localizeHref(`/app/account`)}
 			use:isActive
 		>
 			<User class="size-5" />
@@ -65,7 +65,10 @@
 								'bg-card-hover border-border'
 						)}
 					>
-						<a href={`/app/projects/${project.id}`} class="flex grow flex-row items-center gap-2">
+						<a
+							href={localizeHref(`/app/projects/${project.id}`)}
+							class="flex grow flex-row items-center gap-2"
+						>
 							{#if currentProject?.id === project.id}
 								<FolderOpen class="size-4" />
 							{:else}
@@ -83,7 +86,7 @@
 					<div class="ml-4 flex flex-col">
 						{#each project.environments as environment}
 							<a
-								href={`/app/projects/${project.id}/environments/${environment.name}`}
+								href={localizeHref(`/app/projects/${project.id}/environments/${environment.name}`)}
 								class={cn(
 									'flex flex-row items-center gap-2 rounded border border-transparent p-2 text-base font-normal',
 									currentEnvironment?.id === environment.id && 'bg-card-hover border-border'

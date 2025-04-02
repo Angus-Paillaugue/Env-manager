@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { localizeHref } from '$lib/translations';
 	import { cn } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import type { SvelteHTMLElements } from 'svelte/elements';
@@ -7,6 +8,7 @@
 
 	interface MyProps {
 		hoverEffect?: boolean;
+		overrideHref?: boolean;
 	}
 
 	type Props = ({ href: string } & SvelteHTMLElements['a']) | SvelteHTMLElements['div'];
@@ -15,6 +17,7 @@
 		children,
 		class: className,
 		hoverEffect = false,
+		overrideHref = true,
 		...restProps
 	}: Props & MyProps = $props();
 
@@ -55,8 +58,8 @@
 
 	let href = $state('href' in restProps ? restProps.href : undefined);
 	if ('href' in restProps) {
-		if (restProps.href) {
-			href = restProps.href;
+		if (restProps.href && overrideHref) {
+			href = localizeHref(restProps.href);
 		}
 	}
 </script>

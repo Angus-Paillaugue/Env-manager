@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { MediaQuery } from 'svelte/reactivity';
+import { unlocalizeHref } from '$lib/translations';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -16,11 +17,13 @@ export const formatTimestamp = (timestamp: Date) => {
 
 export function urlStartsWith(url: string, path: string | string[]): boolean {
 	if (!url || !path) return false;
-	if (path instanceof Array) return path.some((p) => urlStartsWith(url, p));
+	url = unlocalizeHref(url);
+	const pathname = new URL(url).pathname;
+	if (path instanceof Array) return path.some((p) => urlStartsWith(pathname, p));
 	// For the `/` path
-	if (path.length === 1) return url.at(-1) === path;
+	if (path.length === 1) return pathname.at(-1) === path;
 
-	return url.startsWith(path);
+	return pathname.startsWith(path);
 }
 
 export const isEmailValid = (email: string): boolean => {

@@ -8,7 +8,7 @@ export const load: LayoutLoad = async ({ data }) => {
 	addTranslations(translations);
 
 	await setRoute(route);
-	await setLocale(lang);
+	await setLocale(lang, true);
 
 	return i18n;
 };
