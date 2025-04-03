@@ -3,10 +3,10 @@ name: i18n Check
 on:
   push:
     branches:
-      - main
+      - '**'
   pull_request:
     branches:
-      - main
+      - '**'
 
 jobs:
   i18n-check:
@@ -22,7 +22,7 @@ jobs:
           node-version: '23'
 
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
       - name: Run i18n:check
-        run: pnpm run i18n:check
+        run: npm run i18n:check
