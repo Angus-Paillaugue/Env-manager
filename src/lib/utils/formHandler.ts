@@ -1,12 +1,12 @@
 interface FormReturn {
-	body: unknown;
-	ok: boolean;
-	action: string;
+  body: unknown;
+  ok: boolean;
+  action: string;
 }
 
 interface FormHandlerOptions {
-	onSuccess?: (body: unknown, action: string) => void;
-	onError?: (body: unknown, action: string) => void;
+  onSuccess?: (body: unknown, action: string) => void;
+  onError?: (body: unknown, action: string) => void;
 }
 
 /**
@@ -14,13 +14,13 @@ interface FormHandlerOptions {
  * @param options - Configuration for form handling.
  */
 export function handleForm(form: unknown, { onSuccess, onError }: FormHandlerOptions) {
-	if (!form) return;
+  if (!form) return;
 
-	const { body, ok, action } = form as FormReturn;
+  const { body, ok, action } = form as FormReturn;
 
-	if (ok && action && body) {
-		onSuccess?.(body, action);
-	} else if (!ok && action && body) {
-		onError?.(body, action);
-	}
+  if (ok && action && body) {
+    onSuccess?.(body, action);
+  } else if (!ok && action && body) {
+    onError?.(body, action);
+  }
 }

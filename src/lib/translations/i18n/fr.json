@@ -1,0 +1,399 @@
+{
+  "app": {
+    "account": {
+      "description": "Gérez votre compte",
+      "logOut": "Déconnexion",
+      "settings": {
+        "2fa": {
+          "unlink": {
+            "description": "Votre authentification à deux facteurs a été supprimée avec succès. \nVous pouvez le réactiver à tout moment dans les paramètres de votre compte.",
+            "goBackToSettings": "Revenir aux paramètres",
+            "title": "2fa non lié"
+          }
+        },
+        "description": "Gérez les paramètres de votre compte.",
+        "tabs": {
+          "dangerZone": {
+            "deleteAccount": {
+              "button": "Supprimer le compte",
+              "description": "Êtes-vous sûr de vouloir supprimer votre compte? \nCette action est irréversible et supprimera toutes vos données.",
+              "title": "Supprimer le compte",
+              "warning": "Cette action ne peut pas être annulée."
+            },
+            "description": "Actions irréversibles et destructrices.",
+            "name": "Zone de danger"
+          },
+          "general": {
+            "avatar": {
+              "confirmModal": {
+                "cancelButton": "Annuler",
+                "description": "Voulez-vous enregistrer cette photo de profil?",
+                "title": "Téléchargement de l'image de profil"
+              },
+              "label": "Changer d'avatar"
+            },
+            "description": "Mettez à jour vos informations de profil.",
+            "language": "Langue",
+            "name": "Général"
+          },
+          "security": {
+            "2fa": {
+              "description": "Ajoutez une couche supplémentaire de sécurité à votre compte.",
+              "enabled": "L'authentification à deux facteurs est activée pour votre compte.",
+              "manageButton": "Gérer 2FA",
+              "notEnabled": "L'authentification à deux facteurs n'est pas activée. \nActivez-le pour sécuriser votre compte.",
+              "setupButton": "Configurer 2fa",
+              "title": "2fa"
+            },
+            "changePassword": {
+              "currentPassword": "Mot de passe actuel",
+              "description": "Mettez à jour votre mot de passe.",
+              "newPassword": "Nouveau mot de passe",
+              "success": "Le mot de passe a changé avec succès.",
+              "title": "Changer le mot de passe",
+              "updateButton": "Mise à jour"
+            },
+            "description": "Paramètres avancés pour l'application.",
+            "manage2fa": {
+              "description": "2FA est déjà configuré pour votre compte. \nVous pouvez le désactiver en cliquant sur le bouton ci-dessous",
+              "disableButton": "Désactiver",
+              "title": "Gérer 2FA"
+            },
+            "name": "Sécurité",
+            "setup2fa": {
+              "confirmCode": "Confirmer le code",
+              "description": "Pour améliorer la sécurité de votre compte, veuillez configurer le mot de passe ponctuel basé sur le temps (2FA)",
+              "nextButton": "Suivant",
+              "qrCodeAlt": "Code QR pour la configuration 2FA",
+              "showHideValue": "Afficher / masquer la valeur",
+              "title": "Configurer 2fa",
+              "unableToScan": "Impossible de scanner? \nVous pouvez montrer la clé secrète:"
+            },
+            "successModal": {
+              "description": "Succès Configuration de TOTP",
+              "message": "Vous configurez avec succès l'authentification TOTP sur votre compte. \nVous serez invité à entrer le code sur chaque connexion.",
+              "title": "Succès"
+            },
+            "totpUnlink": {
+              "description": "Votre authentification à deux facteurs a été supprimée avec succès. \nVous pouvez le réactiver à tout moment dans les paramètres de votre compte.",
+              "goBackButton": "Revenir aux paramètres",
+              "title": "2fa non lié"
+            },
+            "unlink2fa": {
+              "description": "Pour dissocier 2FA, veuillez saisir le code de votre application Authenticator.",
+              "disableButton": "Désactiver",
+              "title": "Unlink 2fa"
+            }
+          }
+        },
+        "title": "Paramètres"
+      },
+      "title": "Compte"
+    },
+    "environment": {
+      "delete": {
+        "confirmation": "Êtes-vous sûr de vouloir supprimer cet environnement?",
+        "description": "Supprimer {{EnvironmentName}}?",
+        "title": "Supprimer l'environnement",
+        "warning": "Cette action ne peut pas être annulée. \nCela supprimera en permanence l'environnement nommé <b> {{EnvironmentName}} </b>."
+      },
+      "edit": {
+        "description": "Edit <b> {{EnvironmentName}} </b>",
+        "nameLabel": "Nom",
+        "placeholder": "par exemple \nDev",
+        "title": "Modifier un environnement"
+      }
+    },
+    "environments": {
+      "delete": {
+        "cancelButton": "Annuler",
+        "confirmButton": "Supprimer",
+        "description": "Êtes-vous sûr de vouloir supprimer l'environnement {{EnvironmentName}}?",
+        "title": "Supprimer l'environnement",
+        "warning": "Cette action ne peut pas être annulée."
+      },
+      "description": "Gérer les environnements pour le projet {{projectName}}.",
+      "edit": {
+        "description": "Modifier les détails de l'environnement {{EnvironmentName}}.",
+        "nameLabel": "Nom de l'environnement",
+        "placeholder": "Entrez un nouveau nom pour l'environnement",
+        "title": "Modifier l'environnement"
+      },
+      "seo": {
+        "title": "Environnements - {{projectName}}"
+      },
+      "title": "Environnements"
+    },
+    "project": {
+      "create": {
+        "action": "Créer",
+        "description": "Créez un nouvel environnement pour gérer vos variables",
+        "title": "Créer un environnement"
+      },
+      "delete": {
+        "content": "La suppression de ce projet supprimera également tous les environnements et variables qui lui sont associés. </br> Cette action est irréversible.",
+        "description": "Êtes-vous sûr de vouloir supprimer ce projet?",
+        "title": "Supprimer le projet"
+      },
+      "environments": {
+        "noEnvironments": "Aucun environnement trouvé. \nCréez-en un pour gérer vos variables.",
+        "settings": {
+          "tabs": {
+            "general": {
+              "projectName": "Nom du projet",
+              "title": "Général"
+            },
+            "security": {
+              "deleteProject": "Supprimer le projet",
+              "title": "Sécurité"
+            }
+          },
+          "title": "Paramètres"
+        },
+        "title": "Environnements"
+      },
+      "member": {
+        "leaveProject": "Projet de départ",
+        "remove": {
+          "actions": {
+            "leave": "Partir",
+            "remove": "Retirer"
+          },
+          "content": {
+            "someoneElse": "Êtes-vous sûr de vouloir supprimer <b> {{nom d'utilisateur}} </b> du projet?",
+            "yourself": "Êtes-vous sûr de vouloir vous retirer du projet?"
+          },
+          "description": "Supprimer <b> {{nom d'utilisateur}} </b>",
+          "title": "Supprimer un membre"
+        },
+        "removeProject": "Supprimer du projet"
+      },
+      "members": {
+        "add": {
+          "description": "Ajoutez un nouveau membre au projet {{projectName}}.",
+          "title": "Ajouter un membre",
+          "usernameLabel": "Nom d'utilisateur"
+        },
+        "list": {
+          "title": "Membres"
+        }
+      }
+    },
+    "projects": {
+      "create": {
+        "button": "Créer",
+        "description": "Ajoutez un nouveau projet pour commencer à gérer votre environnement.",
+        "nameLabel": "Nom du projet",
+        "placeholder": "Entrez un nom pour le projet",
+        "title": "Créer un projet"
+      },
+      "description": "Gérez vos projets et vos environnements.",
+      "environments": {
+        "environment": {
+          "create": {
+            "description": "Créez une nouvelle variable dans l'environnement <b> {{name}} </b>",
+            "enterManually": {
+              "label": "Entrez-le manuellement",
+              "placeholder": "par exemple \nApi_key"
+            },
+            "importDotEnv": {
+              "label": "Importer un fichier .env",
+              "placeholder": "Choisissez un fichier .env"
+            },
+            "title": "Créer une variable"
+          },
+          "description": "Gérer les variables dans l'environnement <b> {{EnvironmentName}} </b> du projet <b> {{projectName}} </b>",
+          "title": "{{nom}} Environnement",
+          "variable": {
+            "actions": {
+              "delete": {
+                "description": "Delete <b> {{VariabbleName}} </b> de <b> {{EnvironmentName}} </b>?",
+                "text": "Êtes-vous sûr de vouloir supprimer cette variable? </br> Cette action ne peut pas être annulée. \nCela supprimera en permanence la variable <b> {{variablename}} </b> de l'environnement <b> {{EnvironmentName}} </b>.",
+                "title": "Supprimer une variable"
+              },
+              "edit": {
+                "description": "Edit <b> {{variableName}} </b> dans <b> {{EnvironmentName}} </b>",
+                "title": "Modifier une variable",
+                "variablePlaceholder": "par exemple \nApi_key"
+              }
+            },
+            "create": "Créer une variable",
+            "download": {
+              "label": "Télécharger les variables"
+            },
+            "noVariables": "On dirait qu'il n'y a pas de variables dans cet environnement. \nCliquez sur le bouton ci-dessus pour en créer un.",
+            "title": "Variables",
+            "toggleValueVisibility": "Afficher / masquer la valeur"
+          }
+        }
+      },
+      "noProjects": {
+        "create": "Créer un projet pour commencer",
+        "title": "Aucun projet trouvé"
+      },
+      "title": "Projets",
+      "yourProjects": "Vos projets"
+    },
+    "sidebar": {
+      "items": {
+        "account": "Compte",
+        "projects": "Projets"
+      }
+    }
+  },
+  "home": {
+    "auth": {
+      "callback": {
+        "success": {
+          "description": "Votre appareil est maintenant connecté.",
+          "text": "Félicitations, vous êtes prêt!",
+          "title": "Succès"
+        }
+      },
+      "logIn": {
+        "description": "Veuillez saisir vos informations d'identification pour vous connecter.",
+        "noAccount": {
+          "cta": "S'inscrire.",
+          "text": "Aucun compte?"
+        },
+        "title": "Se connecter",
+        "totp": {
+          "description": "Confirmez votre code TOTP",
+          "next": "Suivant",
+          "title": "TOTP Confirm"
+        }
+      },
+      "signUp": {
+        "alreadyHaveAnAccount": {
+          "cta": "Se connecter.",
+          "text": "Vous avez déjà un compte?"
+        },
+        "description": "Créer un nouveau compte.",
+        "title": "S'inscrire"
+      }
+    },
+    "navbar": {
+      "navItems": {
+        "cta": {
+          "logIn": "Se connecter",
+          "signUp": "S'inscrire"
+        },
+        "main": {
+          "docs": "Docs",
+          "features": "Caractéristiques",
+          "pricing": "Prix"
+        }
+      },
+      "projectName": "Manager env"
+    },
+    "footer": {
+      "about": {
+        "description": "Env-Manager simplifie la gestion des variables environnementales pour les équipes, assurant une collaboration transparente et des mises à jour en temps réel.",
+        "title": "À propos"
+      },
+      "copyright": "Tous droits réservés.",
+      "language": {
+        "title": "Langue"
+      },
+      "navigation": {
+        "links": {
+          "dashboard": "Tableau de bord",
+          "help": "Centre d'aide",
+          "logIn": "Se connecter",
+          "signUp": "S'inscrire"
+        },
+        "title": "Liens rapides"
+      }
+    },
+    "homepage": {
+      "bento": {
+        "card1": {
+          "description": "Partagez les variables en toute sécurité avec les coéquipiers. \nAttribuez des rôles et assurez-vous que les données sensibles ne sont accessibles qu'aux bonnes personnes.",
+          "roles": {
+            "guest": "Invité",
+            "owner": "Propriétaire"
+          },
+          "title": "Contrôler qui voit ce"
+        },
+        "card2": {
+          "description": "Gérez facilement les variables d'environnement pour tous vos projets en un seul endroit, avec une interface utilisateur propre et une CLI puissante.",
+          "title": "Toutes vos variables, un hub sécurisé",
+          "environment": {
+            "name": "Production",
+            "title": "Environnement:"
+          },
+          "project": {
+            "name": "Mon application",
+            "title": "Projet:"
+          },
+          "syncNow": "Synchroniser maintenant",
+          "syncing": "Synchronisation",
+          "syncingTo": "Synchronisation avec"
+        },
+        "card3": {
+          "description": "Avec Env-Manager, les équipes restent synchronisées. \nAjoutez une variable une fois, et elle atteint instantanément un membre de l'équipe très, non plus de fichiers .env!",
+          "title": "Collaboration sans effort avec des variables partagées"
+        },
+        "card4": {
+          "description": "Tirez et poussez les variables d'environnement de manière transparente entre votre configuration locale et le cloud, en gardant tout à jour.",
+          "title": "Synchroniser les variables en secondes"
+        },
+        "heading": {
+          "description": "Poussez une fois, synchronise partout. \nMettre à jour instantanément les variables d'environnement dans toute votre équipe.",
+          "pill": "Synchronisation en direct",
+          "title": "Collaboration en temps réel"
+        }
+      },
+      "description": "Page d'accueil de Env Manager",
+      "hero": {
+        "cli": {
+          "title": "Intégration CLI"
+        },
+        "ctaText": "Commencer",
+        "slogan": {
+          "emphasis": "n'importe où",
+          "text": "Gestion des variables d'environnement sans couture,"
+        }
+      },
+      "title": "Maison",
+      "workflow": {
+        "card1": {
+          "description": "Étant donné que les variables d'environnement sont universelles et le langage / le cadre agnostique, aucune intégration particulière n'est nécessaire.",
+          "title": "Connectez vos projets"
+        },
+        "card2": {
+          "description": "Vos variables d'environnement sont stockées en toute sécurité et facilement accessibles. \nContrôler l'accès et mettre à jour les valeurs sans effort.",
+          "title": "Sécurisé",
+          "targetText": "Sécurisé & Facile"
+        },
+        "card3": {
+          "description": "Tirez vos variables d'environnement avec une seule commande et les intégrez de manière transparente dans n'importe quel projet, pipeline CI / CD ou développement local.",
+          "title": "Synchronisation"
+        },
+        "heading": {
+          "description": "Passez sans effort à Env-Manager sur des projets nouveaux ou existants. \nPas besoin de changer votre flux de travail ou d'apprendre de nouveaux outils.",
+          "pill": "Intégration",
+          "title": "Avec nous, l'intégration n'a jamais été aussi facile"
+        }
+      }
+    }
+  },
+  "labels": {
+    "add": "Ajouter",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "create": "Créer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "save": "Sauvegarder",
+    "submit": "S'inscrire",
+    "username": "Nom d'utilisateur",
+    "profilePicture": "Photo de profil",
+    "variables": {
+      "keyLabel": "Clé",
+      "valueLabel": "Valeur"
+    }
+  }
+}

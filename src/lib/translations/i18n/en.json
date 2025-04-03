@@ -1,0 +1,399 @@
+{
+  "labels": {
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "create": "Create",
+    "close": "Close",
+    "submit": "Submit",
+    "profilePicture": "Profile picture",
+    "variables": {
+      "keyLabel": "Key",
+      "valueLabel": "Value"
+    }
+  },
+  "app": {
+    "account": {
+      "title": "Account",
+      "settings": {
+        "title": "Settings",
+        "description": "Manage your account settings.",
+        "tabs": {
+          "general": {
+            "name": "General",
+            "description": "Update your profile information.",
+            "avatar": {
+              "label": "Change avatar",
+              "confirmModal": {
+                "title": "Profile picture upload",
+                "description": "Do you want to save this profile picture?",
+                "cancelButton": "Cancel"
+              }
+            },
+            "language": "Language"
+          },
+          "dangerZone": {
+            "name": "Danger Zone",
+            "description": "Irreversible and destructive actions.",
+            "deleteAccount": {
+              "title": "Delete account",
+              "description": "Are you sure you want to delete your account? This action is irreversible and will delete all your data.",
+              "warning": "This action cannot be undone.",
+              "button": "Delete account"
+            }
+          },
+          "security": {
+            "name": "Security",
+            "description": "Advanced settings for the application.",
+            "changePassword": {
+              "title": "Change Password",
+              "description": "Update your password.",
+              "currentPassword": "Current password",
+              "newPassword": "New password",
+              "updateButton": "Update",
+              "success": "Password changed successfully."
+            },
+            "2fa": {
+              "title": "2FA",
+              "description": "Add an extra layer of security to your account.",
+              "notEnabled": "Two-factor authentication is not enabled. Enable it to secure your account.",
+              "enabled": "Two-factor authentication is enabled for your account.",
+              "setupButton": "Set up 2FA",
+              "manageButton": "Manage 2FA"
+            },
+            "unlink2fa": {
+              "title": "Unlink 2FA",
+              "description": "To unlink 2FA, please enter the code from your authenticator app.",
+              "disableButton": "Disable"
+            },
+            "manage2fa": {
+              "title": "Manage 2FA",
+              "description": "2FA is already set up for your account. You can disable it by clicking the button below",
+              "disableButton": "Disable"
+            },
+            "setup2fa": {
+              "title": "Set up 2FA",
+              "description": "To enhance your account security, please set up Time-based One-Time Password (2FA)",
+              "qrCodeAlt": "QR Code for 2FA setup",
+              "unableToScan": "Unable to scan? You can show the secret key :",
+              "showHideValue": "Show/hide value",
+              "confirmCode": "Confirm code",
+              "nextButton": "Next"
+            },
+            "totpUnlink": {
+              "title": "2FA unlinked",
+              "description": "Your two-factor authentication has been successfully removed. You can re-enable it at any time in your account settings.",
+              "goBackButton": "Go back to settings"
+            },
+            "successModal": {
+              "title": "Success",
+              "message": "You successfully set-up TOTP authentication on your account. You will be prompted to enter the code on each log-in.",
+              "description": "Success setting up TOTP"
+            }
+          }
+        },
+        "2fa": {
+          "unlink": {
+            "title": "2FA unlinked",
+            "description": "Your two-factor authentication has been successfully removed. You can re-enable it at any time in your account settings.",
+            "goBackToSettings": "Go back to settings"
+          }
+        }
+      },
+      "description": "Manage your account",
+      "logOut": "Log-out"
+    },
+    "environment": {
+      "delete": {
+        "title": "Delete environment",
+        "description": "Delete {{environmentName}} ?",
+        "confirmation": "Are you sure you want to delete this environment ?",
+        "warning": "This action cannot be undone. This will permanently delete the environment named <b>{{environmentName}}</b>."
+      },
+      "edit": {
+        "title": "Edit an environment",
+        "description": "Edit <b>{{environmentName}}</b>",
+        "nameLabel": "Name",
+        "placeholder": "e.g. Dev"
+      }
+    },
+    "project": {
+      "members": {
+        "add": {
+          "title": "Add a member",
+          "description": "Add a new member to the project {{projectName}}.",
+          "usernameLabel": "Username"
+        },
+        "list": {
+          "title": "Members"
+        }
+      },
+      "member": {
+        "remove": {
+          "title": "Remove a member",
+          "description": "Remove <b>{{username}}</b>",
+          "content": {
+            "yourself": "Are you sure you want to remove yourself from the project?",
+            "someoneElse": "Are you sure you want to remove <b>{{username}}</b> from the project?"
+          },
+          "actions": {
+            "leave": "Leave",
+            "remove": "Remove"
+          }
+        },
+        "leaveProject": "Leave project",
+        "removeProject": "Remove from project"
+      },
+      "create": {
+        "title": "Create an environment",
+        "description": "Create a new environment to manage your variables",
+        "action": "Create"
+      },
+      "delete": {
+        "title": "Delete Project",
+        "description": "Are you sure you want to delete this project?",
+        "content": "Deleting this project will also delete all environments and variables associated with it.</ br>This action is irreversible."
+      },
+      "environments": {
+        "title": "Environments",
+        "noEnvironments": "No environments found. Create one to manage your variables.",
+        "settings": {
+          "title": "Settings",
+          "tabs": {
+            "general": {
+              "title": "General",
+              "projectName": "Project Name"
+            },
+            "security": {
+              "title": "Security",
+              "deleteProject": "Delete project"
+            }
+          }
+        }
+      }
+    },
+    "projects": {
+      "title": "Projects",
+      "description": "Manage your projects and environments.",
+      "yourProjects": "Your projects",
+      "create": {
+        "title": "Create a project",
+        "description": "Add a new project to start managing your environments.",
+        "nameLabel": "Project name",
+        "placeholder": "Enter a name for the project",
+        "button": "Create"
+      },
+      "noProjects": {
+        "title": "No projects found",
+        "create": "Create a project to get started"
+      },
+      "environments": {
+        "environment": {
+          "title": "{{name}} environment",
+          "description": "Manage variables in the <b>{{environmentName}}</b> environment of the <b>{{projectName}}</b> project",
+          "create": {
+            "title": "Create a variable",
+            "description": "Create a new variable in the <b>{{name}}</b> environment",
+            "importDotEnv": {
+              "label": "Import a .env file",
+              "placeholder": "Choose a .env file"
+            },
+            "enterManually": {
+              "label": "Enter it manually",
+              "placeholder": "e.g. API_KEY"
+            }
+          },
+          "variable": {
+            "title": "Variables",
+            "download": {
+              "label": "Download variables"
+            },
+            "create": "Create a variable",
+            "toggleValueVisibility": "Show/hide value",
+            "noVariables": "Looks like there are no variables in this environment. Click the button above to create one.",
+            "actions": {
+              "delete": {
+                "title": "Delete a variable",
+                "description": "Delete <b>{{variableName}}</b> from <b>{{environmentName}}</b>?",
+                "text": "Are you sure you want to delete this variable ?</ br>This action cannot be undone. This will permanently delete the variable <b>{{variableName}}</b> from the <b>{{environmentName}}</b> environment. "
+              },
+              "edit": {
+                "title": "Edit a variable",
+                "description": "Edit <b>{{variableName}}</b> in <b>{{environmentName}}</b>",
+                "variablePlaceholder": "e.g. API_KEY"
+              }
+            }
+          }
+        }
+      }
+    },
+    "environments": {
+      "title": "Environments",
+      "description": "Manage environments for the project {{projectName}}.",
+      "seo": {
+        "title": "Environments - {{projectName}}"
+      },
+      "delete": {
+        "title": "Delete environment",
+        "description": "Are you sure you want to delete the environment {{environmentName}}?",
+        "warning": "This action cannot be undone.",
+        "confirmButton": "Delete",
+        "cancelButton": "Cancel"
+      },
+      "edit": {
+        "title": "Edit environment",
+        "description": "Edit details for the environment {{environmentName}}.",
+        "nameLabel": "Environment name",
+        "placeholder": "Enter a new name for the environment"
+      }
+    },
+    "sidebar": {
+      "items": {
+        "projects": "Projects",
+        "account": "Account"
+      }
+    }
+  },
+  "home": {
+    "auth": {
+      "logIn": {
+        "title": "Log-in",
+        "description": "Please enter your credentials to log in.",
+        "noAccount": {
+          "text": "No account ?",
+          "cta": "Sign up."
+        },
+        "totp": {
+          "next": "Next",
+          "title": "TOTP confirm",
+          "description": "Confirm your TOTP code"
+        }
+      },
+      "signUp": {
+        "title": "Sign-up",
+        "description": "Create a new account.",
+        "alreadyHaveAnAccount": {
+          "text": "Already have an account ?",
+          "cta": "Log in."
+        }
+      },
+      "callback": {
+        "success": {
+          "title": "Success",
+          "description": "Your device is now connected.",
+          "text": "Congratulations, you're all set!"
+        }
+      }
+    },
+    "navbar": {
+      "navItems": {
+        "main": {
+          "features": "Features",
+          "docs": "Docs",
+          "pricing": "Pricing"
+        },
+        "cta": {
+          "logIn": "Log In",
+          "signUp": "Sign Up"
+        }
+      },
+      "projectName": "ENV-MANAGER"
+    },
+    "footer": {
+      "about": {
+        "title": "About",
+        "description": "Env-Manager simplifies environment variable management for teams, ensuring seamless collaboration and real-time updates."
+      },
+      "language": {
+        "title": "Language"
+      },
+      "navigation": {
+        "title": "Quick Links",
+        "links": {
+          "dashboard": "Dashboard",
+          "signUp": "Sign Up",
+          "logIn": "Log in",
+          "help": "Help Center"
+        }
+      },
+      "copyright": "All rights reserved."
+    },
+    "homepage": {
+      "title": "Home",
+      "description": "Env manager's home page",
+      "hero": {
+        "ctaText": "Get started",
+        "slogan": {
+          "text": "Seamless environment variable management,",
+          "emphasis": "anywhere"
+        },
+        "cli": {
+          "title": "CLI Integration"
+        }
+      },
+      "bento": {
+        "heading": {
+          "pill": "Live Sync",
+          "title": "Real-time Collaboration",
+          "description": "Push once, sync everywhere. Instantly update environment variables across your entire team."
+        },
+        "card1": {
+          "title": "Control Who Sees What",
+          "description": "Share variables securely with teammates. Assign roles and ensure sensitive data is only accessible to the right people.",
+          "roles": {
+            "owner": "Owner",
+            "guest": "Guest"
+          }
+        },
+        "card2": {
+          "title": "All Your Variables, One Secure Hub",
+          "description": "Easily manage environment variables for all your projects in one place, with a clean UI and powerful CLI.",
+          "syncing": "Syncing",
+          "syncNow": "Sync Now",
+          "project": {
+            "title": "Project:",
+            "name": "My App"
+          },
+          "environment": {
+            "title": "Environment:",
+            "name": "Production"
+          },
+          "syncingTo": "Syncing to"
+        },
+        "card3": {
+          "description": "With env-manager, teams stay in sync. Add a variable once, and it instantly reaches very team member—no more outdated .env files!",
+          "title": "Effortless Collaboration with Shared Variables"
+        },
+        "card4": {
+          "title": "Sync Variables in Seconds",
+          "description": "Pull and push environment variables seamlessly between your local setup and the cloud, keeping everything up to date."
+        }
+      },
+      "workflow": {
+        "heading": {
+          "pill": "Integration",
+          "title": "With us, integrating has never been easier",
+          "description": "Effortlessly switch to Env-Manager on new or existing projects. No need to change your workflow or learn new tools."
+        },
+        "card1": {
+          "title": "Connect your projects",
+          "description": "Since environment variables are universal and language/framework agnostic, no special integration is needed."
+        },
+        "card2": {
+          "title": "Secure & Manage with Ease",
+          "description": "Your environment variables are safely stored and easily accessible. Control access and update values effortlessly.",
+          "targetText": "Secure & Easy"
+        },
+        "card3": {
+          "title": "Sync & Deploy Anywhere",
+          "description": "Pull your environment variables with a single command and seamlessly integrate them into any project, CI/CD pipeline, or local development."
+        }
+      }
+    }
+  }
+}
