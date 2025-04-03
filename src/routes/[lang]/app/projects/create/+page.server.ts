@@ -1,5 +1,6 @@
 import { redirect, type Actions } from '@sveltejs/kit';
 import { ErrorHandling } from '$lib/server/errorHandling';
+import { localizeHref } from '$lib/translations';
 import type { Project } from '$lib/types';
 
 export const actions: Actions = {
@@ -34,7 +35,7 @@ export const actions: Actions = {
     }
 
     if (project) {
-      throw redirect(303, '/app/projects/' + project.id);
+      throw redirect(303, localizeHref('/app/projects/' + project.id));
     } else {
       return ErrorHandling.throwActionError(
         400,

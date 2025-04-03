@@ -276,7 +276,8 @@
       "navItems": {
         "cta": {
           "logIn": "Se connecter",
-          "signUp": "S'inscrire"
+          "signUp": "S'inscrire",
+          "dashboard": "Tableau de bord"
         },
         "main": {
           "docs": "Docs",
@@ -394,6 +395,14 @@
     "variables": {
       "keyLabel": "Clé",
       "valueLabel": "Valeur"
+    }
+  },
+  "layout": {
+    "languageSwitcher": {
+      "dismiss": "Rejeter",
+      "switchToLang": "Passez en {{lang}}",
+      "text": "Vous êtes actuellement sur la version <b> {{pageLanguage}} </b> du site Web mais le langage de votre navigateur est <b> {{userLanguage}} </b>.",
+      "title": "Sélection de la langue"
     }
   }
 }

@@ -4,7 +4,7 @@ import type { LayoutServerLoad } from './$types';
 export const load: LayoutServerLoad = async ({ locals }) => {
   const { lang } = locals;
 
-  await loadTranslations(lang);
+  if (lang) await loadTranslations(lang);
 
-  return { i18n: { lang } };
+  return locals;
 };

@@ -31,3 +31,4 @@ uploads/
 pg_data/
 dist/
 .vscode/
+.unlighthouse

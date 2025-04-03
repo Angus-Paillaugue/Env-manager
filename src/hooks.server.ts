@@ -1,7 +1,7 @@
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { auth } from '$lib/server/auth';
-import { defaultLocale, locales, origin } from '$lib/translations/';
+import { defaultLocale, locales, localizeHref, origin } from '$lib/translations/';
 import { urlStartsWith } from '$lib/utils';
 import { NEED_AUTH_ROUTES, NO_I18N_OVERRIDES_ROUTES } from '$lib/utils/constants';
 import { Logger } from '$lib/utils/logger';
@@ -32,7 +32,7 @@ const authHandler: Handle = async ({ event, resolve }) => {
 
   // Redirect to login page if user is not logged in and trying to access a protected route
   if (!locals.user && urlStartsWith(url.pathname, NEED_AUTH_ROUTES)) {
-    redirect(303, '/auth/log-in'); //! This is the line that's causing the issue
+    redirect(303, localizeHref('/auth/log-in'));
   }
 
   const response = await resolve(event);
@@ -49,6 +49,11 @@ export const i18nHandler: Handle = async ({ event, resolve }) => {
   const { pathname } = url;
 
   origin.set(url.origin);
+
+  console.log(
+    pathname,
+    NO_I18N_OVERRIDES_ROUTES.some((route) => urlStartsWith(pathname, route))
+  );
 
   if (NO_I18N_OVERRIDES_ROUTES.some((route) => urlStartsWith(pathname, route))) {
     return resolve(event);

@@ -16,5 +16,6 @@ export const origin = i18nInstance.origin;
 export const loadTranslations = (locale: string) => i18nInstance.loadTranslations(locale);
 export const setLocale = (locale: string, hook?: boolean) => i18nInstance.setLocale(locale, hook);
 export const localizeHref = (href: string, l?: string) => i18nInstance.localizeHref(href, l);
-export const unlocalizeHref = (href: string) => i18nInstance.unlocalizeHref(href);
+export const unLocalizeHref = (href: string, origin?: string) =>
+  i18nInstance.unLocalizeHref(href, origin);
 export const setOrigin = (origin: string) => i18nInstance.setOrigin(origin);

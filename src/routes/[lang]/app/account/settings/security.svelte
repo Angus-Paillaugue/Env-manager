@@ -268,7 +268,7 @@
         />
         <div class="flex flex-col items-center justify-center">
           <p>{$t('app.account.settings.tabs.security.setup2fa.unableToScan')}</p>
-          <div class="flex flex-row items-center justify-center">
+          <div class="flex h-6 flex-row items-center justify-center">
             <button
               class="hover:bg-secondary-hover text-muted mr-1 size-6 shrink-0 cursor-pointer rounded-sm p-1 transition-colors"
               title={$t('app.account.settings.tabs.security.setup2fa.showHideValue')}

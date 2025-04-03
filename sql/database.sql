@@ -1,8 +1,24 @@
-CREATE USER env_manager_user
-WITH ENCRYPTED PASSWORD 'env_manager_password';
+-- Create user
+do
+$$
+begin
+  if not exists (select * from pg_user where usename = 'env_manager_user') then
+    CREATE USER env_manager_user WITH ENCRYPTED PASSWORD 'env_manager_password';
+  end if;
+end
+$$
+;
 
-
-CREATE DATABASE env_manager;
+-- Create database
+do
+$$
+begin
+  if not exists (SELECT FROM pg_database WHERE datname = 'env_manager') then
+    CREATE DATABASE env_manager;
+  end if;
+end
+$$
+;
 
 \c env_manager;
 
@@ -53,7 +69,6 @@ CREATE TABLE variables (
     value TEXT NOT NULL,
     UNIQUE (environment_id, name)
 );
-
 
 -- Set 'updated_at' to update automatically on row modification
 CREATE OR REPLACE FUNCTION set_variable_updated_at()

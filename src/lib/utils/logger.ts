@@ -1,59 +1,51 @@
 import fs from 'fs';
+import { dirname } from 'node:path';
 
-type LogLevel = 'info' | 'error' | 'warn' | 'debug';
+const LOG_FILE_PATH = 'uploads/logs/log.log';
+const loggerLevels = ['error', 'warn', 'debug'] as const;
 
-export class Logger {
-  static readonly LOG_FILE_PATH = 'uploads/logs/log.log';
-
-  static normalizeMessage(...args: unknown[]) {
-    const message = [];
-    for (const arg of args) {
-      if (arg instanceof Error) {
-        message.push(arg.message);
-      } else if (typeof arg === 'object') {
-        message.push(JSON.stringify(arg, null, 2));
-      } else {
-        message.push(arg);
-      }
+function normalizeMessage(...args: unknown[]) {
+  const message = [];
+  for (const arg of args) {
+    if (arg instanceof Error) {
+      message.push(arg.message);
+    } else if (typeof arg === 'object') {
+      message.push(JSON.stringify(arg, null, 2));
+    } else {
+      message.push(arg);
     }
-    return message.join(' ');
   }
-
-  static appendToFille(message: string, level: LogLevel) {
-    // Check if the file exists
-    if (!fs.existsSync(Logger.LOG_FILE_PATH)) {
-      // Create directory if it does not exist
-      if (!fs.existsSync('uploads/logs')) {
-        fs.mkdirSync('uploads/logs', { recursive: true });
-      }
-      fs.writeFileSync(Logger.LOG_FILE_PATH, '');
-    }
-    const timeStamp = new Date().toISOString();
-    const levelString = '[' + level.toUpperCase() + ']';
-    const logMessage = `${timeStamp} ${levelString} ${message}\n`;
-    fs.appendFileSync(Logger.LOG_FILE_PATH, logMessage);
-  }
-
-  static log(...args: unknown[]) {
-    const message = Logger.normalizeMessage(...args);
-    console.log(message);
-    Logger.appendToFille(message, 'info');
-  }
-
-  static error(...args: unknown[]) {
-    const message = Logger.normalizeMessage(...args);
-    console.error(message);
-    Logger.appendToFille(message, 'error');
-  }
-
-  static warn(...args: unknown[]) {
-    const message = Logger.normalizeMessage(...args);
-    console.warn(message);
-    Logger.appendToFille(message, 'warn');
-  }
-
-  static debug(...args: unknown[]) {
-    const message = Logger.normalizeMessage(...args);
-    console.debug(message);
-  }
+  return message.join(' ');
 }
+
+function appendToFille(message: string, level: (typeof loggerLevels)[number]) {
+  // Check if the file exists
+  if (!fs.existsSync(LOG_FILE_PATH)) {
+    // Create directory if it does not exist
+    if (!fs.existsSync(dirname(LOG_FILE_PATH))) {
+      fs.mkdirSync(dirname(LOG_FILE_PATH), { recursive: true });
+    }
+    fs.writeFileSync(LOG_FILE_PATH, '');
+  }
+  const timeStamp = new Date().toISOString();
+  const levelString = '[' + level.toUpperCase() + ']';
+  const logMessage = `${timeStamp} ${levelString} ${message}\n`;
+  fs.appendFileSync(LOG_FILE_PATH, logMessage);
+}
+
+const loggerFactory = () => {
+  return Object.fromEntries(
+    loggerLevels.map((l) => {
+      return [
+        l,
+        (...args: unknown[]) => {
+          const message = normalizeMessage(...args);
+          appendToFille(message, l);
+          console[l](message);
+        }
+      ];
+    })
+  );
+};
+
+export const Logger = loggerFactory();

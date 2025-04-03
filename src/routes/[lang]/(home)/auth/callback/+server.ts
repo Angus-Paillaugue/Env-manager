@@ -1,5 +1,6 @@
 import { json, redirect } from '@sveltejs/kit';
 import { auth, generateAccessToken } from '$lib/server/auth';
+import { localizeHref } from '$lib/translations';
 import { Logger } from '$lib/utils/logger';
 
 export async function GET({ url, cookies }) {
@@ -11,7 +12,7 @@ export async function GET({ url, cookies }) {
   if (!cookie) {
     // Properly encode the redirect URL
     const redirectUrl = encodeURIComponent(`/auth/callback?state=${state}`);
-    throw redirect(302, `/auth/log-in?redirect=${redirectUrl}`);
+    throw redirect(302, localizeHref(`/auth/log-in?redirect=${redirectUrl}`));
   }
 
   try {
@@ -19,7 +20,7 @@ export async function GET({ url, cookies }) {
     const user = await auth(cookie);
     if (!user) {
       const redirectUrl = encodeURIComponent(`/auth/callback?state=${state}`);
-      throw redirect(302, `/auth/log-in?redirect=${redirectUrl}`);
+      throw redirect(302, localizeHref(`/auth/log-in?redirect=${redirectUrl}`));
     }
 
     // Generate a new access token and associate it with the state
@@ -38,5 +39,5 @@ export async function GET({ url, cookies }) {
   }
 
   // Redirect to success page
-  throw redirect(302, '/auth/callback/success');
+  throw redirect(302, localizeHref('/auth/callback/success'));
 }

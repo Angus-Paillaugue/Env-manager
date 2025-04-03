@@ -2,6 +2,7 @@ import { redirect, type Actions } from '@sveltejs/kit';
 import { generateAccessToken, tokenOptions } from '$lib/server/auth';
 import { UserDAO } from '$lib/server/db/user';
 import { ErrorHandling } from '$lib/server/errorHandling';
+import { localizeHref } from '$lib/translations';
 import { isEmailValid } from '$lib/utils';
 import { Logger } from '$lib/utils/logger';
 import bcrypt from 'bcryptjs';
@@ -9,7 +10,7 @@ import bcrypt from 'bcryptjs';
 export const load = async ({ locals, url }) => {
   if (locals.user) {
     const redirectUrl = url.searchParams.get('redirect') || '/app';
-    throw redirect(302, redirectUrl);
+    throw redirect(302, localizeHref(redirectUrl));
   }
 };
 
@@ -49,6 +50,6 @@ export const actions: Actions = {
       return ErrorHandling.throwActionError(400, 'signUp', error, true);
     }
 
-    throw redirect(303, '/app');
+    throw redirect(303, localizeHref('/app'));
   }
 };

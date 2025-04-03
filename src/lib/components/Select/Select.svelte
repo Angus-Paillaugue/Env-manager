@@ -18,7 +18,7 @@
     children,
     maxWidth = 300,
     ...restProps
-  }: MyProps & SvelteHTMLElements['button'] = $props();
+  }: MyProps & SvelteHTMLElements['div'] = $props();
 
   const baseClasses =
     'block bg-card text-foreground text-sm min-w-[40px] relative font-medium px-2 py-1 rounded font-sans focus:outline-hidden border border-border outline-hidden focus:ring-2 transition-all ring-primary flex flex-row gap-2 items-center';
@@ -26,7 +26,7 @@
   const finalClasses = cn(baseClasses, className);
 
   let open = $state(false);
-  let selectElement: HTMLButtonElement | null = null;
+  let selectElement: HTMLDivElement | null = null;
 
   function onPageClick(e: MouseEvent) {
     const target = e.target as HTMLElement;
@@ -46,7 +46,9 @@
 
 <svelte:window onclick={onPageClick} />
 
-<button
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+<div
+  tabindex="0"
   class={finalClasses}
   bind:this={selectElement}
   onclick={handleClick}
@@ -62,4 +64,4 @@
       {@render children?.()}
     </div>
   </div>
-</button>
+</div>

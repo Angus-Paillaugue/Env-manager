@@ -2,6 +2,7 @@ services:
   web:
     build: .
     image: anguspllg/env-manager:latest
+    container_name: env-manager
     env_file:
       - .env
     environment:
@@ -19,6 +20,7 @@ services:
 
   db:
     image: postgres
+    container_name: env-manager-db
     environment:
       - POSTGRES_PORT=5432
     env_file:

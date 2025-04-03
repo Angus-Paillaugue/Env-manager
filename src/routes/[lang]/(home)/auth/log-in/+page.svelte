@@ -1,7 +1,6 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import { Alert, Button, Card, Input, Modal } from '$lib/components';
-  import { SECTION_HEIGHT } from '$lib/components/home/utils';
   import Link from '$lib/components/Link/Link.svelte';
   import { pageHeading } from '$lib/stores';
   import { t } from '$lib/translations';
