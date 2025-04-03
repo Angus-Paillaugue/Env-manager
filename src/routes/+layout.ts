@@ -2,10 +2,9 @@ import { setLocale } from '$lib/translations';
 import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async ({ data }) => {
-  const { i18n } = data;
-  const { lang } = i18n;
+  const { lang } = data;
 
   await setLocale(lang, true);
 
-  return i18n;
+  return data;
 };

@@ -1,5 +1,6 @@
 import { browser, dev } from '$app/environment';
 import { page } from '$app/state';
+import chalk from 'chalk';
 import { get, readable, writable } from 'svelte/store';
 
 interface Loader {
@@ -12,20 +13,39 @@ export interface Config {
   loaders: Loader[];
 }
 
+const loggerLevels = ['error', 'warn', 'debug'] as const;
+
+const loggerFactory = () => {
+  const prefix = '[i18n]:';
+  const color = '#f96743';
+
+  return Object.fromEntries(
+    loggerLevels.map((l) => {
+      const styledPrefix = browser
+        ? [`%c${prefix}`, `color: ${color}; font-weight: bold;`]
+        : [chalk.hex(color).bold(prefix)];
+      return [
+        l,
+        (...args: unknown[]) => {
+          if (dev) console[l](...styledPrefix, ...args);
+        }
+      ];
+    })
+  );
+};
+
+const logger = loggerFactory();
+
 export class i18n {
   private _config: Config;
   private _locale = writable<string>('en');
   private _currentPageTranslations = $state<Record<string, string>>({});
   private _origin = writable<string>('');
-  private _logPrefix = '[i18n]:';
 
   constructor(config: Config) {
     this._config = config;
     this._locale.set(config.defaultLocale);
-  }
-
-  private log(...args: unknown[]) {
-    if (dev) console.log(this._logPrefix, ...args);
+    logger.debug(`i18n initialized with default locale "${config.defaultLocale}"`);
   }
 
   get locale() {
@@ -45,7 +65,7 @@ export class i18n {
   }
 
   setOrigin(origin: string) {
-    this.log(`Setting origin to "${origin}"`);
+    logger.debug(`Setting origin to "${origin}"`);
     this._origin.set(origin);
   }
 
@@ -70,26 +90,29 @@ export class i18n {
     // Then add the current locale prefix
     l ??= get(this.locale);
     if (l) {
-      url.pathname = `/${l}${url.pathname}`;
+      url.pathname = `/${l}${url.pathname !== '/' ? url.pathname : ''}`;
     }
 
     return url.toString();
   };
 
-  unlocalizeHref = (href: string) => {
-    const url = this.getAbsoluteUrl(href);
+  unLocalizeHref = (href: string, origin?: string) => {
+    const url = origin ? new URL(href, origin) : this.getAbsoluteUrl(href);
     const exp = new RegExp(`^/(${this.locales.join('|')})`);
     url.pathname = url.pathname.replace(exp, '');
     return url.toString();
   };
 
   setLocale(locale: string, hook?: boolean) {
-    this.log(`Setting locale to "${locale}"`);
+    if (!locale) {
+      return;
+    }
+    logger.debug(`Setting locale to "${locale}"`);
     if (this.isLocaleSupported(locale)) {
       this._locale.set(locale);
       this.loadTranslations(locale);
     } else {
-      this.log(`Locale ${locale} not supported`);
+      logger.error(`Locale ${locale} not supported`);
       throw new Error(`Locale ${locale} not supported`);
     }
 
@@ -97,12 +120,16 @@ export class i18n {
       return;
     }
     // Redirect to the new locale
-    const url = this.localizeHref(this.unlocalizeHref(page.url.pathname), locale);
+    const url = this.localizeHref(this.unLocalizeHref(page.url.pathname), locale);
     if (url !== page.url.href) {
       if (browser && 'history' in window) {
         // goto(url, { replaceState: true });
         // TODO: make the localizeHref function return reactive values so wo can use the builtin goto function to not have to reload the page. This is a workaround for SvelteKit's goto function until we implement the reactivity
         window.location.href = url;
+        // Set the locale in localStorage to persist the locale across page reloads
+        // In the top most layout.svelte, this value is compared against the current page locale
+        // If the do not match, the user is redirected to the localStorage locale
+        localStorage.setItem('language-override', locale);
       }
     }
   }
@@ -137,10 +164,11 @@ export class i18n {
     if (loader) {
       this._currentPageTranslations = this.flattenTranslations(await loader.loader());
     } else {
+      logger.error(`Loader for locale ${locale} not found`);
       throw new Error(`Loader for locale ${locale} not found`);
     }
 
-    this.log(
+    logger.debug(
       `${Object.keys(this._currentPageTranslations).length} "${locale}" translations loaded`
     );
   }
@@ -154,13 +182,16 @@ export class i18n {
   // Updates when the locale changes
   get t() {
     return readable((key: string, params?: Record<string, unknown>) => {
+      if (Object.keys(this._currentPageTranslations).length === 0) {
+        return key;
+      }
       const translation = this._currentPageTranslations[key];
       if (translation) {
         return translation.replace(/\{{([a-zA-Z0-9]+)\}}/g, (_, index) =>
           String(params?.[index] || '')
         );
       } else {
-        this.log(`Translation for key "${key}" not found`);
+        logger.warn(`Translation for key "${key}" not found`);
       }
       return key;
     });

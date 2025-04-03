@@ -2,11 +2,12 @@ import { redirect, type Actions } from '@sveltejs/kit';
 import { tokenOptions } from '$lib/server/auth';
 import { UserDAO } from '$lib/server/db/user';
 import { ErrorHandling } from '$lib/server/errorHandling';
+import { localizeHref } from '$lib/translations';
 
 export const load = async ({ locals, url }) => {
   if (locals.user) {
     const redirectUrl = url.searchParams.get('redirect') || '/app';
-    throw redirect(302, redirectUrl);
+    throw redirect(302, localizeHref(redirectUrl));
   }
 };
 
@@ -42,9 +43,9 @@ export const actions: Actions = {
     cookies.set('token', data.token, tokenOptions);
 
     if (actualUrl.searchParams.has('redirect')) {
-      throw redirect(303, actualUrl.searchParams.get('redirect') as string);
+      throw redirect(303, localizeHref(actualUrl.searchParams.get('redirect') as string));
     }
-    throw redirect(302, '/app');
+    throw redirect(302, localizeHref('/app'));
   },
   async confirmTOTP({ cookies, request, fetch, url }) {
     const formData = Object.fromEntries(await request.formData());
@@ -67,8 +68,8 @@ export const actions: Actions = {
     cookies.set('token', totpData.token, tokenOptions);
 
     if (actualUrl.searchParams.has('redirect')) {
-      throw redirect(303, actualUrl.searchParams.get('redirect') as string);
+      throw redirect(303, localizeHref(actualUrl.searchParams.get('redirect') as string));
     }
-    throw redirect(302, '/app');
+    throw redirect(302, localizeHref('/app'));
   }
 };

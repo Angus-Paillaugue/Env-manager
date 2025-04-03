@@ -299,7 +299,8 @@
         },
         "cta": {
           "logIn": "Log In",
-          "signUp": "Sign Up"
+          "signUp": "Sign Up",
+          "dashboard": "Dashboard"
         }
       },
       "projectName": "ENV-MANAGER"
@@ -394,6 +395,14 @@
           "description": "Pull your environment variables with a single command and seamlessly integrate them into any project, CI/CD pipeline, or local development."
         }
       }
+    }
+  },
+  "layout": {
+    "languageSwitcher": {
+      "title": "Language Selection",
+      "text": "You're currently on the <b>{{pageLanguage}}</b> version of the website but your browser's language is <b>{{userLanguage}}</b>.",
+      "dismiss": "Dismiss",
+      "switchToLang": "Switch to {{lang}}"
     }
   }
 }

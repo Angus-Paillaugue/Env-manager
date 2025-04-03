@@ -5,11 +5,11 @@ export const config: Config = {
   loaders: [
     {
       locale: 'en',
-      loader: async () => (await import('./i18n/en.json')).default
+      loader: async () => (await import('./messages/en.json')).default
     },
     {
       locale: 'fr',
-      loader: async () => (await import('./i18n/fr.json')).default
+      loader: async () => (await import('./messages/fr.json')).default
     }
   ]
 };

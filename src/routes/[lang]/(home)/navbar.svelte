@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from '$app/state';
   import { Button, Modal } from '$lib/components';
   import type { Variant as ButtonVariant } from '$lib/components/Button/Button.svelte';
   import { localizeHref, t } from '$lib/translations';
@@ -28,10 +29,12 @@
       { label: 'home.navbar.navItems.main.docs', href: '/docs' },
       { label: 'home.navbar.navItems.main.pricing', href: '/pricing' }
     ],
-    cta: [
-      { label: 'home.navbar.navItems.cta.logIn', href: '/auth/log-in', variant: 'secondary' },
-      { label: 'home.navbar.navItems.cta.signUp', href: '/auth/sign-up', variant: 'primary' }
-    ]
+    cta: page.data?.user
+      ? [{ label: 'home.navbar.navItems.cta.dashboard', href: '/app', variant: 'primary' }]
+      : [
+          { label: 'home.navbar.navItems.cta.logIn', href: '/auth/log-in', variant: 'secondary' },
+          { label: 'home.navbar.navItems.cta.signUp', href: '/auth/sign-up', variant: 'primary' }
+        ]
   };
 
   function handleScroll(e: Event) {

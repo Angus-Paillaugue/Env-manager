@@ -8,3 +8,4 @@ Dockerfile
 docker-compose.yaml
 uploads/
 pg_data/
+.unlighthouse/

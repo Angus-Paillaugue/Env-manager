@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Card } from '$lib/components';
   import { pageHeading } from '$lib/stores';
-  import { localizeHref, t } from '$lib/translations';
+  import { t } from '$lib/translations';
   import { DoorOpen, Settings } from 'lucide-svelte';
 
   pageHeading.set({
