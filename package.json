@@ -16,7 +16,8 @@
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint .",
     "cli": "bun run cli/cli.ts",
-    "i18n:check": "node ./scripts/checkTranslations.js"
+    "i18n:check": "node ./scripts/checkTranslations.js",
+    "pipeline": "act push"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.5",
