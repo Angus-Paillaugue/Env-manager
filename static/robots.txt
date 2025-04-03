@@ -1,0 +1,9 @@
+User-agent: Googlebot
+Disallow: /api*
+Disallow: /log-out
+Disallow: /*/app*
+
+User-agent: *
+Allow: /
+
+Sitemap: https://env-manager.paillaugue.fr/sitemap.xml

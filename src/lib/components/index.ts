@@ -4,6 +4,7 @@ export { default as Card } from './Card';
 export { default as Collapsible } from './Collapsible';
 export { default as Checkbox } from './Checkbox';
 export { default as Dropdown } from './Dropdown';
+export { default as Flag } from './Flag';
 export { default as Hr } from './Hr';
 export { default as Input } from './Input';
 export { default as Link } from './Link';
