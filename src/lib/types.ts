@@ -39,3 +39,26 @@ export type Variable = {
   value: string;
   createdAt: Date;
 };
+
+export interface Docs {
+  Metadata: Metadata;
+  Page: Page;
+  Tree: Tree;
+}
+interface Metadata {
+  title?: string;
+  description?: string;
+}
+
+interface Page {
+  component: any;
+  url: string;
+  metadata: Metadata;
+}
+
+interface Tree {
+  type: 'file' | 'dir';
+  name: string;
+  url: string;
+  children: Tree[];
+}

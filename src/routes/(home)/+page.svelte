@@ -5,6 +5,7 @@
   import Workflow from '$lib/components/home/workflow/workflow.svelte';
   import { pageHeading } from '$lib/stores';
   import { t } from '$lib/translations';
+  import Footer from './footer.svelte';
 
   $effect(() => {
     pageHeading.set({
@@ -21,3 +22,5 @@
 <Bento />
 
 <Workflow />
+
+<Footer />
