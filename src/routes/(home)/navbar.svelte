@@ -2,7 +2,7 @@
   import { page } from '$app/state';
   import { Button, Modal } from '$lib/components';
   import type { Variant as ButtonVariant } from '$lib/components/Button/Button.svelte';
-  import { localizeHref, t } from '$lib/translations';
+  import { t } from '$lib/translations';
   import { cn } from '$lib/utils';
   import { Menu } from 'lucide-svelte';
   import { onMount } from 'svelte';
@@ -73,7 +73,7 @@
   >
     <div class="flex flex-col gap-4">
       {#each navItems.main as item}
-        <a href={localizeHref(item.href)} class="text-center text-base">{$t(item.label)}</a>
+        <a href={item.href} class="text-center text-base">{$t(item.label)}</a>
       {/each}
     </div>
 
@@ -92,7 +92,7 @@
   )}
 >
   <div class="flex flex-row items-center justify-between gap-4 max-lg:grow">
-    <a href={localizeHref('/')}>{$t('home.navbar.projectName')}</a>
+    <a href="/">{$t('home.navbar.projectName')}</a>
     <Button
       class="size-10 p-2 lg:hidden"
       variant="secondary"
@@ -106,7 +106,7 @@
   <div class="hidden flex-row gap-4 lg:flex">
     {#each navItems.main as item}
       <a
-        href={localizeHref(item.href)}
+        href={item.href}
         class="text-foreground after:bg-foreground relative font-mono font-bold after:absolute after:top-full after:left-1/2 after:mt-1 after:h-[2px] after:w-0 after:-translate-x-1/2 after:rounded-full after:transition-all after:duration-300 after:content-[''] hover:after:w-full"
         >{$t(item.label)}</a
       >

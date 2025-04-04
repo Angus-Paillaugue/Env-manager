@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from '$app/state';
   import { Card, Hr } from '$lib/components';
-  import { localizeHref, t } from '$lib/translations';
+  import { t } from '$lib/translations';
   import { cn } from '$lib/utils';
   import { ChevronDown, Code, Folder, FolderOpen, User } from 'lucide-svelte';
 
@@ -28,7 +28,7 @@
   <div class="border-border bg-card grid h-12 w-full grid-cols-2 rounded-full border">
     <a
       class="flex h-full w-full flex-row items-center justify-center gap-2 font-mono text-base font-medium"
-      href={localizeHref(`/app`)}
+      href="/app"
       use:isActive
     >
       {#if pathname.startsWith('/app/projects')}
@@ -40,7 +40,7 @@
     </a>
     <a
       class="flex h-full w-full flex-row items-center justify-center gap-2 font-mono text-base font-medium"
-      href={localizeHref(`/app/account`)}
+      href="/app/account"
       use:isActive
     >
       <User class="size-5" />
@@ -50,7 +50,7 @@
 </div>
 
 <aside
-  class="bg-card border-border hidden w-full max-w-sm shrink-0 flex-col border-r p-4 transition-transform duration-300 lg:flex"
+  class="bg-card border-border hidden w-full max-w-sm shrink-0 flex-col border-r p-4 transition-transform duration-300 lg:flex rtl:border-l"
 >
   <div class="flex flex-col gap-1">
     <Hr text={$t('app.projects.title')} href="/app" />
@@ -65,10 +65,7 @@
                 'bg-card-hover border-border'
             )}
           >
-            <a
-              href={localizeHref(`/app/projects/${project.id}`)}
-              class="flex grow flex-row items-center gap-2"
-            >
+            <a href="/app/projects/{project.id}" class="flex grow flex-row items-center gap-2">
               {#if currentProject?.id === project.id}
                 <FolderOpen class="size-4" />
               {:else}
@@ -86,7 +83,7 @@
           <div class="ml-4 flex flex-col">
             {#each project.environments as environment}
               <a
-                href={localizeHref(`/app/projects/${project.id}/environments/${environment.name}`)}
+                href="/app/projects/{project.id}/environments/{environment.name}"
                 class={cn(
                   'flex flex-row items-center gap-2 rounded border border-transparent p-2 text-base font-normal',
                   currentEnvironment?.id === environment.id && 'bg-card-hover border-border'

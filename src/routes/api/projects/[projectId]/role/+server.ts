@@ -1,5 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import { ProjectMembersDAO } from '$lib/server/db/projectMember';
+import { translate } from '$lib/translations';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ locals, params }) => {
@@ -7,14 +8,13 @@ export const GET: RequestHandler = async ({ locals, params }) => {
   const { projectId } = params;
 
   try {
-    // TODO: Use API call instead of direct DAO call
     const role = await ProjectMembersDAO.getUserRole(projectId, user.id);
     if (!role) {
-      throw new Error('Unauthorized');
+      throw new Error(translate('errors.unauthorized'));
     }
 
     return json({ role });
   } catch (e) {
-    return error(401, e instanceof Error ? e.message : 'Unauthorized');
+    return error(401, e instanceof Error ? e.message : translate('errors.unauthorized'));
   }
 };

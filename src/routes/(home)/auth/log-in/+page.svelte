@@ -6,10 +6,12 @@
   import { t } from '$lib/translations';
   import { handleForm } from '$lib/utils/formHandler';
 
-  $pageHeading = {
-    title: $t('home.auth.logIn.title'),
-    description: $t('home.auth.logIn.description')
-  };
+  $effect(() => {
+    pageHeading.set({
+      title: $t('home.auth.logIn.title'),
+      description: $t('home.auth.logIn.description')
+    });
+  });
 
   let { form } = $props();
   let isLoading = $state<boolean>(false);

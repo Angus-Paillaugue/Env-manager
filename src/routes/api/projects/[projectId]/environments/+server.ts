@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { EnvironmentDAO } from '$lib/server/db/environment';
+import { translate } from '$lib/translations';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params, locals }) => {
@@ -14,7 +15,7 @@ export const POST: RequestHandler = async ({ request, params, locals }) => {
   const { name } = await request.json();
 
   if (!name || name.trim() === '') {
-    return json({ error: 'Environment name is required' }, { status: 400 });
+    return json({ error: translate('errors.environmentNameRequired') }, { status: 400 });
   }
 
   try {

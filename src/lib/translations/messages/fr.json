@@ -404,5 +404,48 @@
       "text": "Vous êtes actuellement sur la version <b> {{pageLanguage}} </b> du site Web mais le langage de votre navigateur est <b> {{userLanguage}} </b>.",
       "title": "Sélection de la langue"
     }
+  },
+  "api": {
+    "authenticate": {
+      "authSuccessFull": "Connecté avec succès!"
+    },
+    "projects": {
+      "project": {
+        "environments": {
+          "environment": {
+            "variables": {
+              "variableDeleted": "Variable supprimée",
+              "variablesCreated": "Variables créées",
+              "variablesUpdated": "Variable mise à jour"
+            }
+          }
+        }
+      }
+    }
+  },
+  "errors": {
+    "authFailed": "L'authentification a échoué",
+    "environmentIdRequired": "L'identification de l'environnement est requise",
+    "environmentNameRequired": "Le nom de l'environnement est requis",
+    "environmentNotFound": "Environnement introuvable",
+    "errorGeneratingTOTP": "Génération d'erreur TOTP",
+    "errorValidatingTOTP": "Erreur validant TOTP",
+    "incorrectPassword": "Mot de passe incorrect!",
+    "invalidTOTP": "Code totp non valide.",
+    "loginSuccessFull": "Connecté avec succès!",
+    "memberIdRequired": "L'identification du membre est requise",
+    "memberUsernameRequired": "Le nom d'utilisateur des membres est requis",
+    "mustLogIn": "Vous devez vous connecter en premier!",
+    "needTOTP": "Authentification Topt requise. \nVeuillez fournir le code TOTP.",
+    "noAccountWithThisEmail": "Aucun compte avec cet e-mail!",
+    "noEmail": "Veuillez saisir un e-mail!",
+    "noPassword": "Veuillez saisir un mot de passe!",
+    "noUsername": "Veuillez saisir un nom d'utilisateur!",
+    "passwordTooShort": "Le mot de passe doit comporter au moins 6 caractères!",
+    "projectNameTooShort": "Le nom du projet doit comporter au moins 3 caractères",
+    "projectNotFound": "Projet introuvable",
+    "unauthorized": "Non autorisé",
+    "unknownError": "Une erreur s'est produite!",
+    "userNotFound": "L'utilisateur n'est pas trouvé!"
   }
 }

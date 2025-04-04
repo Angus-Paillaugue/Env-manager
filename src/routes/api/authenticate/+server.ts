@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import { auth, generateAccessToken, tokenOptions } from '$lib/server/auth';
 import { UserDAO } from '$lib/server/db/user';
 import { validateTOTP } from '$lib/server/totp';
+import { translate } from '$lib/translations';
 import type { User } from '$lib/types';
 import { isEmailValid } from '$lib/utils';
 import { Logger } from '$lib/utils/logger';
@@ -15,14 +16,18 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     try {
       const user = await auth(bearer.replace('Bearer ', ''));
       if (user) {
-        return json({ success: true, message: 'Logged in successfully!', token: bearer });
+        return json({
+          success: true,
+          message: translate('api.authenticate.authSuccessFull'),
+          token: bearer
+        });
       } else {
-        return json({ error: 'You must log in first!' }, { status: 401 });
+        return json({ error: translate('errors.mustLogIn') }, { status: 401 });
       }
     } catch (error) {
       Logger.error(error);
       return json(
-        { error: error instanceof Error ? error.message : 'An error occurred!' },
+        { error: error instanceof Error ? error.message : translate('errors.unknownError') },
         { status: 500 }
       );
     }
@@ -41,26 +46,27 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 
     // Check if username is provided
     if (!email || !isEmailValid(email))
-      return json({ error: 'Please enter a email!' }, { status: 400 });
+      return json({ error: translate('errors.noEmail') }, { status: 400 });
 
     // Check if password is provided
-    if (!password) return json({ error: 'Please enter a password!' }, { status: 400 });
+    if (!password) return json({ error: translate('errors.noPassword') }, { status: 400 });
 
     let user: User | null = null;
     try {
       user = await UserDAO.getUserByEmail(email);
 
       // If user does not exist, return error
-      if (!user) return json({ error: 'No account with this email!' }, { status: 400 });
+      if (!user)
+        return json({ error: translate('errors.noAccountWithThisEmail') }, { status: 400 });
 
       const compare = bcrypt.compareSync(password, user.passwordHash);
 
       // If password is incorrect, return error
-      if (!compare) return json({ error: 'Incorrect password!' }, { status: 400 });
+      if (!compare) return json({ error: translate('errors.incorrectPassword') }, { status: 400 });
     } catch (error) {
       Logger.error(error);
       return json(
-        { error: error instanceof Error ? error.message : 'An error occurred!' },
+        { error: error instanceof Error ? error.message : translate('errors.unknownError') },
         { status: 500 }
       );
     }
@@ -68,7 +74,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
       if (!totpCode) {
         return json(
           {
-            error: 'TOPT authentication required. Please provide the TOTP code.',
+            error: translate('errors.needTOTP'),
             noTOTPCode: true
           },
           { status: 400 }
@@ -78,16 +84,16 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
       try {
         const result = await validateTOTP(user.totpSecret, totpCode);
         if (!result) {
-          return json({ error: 'Invalid TOTP code.' }, { status: 400 });
+          return json({ error: translate('errors.invalidTOTP') }, { status: 400 });
         }
       } catch (error) {
         Logger.error('Error validating TOTP:', error);
-        return json({ error: 'Error validating TOTP' }, { status: 500 });
+        return json({ error: translate('errors.errorValidatingTOTP') }, { status: 500 });
       }
     }
     const token = generateAccessToken(user.id);
     if (setCookie) cookies.set('token', token, tokenOptions);
 
-    return json({ success: true, message: 'Logged in successfully!', token, user });
+    return json({ success: true, message: translate('errors.loginSuccessFull'), token, user });
   }
 };

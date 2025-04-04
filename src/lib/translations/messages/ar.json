@@ -1,0 +1,451 @@
+{
+  "app": {
+    "account": {
+      "description": "إدارة حسابك",
+      "logOut": "الخروج",
+      "settings": {
+        "2fa": {
+          "unlink": {
+            "description": "تمت إزالة المصادقة ثنائية العوامل بنجاح. \nيمكنك إعادة تمكينها في أي وقت في إعدادات حسابك.",
+            "goBackToSettings": "عد إلى الإعدادات",
+            "title": "2FA غير مرتبط"
+          }
+        },
+        "description": "إدارة إعدادات حسابك.",
+        "tabs": {
+          "dangerZone": {
+            "deleteAccount": {
+              "button": "حذف الحساب",
+              "description": "هل أنت متأكد من أنك تريد حذف حسابك؟ \nThis action is irreversible and will delete all your data.",
+              "title": "حذف الحساب",
+              "warning": "لا يمكن التراجع عن هذا الإجراء."
+            },
+            "description": "أفعال لا رجعة فيها ومدمرة.",
+            "name": "منطقة الخطر"
+          },
+          "general": {
+            "avatar": {
+              "confirmModal": {
+                "cancelButton": "يلغي",
+                "description": "هل تريد حفظ صورة الملف الشخصي هذه؟",
+                "title": "تحميل صورة الملف الشخصي"
+              },
+              "label": "تغيير الصورة الرمزية"
+            },
+            "description": "قم بتحديث معلومات ملفك الشخصي.",
+            "language": "لغة",
+            "name": "عام"
+          },
+          "security": {
+            "2fa": {
+              "description": "أضف طبقة إضافية من الأمان إلى حسابك.",
+              "enabled": "يتم تمكين المصادقة ثنائية العوامل لحسابك.",
+              "manageButton": "إدارة 2FA",
+              "notEnabled": "لم يتم تمكين المصادقة ثنائية العوامل. \nتمكينه من تأمين حسابك.",
+              "setupButton": "إعداد 2FA",
+              "title": "2FA"
+            },
+            "changePassword": {
+              "currentPassword": "كلمة المرور الحالية",
+              "description": "قم بتحديث كلمة المرور الخاصة بك.",
+              "newPassword": "كلمة المرور الجديدة",
+              "success": "تم تغيير كلمة المرور بنجاح.",
+              "title": "تغيير كلمة المرور",
+              "updateButton": "تحديث"
+            },
+            "description": "الإعدادات المتقدمة للتطبيق.",
+            "manage2fa": {
+              "description": "تم إعداد 2FA بالفعل لحسابك. \nيمكنك تعطيله بالنقر فوق الزر أدناه",
+              "disableButton": "إبطال",
+              "title": "إدارة 2FA"
+            },
+            "name": "حماية",
+            "setup2fa": {
+              "confirmCode": "تأكيد الرمز",
+              "description": "لتعزيز أمان حسابك ، يرجى إعداد كلمة مرور لمرة واحدة على أساس الوقت (2FA)",
+              "nextButton": "التالي",
+              "qrCodeAlt": "رمز الاستجابة السريعة لإعداد 2FA",
+              "showHideValue": "عرض/إخفاء القيمة",
+              "title": "إعداد 2FA",
+              "unableToScan": "غير قادر على مسح؟ \nيمكنك إظهار المفتاح السري:"
+            },
+            "successModal": {
+              "description": "نجاح إعداد TOTP",
+              "message": "لقد نجحت في إعداد مصادقة TOTP على حسابك. \nسيُطلب منك إدخال الرمز في كل تسجيل الدخول.",
+              "title": "نجاح"
+            },
+            "totpUnlink": {
+              "description": "تمت إزالة المصادقة ثنائية العوامل بنجاح. \nيمكنك إعادة تمكينها في أي وقت في إعدادات حسابك.",
+              "goBackButton": "عد إلى الإعدادات",
+              "title": "2FA غير مرتبط"
+            },
+            "unlink2fa": {
+              "description": "لإلغاء ربط 2FA ، يرجى إدخال الرمز من تطبيق المصادقة الخاص بك.",
+              "disableButton": "إبطال",
+              "title": "إلغاء ربط 2FA"
+            }
+          }
+        },
+        "title": "إعدادات"
+      },
+      "title": "حساب"
+    },
+    "environment": {
+      "delete": {
+        "confirmation": "هل أنت متأكد أنك تريد حذف هذه البيئة؟",
+        "description": "حذف {{بيئة الاسم}}؟",
+        "title": "حذف البيئة",
+        "warning": "لا يمكن التراجع عن هذا الإجراء. \nسيحذف هذا بشكل دائم البيئة المسماة <b> {{engopername}} </b>."
+      },
+      "edit": {
+        "description": "تحرير <b> {{بيئة}} </b>",
+        "nameLabel": "اسم",
+        "placeholder": "على سبيل المثال \nديف",
+        "title": "تحرير بيئة"
+      }
+    },
+    "environments": {
+      "delete": {
+        "cancelButton": "يلغي",
+        "confirmButton": "يمسح",
+        "description": "هل أنت متأكد من أنك تريد حذف البيئة {{بيئة}}}؟",
+        "title": "حذف البيئة",
+        "warning": "لا يمكن التراجع عن هذا الإجراء."
+      },
+      "description": "إدارة البيئات للمشروع {{projectName}}.",
+      "edit": {
+        "description": "تحرير تفاصيل البيئة {{engopername}}.",
+        "nameLabel": "اسم البيئة",
+        "placeholder": "أدخل اسمًا جديدًا للبيئة",
+        "title": "تحرير البيئة"
+      },
+      "seo": {
+        "title": "البيئات - {{projectName}}"
+      },
+      "title": "البيئات"
+    },
+    "project": {
+      "create": {
+        "action": "يخلق",
+        "description": "قم بإنشاء بيئة جديدة لإدارة متغيراتك",
+        "title": "إنشاء بيئة"
+      },
+      "delete": {
+        "content": "سيؤدي حذف هذا المشروع أيضًا إلى حذف جميع البيئات والمتغيرات المرتبطة به. </ br> هذا الإجراء لا رجعة فيه.",
+        "description": "هل أنت متأكد من أنك تريد حذف هذا المشروع؟",
+        "title": "حذف المشروع"
+      },
+      "environments": {
+        "noEnvironments": "لم يتم العثور على بيئات. \nإنشاء واحد لإدارة المتغيرات الخاصة بك.",
+        "settings": {
+          "tabs": {
+            "general": {
+              "projectName": "اسم المشروع",
+              "title": "عام"
+            },
+            "security": {
+              "deleteProject": "حذف المشروع",
+              "title": "حماية"
+            }
+          },
+          "title": "إعدادات"
+        },
+        "title": "البيئات"
+      },
+      "member": {
+        "leaveProject": "ترك المشروع",
+        "remove": {
+          "actions": {
+            "leave": "يترك",
+            "remove": "يزيل"
+          },
+          "content": {
+            "someoneElse": "هل أنت متأكد من أنك تريد إزالة <b> {{username}} </b> من المشروع؟",
+            "yourself": "هل أنت متأكد من أنك تريد إبعاد نفسك من المشروع؟"
+          },
+          "description": "إزالة <b> {{username}} </b>",
+          "title": "إزالة عضو"
+        },
+        "removeProject": "ترفع من المشروع"
+      },
+      "members": {
+        "add": {
+          "description": "أضف عضوًا جديدًا إلى المشروع {{projectName}}.",
+          "title": "إضافة عضو",
+          "usernameLabel": "اسم المستخدم"
+        },
+        "list": {
+          "title": "أعضاء"
+        }
+      }
+    },
+    "projects": {
+      "create": {
+        "button": "يخلق",
+        "description": "أضف مشروعًا جديدًا لبدء إدارة بيئاتك.",
+        "nameLabel": "اسم المشروع",
+        "placeholder": "أدخل اسم المشروع",
+        "title": "إنشاء مشروع"
+      },
+      "description": "إدارة مشاريعك وبيئاتك.",
+      "environments": {
+        "environment": {
+          "create": {
+            "description": "إنشاء متغير جديد في البيئة <b> {{name}} </b>",
+            "enterManually": {
+              "label": "أدخلها يدويًا",
+              "placeholder": "على سبيل المثال \napi_key"
+            },
+            "importDotEnv": {
+              "label": "استيراد ملف .env",
+              "placeholder": "اختر ملف .env"
+            },
+            "title": "إنشاء متغير"
+          },
+          "description": "إدارة المتغيرات في البيئة <b> {{{بيئة}}} </b> بيئة <b> {{projectName}} </b>",
+          "title": "{{name}} البيئة",
+          "variable": {
+            "actions": {
+              "delete": {
+                "description": "حذف <b> {{variablename}} </b> من <b> {{{بيئة}} </b>؟",
+                "text": "هل أنت متأكد من أنك تريد حذف هذا المتغير؟ </ br> لا يمكن التراجع عن هذا الإجراء. \nسيحذف هذا بشكل دائم المتغير <b> {{variablename}} </b> من البيئة <b> {{{بيئة}} </b>.",
+                "title": "حذف متغير"
+              },
+              "edit": {
+                "description": "edit <b> {{variablename}} </b> في <b> {{{بيئة}} </b>",
+                "title": "تحرير متغير",
+                "variablePlaceholder": "على سبيل المثال \napi_key"
+              }
+            },
+            "create": "إنشاء متغير",
+            "download": {
+              "label": "تنزيل المتغيرات"
+            },
+            "noVariables": "يبدو أنه لا توجد متغيرات في هذه البيئة. \nانقر فوق الزر أعلاه لإنشاء واحد.",
+            "title": "المتغيرات",
+            "toggleValueVisibility": "عرض/إخفاء القيمة"
+          }
+        }
+      },
+      "noProjects": {
+        "create": "إنشاء مشروع للبدء",
+        "title": "لم يتم العثور على مشاريع"
+      },
+      "title": "المشاريع",
+      "yourProjects": "مشاريعك"
+    },
+    "sidebar": {
+      "items": {
+        "account": "حساب",
+        "projects": "المشاريع"
+      }
+    }
+  },
+  "home": {
+    "auth": {
+      "callback": {
+        "success": {
+          "description": "جهازك متصل الآن.",
+          "text": "تهانينا ، أنت كل شيء!",
+          "title": "نجاح"
+        }
+      },
+      "logIn": {
+        "description": "الرجاء إدخال بيانات الاعتماد الخاصة بك لتسجيل الدخول.",
+        "noAccount": {
+          "cta": "اشتراك.",
+          "text": "لا حساب؟"
+        },
+        "title": "تسجيل الدخول",
+        "totp": {
+          "description": "قم بتأكيد رمز TOTP الخاص بك",
+          "next": "التالي",
+          "title": "TOTP تأكيد"
+        }
+      },
+      "signUp": {
+        "alreadyHaveAnAccount": {
+          "cta": "تسجيل الدخول.",
+          "text": "هل لديك بالفعل حساب؟"
+        },
+        "description": "إنشاء حساب جديد.",
+        "title": "اشتراك"
+      }
+    },
+    "footer": {
+      "about": {
+        "description": "يقوم Env-Manager بتبسيط الإدارة المتغيرة للبيئة للفرق ، مما يضمن التعاون السلس والتحديثات في الوقت الفعلي.",
+        "title": "عن"
+      },
+      "copyright": "جميع الحقوق محفوظة.",
+      "language": {
+        "title": "لغة"
+      },
+      "navigation": {
+        "links": {
+          "dashboard": "لوحة القيادة",
+          "help": "مركز المساعدة",
+          "logIn": "تسجيل الدخول",
+          "signUp": "اشتراك"
+        },
+        "title": "روابط سريعة"
+      }
+    },
+    "homepage": {
+      "bento": {
+        "card1": {
+          "description": "مشاركة المتغيرات بشكل آمن مع زملاء الفريق. \nتعيين الأدوار وضمان أن البيانات الحساسة لا يمكن الوصول إليها إلا للأشخاص المناسبين.",
+          "roles": {
+            "guest": "ضيف",
+            "owner": "مالك"
+          },
+          "title": "السيطرة على من يرى ماذا"
+        },
+        "card2": {
+          "description": "إدارة متغيرات البيئة بسهولة لجميع مشاريعك في مكان واحد ، مع واجهة مستخدم نظيفة و CLI قوية.",
+          "environment": {
+            "name": "إنتاج",
+            "title": "بيئة:"
+          },
+          "project": {
+            "name": "تطبيقي",
+            "title": "مشروع:"
+          },
+          "syncNow": "المزامنة الآن",
+          "syncing": "مزامنة",
+          "syncingTo": "مزامنة",
+          "title": "كل متغيراتك ، مركز آمن واحد"
+        },
+        "card3": {
+          "description": "مع Env-Manager ، تبقى الفرق متزامنة. \nأضف متغيرًا مرة واحدة ، ويصل على الفور إلى عضو في الفريق - لا أكثر من ملفات .env!",
+          "title": "التعاون دون عناء مع المتغيرات المشتركة"
+        },
+        "card4": {
+          "description": "سحب ودفع متغيرات البيئة بسلاسة بين الإعداد المحلي والسحابة ، مع الحفاظ على كل شيء محدثًا.",
+          "title": "متغيرات مزامنة في الثواني"
+        },
+        "heading": {
+          "description": "ادفع مرة واحدة ، المزامنة في كل مكان. \nقم بتحديث متغيرات البيئة على الفور عبر فريقك بأكمله.",
+          "pill": "المزامنة الحية",
+          "title": "التعاون في الوقت الحقيقي"
+        }
+      },
+      "description": "الصفحة الرئيسية لمدير البيئة",
+      "hero": {
+        "cli": {
+          "title": "تكامل CLI"
+        },
+        "ctaText": "ابدأ",
+        "slogan": {
+          "emphasis": "في أي مكان",
+          "text": "إدارة متغيرة البيئة غير الملحومة ،"
+        }
+      },
+      "title": "بيت",
+      "workflow": {
+        "card1": {
+          "description": "نظرًا لأن متغيرات البيئة عالمية ولغة/إطار عمل لا حاجة إلى تكامل خاص.",
+          "title": "قم بتوصيل مشاريعك"
+        },
+        "card2": {
+          "description": "يتم تخزين متغيرات البيئة الخاصة بك بأمان ويمكن الوصول إليها بسهولة. \nالتحكم في الوصول وتحديث القيم دون عناء.",
+          "targetText": "يؤمن",
+          "title": "يؤمن"
+        },
+        "card3": {
+          "description": "اسحب متغيرات البيئة الخاصة بك بأمر واحد ودمجها بسلاسة في أي مشروع أو خط أنابيب CI/CD أو التطوير المحلي.",
+          "title": "المزامنة"
+        },
+        "heading": {
+          "description": "التبديل دون عناء إلى Env-Manager في مشاريع جديدة أو حالية. \nلا حاجة لتغيير سير العمل الخاص بك أو تعلم أدوات جديدة.",
+          "pill": "اندماج",
+          "title": "معنا ، لم يكن الاندماج أسهل من قبل"
+        }
+      }
+    },
+    "navbar": {
+      "navItems": {
+        "cta": {
+          "dashboard": "لوحة القيادة",
+          "logIn": "تسجيل الدخول",
+          "signUp": "اشتراك"
+        },
+        "main": {
+          "docs": "مستندات",
+          "features": "سمات",
+          "pricing": "التسعير"
+        }
+      },
+      "projectName": "البيئة"
+    }
+  },
+  "labels": {
+    "add": "يضيف",
+    "cancel": "يلغي",
+    "close": "يغلق",
+    "create": "يخلق",
+    "delete": "يمسح",
+    "edit": "يحرر",
+    "email": "بريد إلكتروني",
+    "password": "كلمة المرور",
+    "profilePicture": "صورة الملف الشخصي",
+    "save": "يحفظ",
+    "submit": "يُقدِّم",
+    "username": "اسم المستخدم",
+    "variables": {
+      "keyLabel": "مفتاح",
+      "valueLabel": "قيمة"
+    }
+  },
+  "layout": {
+    "languageSwitcher": {
+      "dismiss": "رفض",
+      "switchToLang": "التبديل إلى {{lang}}",
+      "text": "أنت حاليًا على إصدار <b> {{pagelanguage}} </b> من موقع الويب ولكن لغة المتصفح الخاصة بك هي <b> {{userLanguage}}} </b>.",
+      "title": "اختيار اللغة"
+    }
+  },
+  "api": {
+    "authenticate": {
+      "authSuccessFull": "تسجيل الدخول بنجاح!"
+    },
+    "projects": {
+      "project": {
+        "environments": {
+          "environment": {
+            "variables": {
+              "variableDeleted": "متغير حذف",
+              "variablesCreated": "المتغيرات التي تم إنشاؤها",
+              "variablesUpdated": "تم تحديث متغير"
+            }
+          }
+        }
+      }
+    }
+  },
+  "errors": {
+    "authFailed": "فشلت المصادقة",
+    "environmentIdRequired": "معرف البيئة مطلوب",
+    "environmentNameRequired": "اسم البيئة مطلوب",
+    "environmentNotFound": "البيئة غير موجودة",
+    "errorGeneratingTOTP": "خطأ توليد TOTP",
+    "errorValidatingTOTP": "خطأ في التحقق من صحة TOTP",
+    "incorrectPassword": "كلمة مرور غير صحيحة!",
+    "invalidTOTP": "رمز TOTP غير صالح.",
+    "loginSuccessFull": "تسجيل الدخول بنجاح!",
+    "memberIdRequired": "معرف الأعضاء مطلوب",
+    "memberUsernameRequired": "اسم المستخدم العضو مطلوب",
+    "mustLogIn": "يجب عليك تسجيل الدخول أولاً!",
+    "needTOTP": "مصادقة TOPT المطلوبة. \nيرجى تقديم رمز TOTP.",
+    "noAccountWithThisEmail": "لا يوجد حساب مع هذا البريد الإلكتروني!",
+    "noEmail": "الرجاء إدخال بريد إلكتروني!",
+    "noPassword": "الرجاء إدخال كلمة مرور!",
+    "noUsername": "الرجاء إدخال اسم مستخدم!",
+    "passwordTooShort": "يجب أن يكون طول كلمة المرور 6 أحرف على الأقل!",
+    "projectNameTooShort": "يجب أن يكون اسم المشروع 3 أحرف على الأقل",
+    "projectNotFound": "لم يتم العثور على المشروع",
+    "unauthorized": "غير مصرح به",
+    "unknownError": "حدث خطأ!",
+    "userNotFound": "لم يتم العثور على المستخدم!"
+  }
+}

@@ -158,7 +158,7 @@
   </form>
 </Modal>
 
-<Dropdown key="var-{variable.id}" class="ml-auto">
+<Dropdown key="var-{variable.id}" class="ltr:ml-auto rtl:mr-auto">
   {#snippet trigger()}
     <Dropdown.Trigger variant="secondary" class="size-6 rounded p-1" key="var-{variable.id}">
       <EllipsisVertical class="size-full" />

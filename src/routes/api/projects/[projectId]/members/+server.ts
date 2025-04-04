@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { ProjectMembersDAO } from '$lib/server/db/projectMember';
 import { UserDAO } from '$lib/server/db/user';
+import { translate } from '$lib/translations';
 import type { ProjectMember } from '$lib/types';
 import type { RequestHandler } from './$types';
 
@@ -19,11 +20,11 @@ export const POST: RequestHandler = async ({ locals, params, request }) => {
 
   const role: ProjectMember['role'] = 'guest';
 
-  if (!memberUsername) throw new Error('Member username is required');
-
-  const addedUser = await UserDAO.getUserByUsername(memberUsername);
-  if (!addedUser) throw new Error('User not found');
   try {
+    if (!memberUsername) throw new Error(translate('errors.memberUsernameRequired'));
+
+    const addedUser = await UserDAO.getUserByUsername(memberUsername);
+    if (!addedUser) throw new Error(translate('errors.userNotFound'));
     await ProjectMembersDAO.addMember(user.id, params.projectId as string, addedUser.id, role);
     return json({
       projectId: params.projectId,
@@ -40,11 +41,11 @@ export const DELETE: RequestHandler = async ({ locals, params, request }) => {
   const { user } = locals;
   const { memberId } = await request.json();
 
-  if (!memberId) throw new Error('Member id is required');
-
-  const removedUser = await UserDAO.getUserById(memberId);
-  if (!removedUser) throw new Error('User not found');
   try {
+    if (!memberId) throw new Error(translate('errors.memberIdRequired'));
+
+    const removedUser = await UserDAO.getUserById(memberId);
+    if (!removedUser) throw new Error(translate('errors.userNotFound'));
     await ProjectMembersDAO.removeMember(user.id, params.projectId as string, removedUser.id);
     return json({
       projectId: params.projectId,

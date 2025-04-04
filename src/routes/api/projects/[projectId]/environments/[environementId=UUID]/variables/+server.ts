@@ -1,6 +1,7 @@
 import { json, text } from '@sveltejs/kit';
 import { EnvironmentDAO } from '$lib/server/db/environment';
 import { VariableDAO } from '$lib/server/db/variable';
+import { translate } from '$lib/translations';
 import type { Variable } from 'lucide-svelte';
 import type { RequestHandler } from './$types';
 
@@ -20,7 +21,9 @@ export const DELETE: RequestHandler = async ({ locals, request }) => {
 
   try {
     await VariableDAO.deleteVariable(user.id, id);
-    return json({ message: 'Variable deleted' });
+    return json({
+      message: translate('api.projects.project.environments.environment.variables.variableDeleted')
+    });
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : error }, { status: 400 });
   }
@@ -30,7 +33,8 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
   const { user } = locals;
   const environment = await EnvironmentDAO.getEnvironmentById(user.id, params.environementId);
 
-  if (!environment) return json({ message: 'Environment not found' }, { status: 404 });
+  if (!environment)
+    return json({ message: translate('errors.environmentNotFound') }, { status: 404 });
 
   const data = await request.json();
 
@@ -48,7 +52,9 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
       await VariableDAO.createVariable(user.id, environment.id, variable.name, variable.value);
     }
 
-    return json({ message: 'Variables created' });
+    return json({
+      message: translate('api.projects.project.environments.environment.variables.variablesCreated')
+    });
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : error }, { status: 400 });
   }

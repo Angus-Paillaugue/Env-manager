@@ -1,6 +1,7 @@
 import { json, text } from '@sveltejs/kit';
 import { EnvironmentDAO } from '$lib/server/db/environment';
 import { VariableDAO } from '$lib/server/db/variable';
+import { translate } from '$lib/translations';
 import type { Variable } from '$lib/types';
 import type { RequestHandler } from './$types';
 
@@ -12,7 +13,8 @@ export const GET: RequestHandler = async ({ params, locals, url, fetch }) => {
     params.projectId,
     params.environementName
   );
-  if (!environment) return json({ message: 'Environment not found' }, { status: 404 });
+  if (!environment)
+    return json({ message: translate('errors.environmentNotFound') }, { status: 404 });
 
   const res = await fetch(
     `/api/projects/${params.projectId}/environments/${environment.id}/variables`
@@ -32,7 +34,9 @@ export const DELETE: RequestHandler = async ({ locals, request }) => {
 
   try {
     await VariableDAO.deleteVariable(user.id, id);
-    return json({ message: 'Variable deleted' });
+    return json({
+      message: translate('api.projects.project.environments.environment.variables.variableDeleted')
+    });
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : error }, { status: 400 });
   }
@@ -46,7 +50,8 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
     params.projectId,
     params.environementName
   );
-  if (!environment) return json({ message: 'Environment not found' }, { status: 404 });
+  if (!environment)
+    return json({ message: translate('errors.environmentNotFound') }, { status: 404 });
 
   const data = await request.json();
 
@@ -64,7 +69,9 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
       await VariableDAO.createVariable(user.id, environment.id, variable.name, variable.value);
     }
 
-    return json({ message: 'Variables created' });
+    return json({
+      message: translate('api.projects.project.environments.environment.variables.variablesCreated')
+    });
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : error }, { status: 400 });
   }
@@ -77,7 +84,12 @@ export const PATCH: RequestHandler = async ({ locals, request }) => {
 
   try {
     const newVar = await VariableDAO.editVariable(user.id, id, name, value);
-    return json({ message: 'Variable updated', variable: newVar });
+    return json({
+      message: translate(
+        'api.projects.project.environments.environment.variables.variablesUpdated'
+      ),
+      variable: newVar
+    });
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : error }, { status: 400 });
   }
@@ -94,11 +106,14 @@ export const PUT: RequestHandler = async ({ locals, request, params }) => {
       params.projectId,
       params.environementName
     );
-    if (!environment) return json({ message: 'Environment not found' }, { status: 404 });
+    if (!environment)
+      return json({ message: translate('errors.environmentNotFound') }, { status: 404 });
 
     await VariableDAO.replaceVariables(user.id, environment.id, variables);
 
-    return json({ message: 'Variables updated' });
+    return json({
+      message: translate('api.projects.project.environments.environment.variables.variablesUpdated')
+    });
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : error }, { status: 400 });
   }
