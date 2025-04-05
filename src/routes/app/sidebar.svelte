@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import { Card, Hr } from '$lib/components';
+  import { Card, Hr, Sidebar } from '$lib/components';
   import { t } from '$lib/translations';
   import { cn } from '$lib/utils';
   import { ChevronDown, Code, Folder, FolderOpen, User } from 'lucide-svelte';
@@ -10,26 +10,13 @@
   let currentEnvironment = $derived(page.data?.environment);
   let user = $derived(page.data.user);
   let pathname = $derived(page.url.pathname);
-
-  // TODO: Fix this
-  function isActive(node: HTMLAnchorElement) {
-    const href = node.getAttribute('href');
-    const isActive = href && pathname === href;
-    node.dataset.active = isActive ? 'true' : 'false';
-    return {
-      update(newHref: string) {
-        node.dataset.active = newHref && pathname === newHref ? 'true' : 'false';
-      }
-    };
-  }
 </script>
 
-<div class="p-2 lg:hidden">
-  <div class="border-border bg-card grid h-12 w-full grid-cols-2 rounded-full border">
-    <a
+<Sidebar>
+  {#snippet mobile()}
+    <Sidebar.MobileItem
       class="flex h-full w-full flex-row items-center justify-center gap-2 font-mono text-base font-medium"
       href="/app"
-      use:isActive
     >
       {#if pathname.startsWith('/app/projects')}
         <FolderOpen class="size-4" />
@@ -37,22 +24,16 @@
         <Folder class="size-4" />
       {/if}
       {$t('app.sidebar.items.projects')}
-    </a>
-    <a
+    </Sidebar.MobileItem>
+    <Sidebar.MobileItem
       class="flex h-full w-full flex-row items-center justify-center gap-2 font-mono text-base font-medium"
       href="/app/account"
-      use:isActive
     >
       <User class="size-5" />
       {$t('app.sidebar.items.account')}
-    </a>
-  </div>
-</div>
-
-<aside
-  class="bg-card border-border hidden w-full max-w-sm shrink-0 flex-col border-r p-4 transition-transform duration-300 lg:flex rtl:border-l"
->
-  <div class="flex flex-col gap-1">
+    </Sidebar.MobileItem>
+  {/snippet}
+  {#snippet desktop()}
     <Hr text={$t('app.projects.title')} href="/app" />
     {#each projects as project}
       {#if project.environments.length > 0}
@@ -104,23 +85,26 @@
         </a>
       {/if}
     {/each}
-  </div>
-
-  <Card hoverEffect={true} href="/app/account" class="mt-auto flex-row items-center gap-4 rounded">
-    <div class="border-border size-12 overflow-hidden rounded-full border">
-      <!-- svelte-ignore a11y_img_redundant_alt -->
-      <img
-        src={user.profilePicture}
-        alt={$t('labels.profilePicture')}
-        class="object-cover object-center"
-      />
-    </div>
-    <div class="flex flex-col">
-      <span class="text-sm font-medium">{user.username}</span>
-      <span class="text-muted font-mono text-xs">{user.email}</span>
-    </div>
-  </Card>
-</aside>
+    <Card
+      hoverEffect={true}
+      href="/app/account"
+      class="mt-auto flex-row items-center gap-4 rounded"
+    >
+      <div class="border-border size-12 overflow-hidden rounded-full border">
+        <!-- svelte-ignore a11y_img_redundant_alt -->
+        <img
+          src={user.profilePicture}
+          alt={$t('labels.profilePicture')}
+          class="object-cover object-center"
+        />
+      </div>
+      <div class="flex flex-col">
+        <span class="text-sm font-medium">{user.username}</span>
+        <span class="text-muted font-mono text-xs">{user.email}</span>
+      </div>
+    </Card>
+  {/snippet}
+</Sidebar>
 
 <style>
   details > summary {

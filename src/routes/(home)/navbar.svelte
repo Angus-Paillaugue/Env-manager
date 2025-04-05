@@ -38,6 +38,10 @@
   };
 
   function handleScroll(e: Event) {
+    if (page.url.pathname.startsWith('/docs')) {
+      scrollDirection = 'up';
+      return;
+    }
     const target = e.target as HTMLElement;
     const currentScroll = target.scrollTop;
 

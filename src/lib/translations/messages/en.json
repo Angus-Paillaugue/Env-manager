@@ -454,5 +454,17 @@
   },
   "docs": {
     "title": "Docs"
+  },
+  "components": {
+    "docs": {
+      "markdown": {
+        "img": {
+          "zoom": "Zoom on image"
+        },
+        "pre": {
+          "copyCode": "Copy code"
+        }
+      }
+    }
   }
 }

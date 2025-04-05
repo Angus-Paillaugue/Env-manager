@@ -92,7 +92,6 @@ export function getTreeForCurrentLocale(docs: Record<string, any>): Docs['Tree']
   const supportedDocsLocale = new Set(
     Object.keys(docs).map((path) => path.replace(absolutePathStart, '').split('/')[0])
   );
-  console.log(l);
   if (!supportedDocsLocale.has(l)) {
     throw new Error(translate('errors.unsupportedLocale', { locale: l }));
   }

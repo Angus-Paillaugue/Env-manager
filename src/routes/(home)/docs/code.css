@@ -1,0 +1,203 @@
+@reference "../../../app.css"
+
+/* Used for theme toggling */
+html.dark .shiki,
+html.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  /* background-color: var(--shiki-dark-bg) !important; */
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+/* Base styles for all code blocks thruout the app */
+code {
+  counter-reset: codeStep;
+  counter-increment: codeStep 0;
+  direction: ltr;
+  -moz-tab-size: 2;
+  -o-tab-size: 2;
+  tab-size: 2;
+  font-variant-ligatures: normal;
+  @apply hyphens-none whitespace-pre-wrap;
+}
+/* Highlighted code blocks */
+.shiki {
+  @apply !bg-card border-border relative overflow-auto rounded border py-6 whitespace-pre focus:-outline-offset-1;
+}
+
+.line-numbers .line::before {
+  content: counter(codeStep);
+  counter-increment: codeStep;
+  font-variant-numeric: tabular-nums;
+  @apply text-muted inline-block w-6 text-left;
+}
+/* For snippet */
+.snippet {
+  @apply border-border relative my-4 flex w-full max-w-[500px] flex-row items-stretch overflow-hidden rounded border;
+}
+.snippet .shiki {
+  @apply w-full rounded-none border-none p-4;
+}
+.snippet > pre > code .line::before,
+.commands > pre > code .line::before {
+  @apply text-foreground mr-4 inline-block w-fit text-center content-['$'];
+}
+.snippet pre > code .line {
+  @apply p-0 pr-10 whitespace-pre;
+}
+/* For regular code blocks */
+pre > code .line {
+  @apply relative inline-block w-full px-6;
+}
+pre > code {
+  @apply block w-full;
+}
+/* For highlighted lines */
+.diff.remove {
+  @apply bg-red-600/20 after:absolute after:top-1/2 after:left-2 after:-translate-y-1/2 after:text-red-600 after:content-['-'];
+}
+.diff.add {
+  @apply bg-green-600/20 after:absolute after:top-1/2 after:left-2 after:-translate-y-1/2 after:text-green-600 after:content-['+'];
+}
+.highlighted {
+  @apply bg-foreground/20 after:bg-foreground after:absolute after:left-0 after:h-full after:w-[2px];
+}
+/* Inline code */
+code:not(pre code, .command) {
+  @apply bg-foreground text-background rounded-sm px-0.5;
+}
+.commands > pre,
+.commandsCode pre {
+  @apply m-0 rounded-none border-none py-4;
+}
+
+/* Styling page components */
+
+/* Table */
+#docsContainer table thead {
+  @apply bg-secondary;
+}
+
+#docsContainer table th {
+  @apply text-muted border-border p-4 pb-3 pl-8 text-left font-medium;
+}
+
+#docsContainer table td {
+  @apply border-border border-b p-4 pl-8;
+}
+
+/* Lists */
+#docsContainer ul,
+#docsContainer ol {
+  @apply my-5 list-outside list-none ps-6 pl-0;
+}
+
+#docsContainer ul li {
+  @apply relative list-none ps-1;
+}
+
+#docsContainer ul > li::before {
+  @apply bg-card absolute top-[12px] -left-[1.25rem] h-0.5 w-3 rounded-full content-[''];
+}
+
+#docsContainer ol > li {
+  @apply list-decimal;
+}
+
+/* TaskList */
+#docsContainer .task-list-item {
+  @apply flex items-center gap-2;
+}
+#docsContainer .task-list-item input[type='checkbox'] {
+  @apply border-border after:text-background checked:bg-foreground relative size-4 appearance-none rounded-[6px] border after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:text-sm after:font-bold checked:after:content-["✓"];
+}
+
+/* API references */
+.http-keyword {
+  @apply mr-1 rounded border px-2 py-0.5;
+}
+.http-keyword[data-keyword='GET'] {
+  @apply border-blue-700 bg-blue-600/20 text-blue-900 dark:text-blue-100;
+}
+.http-keyword[data-keyword='POST'] {
+  @apply border-green-700 bg-green-600/20 text-green-900 dark:text-green-100;
+}
+.http-keyword[data-keyword='PUT'] {
+  @apply border-yellow-700 bg-yellow-600/20 text-yellow-900 dark:text-yellow-100;
+}
+.http-keyword[data-keyword='DELETE'] {
+  @apply border-red-700 bg-red-600/20 text-red-900 dark:text-red-100;
+}
+.http-keyword[data-keyword='PATCH'] {
+  @apply border-orange-700 bg-orange-600/20 text-orange-900 dark:text-orange-100;
+}
+.http-keyword[data-keyword='OPTIONS'] {
+  @apply border-gray-700 bg-gray-600/20 text-gray-900 dark:text-gray-100;
+}
+.http-keyword[data-keyword='HEAD'] {
+  @apply border-indigo-700 bg-indigo-600/20 text-indigo-900 dark:text-indigo-100;
+}
+.http-keyword[data-keyword='CONNECT'] {
+  @apply border-purple-700 bg-purple-600/20 text-purple-900 dark:text-purple-100;
+}
+.http-keyword[data-keyword='TRACE'] {
+  @apply border-teal-700 bg-teal-600/20 text-teal-900 dark:text-teal-100;
+}
+
+/* Text */
+#docsContainer h1,
+#docsContainer h2,
+#docsContainer h3,
+#docsContainer h4,
+#docsContainer h5,
+#docsContainer h6 {
+  text-wrap: balance;
+  @apply text-foreground;
+}
+
+#docsContainer h1 {
+  @apply mt-4 mb-2 text-3xl leading-[3.5rem] font-medium md:leading-[4rem] md:font-semibold;
+}
+
+#docsContainer h2 {
+  @apply mt-12 mb-4 text-2xl leading-6 font-bold;
+}
+
+#docsContainer h3 {
+  @apply mt-9 mb-2 text-xl leading-6 font-semibold;
+}
+
+#docsContainer h4 {
+  @apply mt-4 mb-2 text-xl font-semibold;
+}
+
+#docsContainer h5 {
+  @apply mt-4 mb-2 text-lg font-semibold;
+}
+
+#docsContainer h6 {
+  @apply mt-4 mb-2 text-base font-semibold;
+}
+
+#docsContainer p {
+  text-wrap: none;
+  @apply text-foreground mb-4 text-base leading-6 font-medium;
+}
+
+#docsContainer span,
+#docsContainer small {
+  @apply text-foreground;
+}
+
+#docsContainer small {
+  @apply text-xs;
+}
+
+/* Others */
+#docsContainer kbd {
+  @apply bg-card text-muted rounded px-2 py-1 font-mono text-sm font-normal;
+}
+
+#docsContainer mark {
+  @apply bg-foreground text-background;
+}

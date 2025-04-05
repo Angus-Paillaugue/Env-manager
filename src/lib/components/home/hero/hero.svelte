@@ -6,7 +6,7 @@
   import DotEnv from './dotEnv.svelte';
 </script>
 
-<section class="text-foreground relative overflow-hidden" style="height: {SECTION_HEIGHT};">
+<section class="text-foreground relative overflow-hidden" style="min-height: {SECTION_HEIGHT};">
   <div
     class="absolute inset-0 -z-10 bg-[image:radial-gradient(var(--pattern)_1px,_transparent_0)] bg-[size:10px_10px] bg-fixed"
     style="--pattern: color-mix(in oklab,var(--color-foreground)15%,transparent);"
