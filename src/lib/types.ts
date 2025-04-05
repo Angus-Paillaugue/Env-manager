@@ -46,6 +46,7 @@ export interface Docs {
   Tree: Tree;
 }
 interface Metadata {
+  name: string;
   title?: string;
   description?: string;
 }

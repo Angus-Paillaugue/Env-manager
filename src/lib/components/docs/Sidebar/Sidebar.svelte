@@ -9,6 +9,10 @@
   const { tree }: MyProps = $props();
 </script>
 
-<div class="flex flex-col">
-  <ElementList {tree} root={true} />
-</div>
+<aside
+  class="bg-card border-border hidden w-full max-w-sm shrink-0 flex-col border-r p-4 transition-transform duration-300 lg:flex rtl:border-l"
+>
+  <div class="flex flex-col gap-1">
+    <ElementList {tree} root={true} />
+  </div>
+</aside>

@@ -446,6 +446,13 @@
     "projectNotFound": "Projet introuvable",
     "unauthorized": "Non autorisé",
     "unknownError": "Une erreur s'est produite!",
-    "userNotFound": "L'utilisateur n'est pas trouvé!"
+    "userNotFound": "L'utilisateur n'est pas trouvé!",
+    "docsNotFound": "Aucune documentation trouvée",
+    "missingStateParameter": "Paramètre d'état manquant",
+    "pageNotFound": "Page introuvable",
+    "unsupportedLocale": "Locale non prise en charge {{Locale}}"
+  },
+  "docs": {
+    "title": "Docs"
   }
 }

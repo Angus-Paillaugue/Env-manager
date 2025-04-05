@@ -6,9 +6,9 @@
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
 </script>
 
-<div class="flex flex-row gap-4">
+<div class="flex h-svh flex-row gap-4">
   <Sidebar tree={data.tree} />
-  <div class="block">
+  <div class="block overflow-y-auto">
     {@render children?.()}
   </div>
 </div>

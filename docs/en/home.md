@@ -1,5 +1,6 @@
 ---
-title: My page title
+title: My home docs page
+name: Home
 ---
 
 # Hi

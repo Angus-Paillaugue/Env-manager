@@ -104,11 +104,11 @@ export class i18n {
     }
     logger.debug(`Setting locale to "${locale}"`);
     if (this.isLocaleSupported(locale)) {
+      this.loadTranslations(locale);
       if (locale !== get(this._locale)) {
         this._locale.set(locale);
         this._dir.set(config.loaders.find((l) => l.locale === locale)?.dir as Dir);
       }
-      this.loadTranslations(locale);
     } else {
       logger.error(`Locale ${locale} not supported`);
       throw new Error(`Locale ${locale} not supported`);

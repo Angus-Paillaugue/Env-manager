@@ -1,5 +1,6 @@
 ---
 title: My test page
+name: Test page
 ---
 
 # Test

@@ -1,12 +1,18 @@
+import { locale, translate } from '$lib/translations'; // Assuming these are exported from the mentioned files
 import type { Docs } from '$lib/types';
+import { get } from 'svelte/store';
 
 const absolutePathStart = '/docs/';
 export const slugify = (path: string) => {
   return path.split('.')[0].replace(/ /g, '-').replace(/_/g, '-').toLowerCase();
 };
 
-export const constructPage = (docs: Record<string, any>, path: string): Docs['Page'] => {
-  const relativePath = path.replace(absolutePathStart, '');
+export const constructPage = (
+  docs: Record<string, any>,
+  path: string,
+  locale: string
+): Docs['Page'] => {
+  const relativePath = path.replace(`${absolutePathStart}${locale}/`, '');
   const pageSlug = slugify(relativePath);
   const page = docs[path];
   const metadata = page.metadata as Docs['Metadata'];
@@ -17,24 +23,28 @@ export const constructPage = (docs: Record<string, any>, path: string): Docs['Pa
   };
 };
 
-export function constructTree(docs: Record<string, any>): Docs['Tree'][] | [] {
+export function constructTree(docs: Record<string, any>, locale: string): Docs['Tree'][] | [] {
   const root: Docs['Tree'] = { type: 'dir', name: '', url: '', children: [] };
 
   for (const path of Object.keys(docs)) {
-    const relativePath = path.replace(absolutePathStart, '');
+    if (!path.startsWith(`${absolutePathStart}${locale}/`)) continue;
+
+    const relativePath = path.replace(`${absolutePathStart}${locale}/`, '');
     const parts = relativePath.split('/');
     let current = root;
 
     parts.forEach((part, index) => {
       const isFile = index === parts.length - 1;
       const slug = slugify(parts.slice(0, index + 1).join('/'));
+      const metadata = docs[path].metadata as Docs['Metadata'];
+      const name = metadata.name || part.split('.')[0];
 
       if (isFile) {
         // Add file to the current directory
         current.children = current.children || [];
         current.children.push({
           type: 'file',
-          name: part.split('.')[0],
+          name,
           url: `/docs/${slug}`,
           children: []
         });
@@ -45,7 +55,12 @@ export function constructTree(docs: Record<string, any>): Docs['Tree'][] | [] {
         ) as Docs['Tree'];
 
         if (!dir) {
-          dir = { type: 'dir', name: part, url: `/docs/${slug}`, children: [] };
+          dir = {
+            type: 'dir',
+            name: part,
+            url: `/docs/${slug}`,
+            children: []
+          };
           current.children = current.children || [];
           current.children.push(dir);
         }
@@ -59,12 +74,28 @@ export function constructTree(docs: Record<string, any>): Docs['Tree'][] | [] {
 }
 
 export function pageBySlug(docs: Record<string, any>, slug: string): Docs['Page'] | null {
+  const l = get(locale);
   for (const path of Object.keys(docs)) {
-    const relativePath = path.replace(absolutePathStart, '');
+    const relativePath = path.replace(`${absolutePathStart}${l}/`, '');
     const pageSlug = slugify(relativePath);
     if (pageSlug === slug) {
-      return constructPage(docs, path);
+      return constructPage(docs, path, l);
     }
   }
   return null;
+}
+
+// Helper function to get the tree for the current locale
+export function getTreeForCurrentLocale(docs: Record<string, any>): Docs['Tree'][] | [] {
+  const l = get(locale);
+  // Check if locale is supported
+  const supportedDocsLocale = new Set(
+    Object.keys(docs).map((path) => path.replace(absolutePathStart, '').split('/')[0])
+  );
+  console.log(l);
+  if (!supportedDocsLocale.has(l)) {
+    throw new Error(translate('errors.unsupportedLocale', { locale: l }));
+  }
+
+  return constructTree(docs, l);
 }

@@ -12,9 +12,9 @@ export const config: Config = {
       loader: async () => (await import('./messages/fr.json')).default
     },
     {
-      locale: 'ar',
+      locale: 'eg',
       dir: 'rtl',
-      loader: async () => (await import('./messages/ar.json')).default
+      loader: async () => (await import('./messages/eg.json')).default
     }
   ]
 };

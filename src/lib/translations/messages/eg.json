@@ -446,6 +446,13 @@
     "projectNotFound": "لم يتم العثور على المشروع",
     "unauthorized": "غير مصرح به",
     "unknownError": "حدث خطأ!",
-    "userNotFound": "لم يتم العثور على المستخدم!"
+    "userNotFound": "لم يتم العثور على المستخدم!",
+    "docsNotFound": "لم يتم العثور على وثائق",
+    "missingStateParameter": "معلمة الحالة المفقودة",
+    "pageNotFound": "الصفحة لم يتم العثور عليها",
+    "unsupportedLocale": "الإعدادات المحلية غير المدعومة {{locale}}"
+  },
+  "docs": {
+    "title": "مستندات"
   }
 }
