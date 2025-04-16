@@ -191,7 +191,6 @@ export class i18n {
 
   // Translate a single translation and returns a string of it's value. No reactivity (mainly used on the server to i18n error messages)
   translate(key: string, params?: Record<string, unknown>) {
-    logger.debug(get(this._locale));
     return get(this.t)(key, params);
   }
 }

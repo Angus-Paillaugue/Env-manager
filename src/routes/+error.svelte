@@ -1,9 +1,9 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import { SECTION_HEIGHT } from '$lib/components/home/utils';
+  import { NAV_HEIGHT, SECTION_HEIGHT } from '$lib/components/home/utils';
 </script>
 
-<div class="flex flex-col items-center justify-center" style="height: {SECTION_HEIGHT};">
+<div class="flex flex-col items-center justify-center" style="height: {SECTION_HEIGHT}; margin-top: {NAV_HEIGHT}px;">
   <div class="border-foreground relative w-full max-w-md rounded border-2 p-4 pt-8">
     <p class="text-foreground text-center text-lg font-medium">{page.error?.message}</p>
     <div

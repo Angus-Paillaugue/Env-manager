@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { SECTION_HEIGHT } from '$lib/components/home/utils';
   import { t } from '$lib/translations';
   import { SquareTerminal } from 'lucide-svelte';
   import Pill from '../pill.svelte';
@@ -8,7 +7,7 @@
   import Terminal from './terminal.svelte';
 </script>
 
-<section class="flex flex-col px-2 py-12 lg:px-10 lg:py-24" style="min-height: {SECTION_HEIGHT};">
+<section class="flex flex-col px-2 py-12 lg:px-10 lg:py-24 min-h-svh">
   <div
     class="mx-auto flex w-full max-w-screen-2xl grow flex-col items-center justify-center gap-10"
   >

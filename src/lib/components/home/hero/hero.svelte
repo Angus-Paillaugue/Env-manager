@@ -1,12 +1,11 @@
 <script lang="ts">
   import Button from '$lib/components/Button';
   import { t } from '$lib/translations';
-  import { SECTION_HEIGHT } from '../utils';
   import Cli from './cli.svelte';
   import DotEnv from './dotEnv.svelte';
 </script>
 
-<section class="text-foreground relative overflow-hidden" style="min-height: {SECTION_HEIGHT};">
+<section class="text-foreground relative overflow-hidden min-h-svh">
   <div
     class="absolute inset-0 -z-10 bg-[image:radial-gradient(var(--pattern)_1px,_transparent_0)] bg-[size:10px_10px] bg-fixed"
     style="--pattern: color-mix(in oklab,var(--color-foreground)15%,transparent);"

@@ -17,7 +17,7 @@ export const GET: RequestHandler = async ({ locals }) => {
 
     return json({ url: otpAuthUrl, secret: secret.base32 });
   } catch (error) {
-    Logger.error(translate('errors.errorGeneratingTOTP') + ':', error);
+    Logger.error('Error generating TOTP Token :', error);
     throw new Error(translate('errors.errorGeneratingTOTP'));
   }
 };
