@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit';
+import { translate } from '$lib/translations';
 import { Logger } from '$lib/utils/logger';
 import speakeasy from 'speakeasy';
 import type { RequestHandler } from './$types';
@@ -16,7 +17,7 @@ export const GET: RequestHandler = async ({ locals }) => {
 
     return json({ url: otpAuthUrl, secret: secret.base32 });
   } catch (error) {
-    Logger.error('Error generating TOTP:', error);
-    throw new Error('Error generating TOTP');
+    Logger.error(translate('errors.errorGeneratingTOTP') + ':', error);
+    throw new Error(translate('errors.errorGeneratingTOTP'));
   }
 };

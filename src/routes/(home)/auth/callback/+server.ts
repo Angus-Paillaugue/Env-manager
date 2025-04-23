@@ -1,18 +1,18 @@
 import { json, redirect } from '@sveltejs/kit';
 import { auth, generateAccessToken } from '$lib/server/auth';
-import { localizeHref } from '$lib/translations';
+import { translate } from '$lib/translations';
 import { Logger } from '$lib/utils/logger';
 
 export async function GET({ url, cookies }) {
   const state = url.searchParams.get('state');
-  if (!state) return json({ error: 'Missing state parameter' }, { status: 400 });
+  if (!state) return json({ error: translate('errors.missingStateParameter') }, { status: 400 });
 
   // Check if the user is already authenticated
   const cookie = cookies.get('token') || null;
   if (!cookie) {
     // Properly encode the redirect URL
     const redirectUrl = encodeURIComponent(`/auth/callback?state=${state}`);
-    throw redirect(302, localizeHref(`/auth/log-in?redirect=${redirectUrl}`));
+    throw redirect(302, `/auth/log-in?redirect=${redirectUrl}`);
   }
 
   try {
@@ -20,7 +20,7 @@ export async function GET({ url, cookies }) {
     const user = await auth(cookie);
     if (!user) {
       const redirectUrl = encodeURIComponent(`/auth/callback?state=${state}`);
-      throw redirect(302, localizeHref(`/auth/log-in?redirect=${redirectUrl}`));
+      throw redirect(302, `/auth/log-in?redirect=${redirectUrl}`);
     }
 
     // Generate a new access token and associate it with the state
@@ -35,9 +35,9 @@ export async function GET({ url, cookies }) {
     }
   } catch (error) {
     Logger.error('Authentication error:', error);
-    return json({ error: 'Authentication failed' }, { status: 401 });
+    return json({ error: translate('errors.authFailed') }, { status: 401 });
   }
 
   // Redirect to success page
-  throw redirect(302, localizeHref('/auth/callback/success'));
+  throw redirect(302, '/auth/callback/success');
 }

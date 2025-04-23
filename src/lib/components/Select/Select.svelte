@@ -58,7 +58,12 @@
   <div class="flex flex-row items-center gap-2">
     {@html $value?.html}
   </div>
-  <ChevronDown class={cn('text-muted ml-auto size-4 transition-transform', open && 'rotate-180')} />
+  <ChevronDown
+    class={cn(
+      'text-muted size-4 transition-transform ltr:ml-auto rtl:mr-auto',
+      open && 'rotate-180'
+    )}
+  />
   <div use:accordion={open} class="absolute top-full right-0 left-0 mt-2">
     <div class="border-border bg-card flex flex-col overflow-hidden rounded border">
       {@render children?.()}

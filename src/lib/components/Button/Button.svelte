@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { localizeHref } from '$lib/translations';
   import { cn } from '$lib/utils';
   import type { SvelteHTMLElements } from 'svelte/elements';
   import { fade } from 'svelte/transition';
@@ -45,21 +44,9 @@
   );
 
   let tagName = 'href' in restProps ? 'a' : 'button';
-
-  let href = $state('href' in restProps ? restProps.href : undefined);
-  if ('href' in restProps) {
-    if (restProps.href) {
-      href = localizeHref(restProps.href);
-    }
-  }
 </script>
 
-<svelte:element
-  this={tagName}
-  class={finalClasses}
-  {...restProps}
-  {...tagName === 'a' ? { href } : {}}
->
+<svelte:element this={tagName} class={finalClasses} {...restProps}>
   {#if loading}
     <span in:fade={{ duration: 200 }}>
       <Spinner class="size-5" />

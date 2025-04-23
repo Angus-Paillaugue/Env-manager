@@ -1,11 +1,12 @@
 import { error, json } from '@sveltejs/kit';
 import { ProjectDAO } from '$lib/server/db/project';
+import { translate } from '$lib/translations';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ locals, params }) => {
   const { user } = locals;
   const project = await ProjectDAO.getProjectById(user.id, params.projectId);
-  if (!project) return error(404, 'Project not found');
+  if (!project) return error(404, translate('errors.projectNotFound'));
   return json({ project });
 };
 
@@ -28,7 +29,7 @@ export const PUT: RequestHandler = async ({ locals, params, request }) => {
   try {
     const project = await ProjectDAO.getProjectById(user.id, params.projectId as string);
     if (!project) {
-      throw new Error('Project not found');
+      throw new Error(translate('errors.projectNotFound'));
     }
     project.name = name;
     await ProjectDAO.updateProject(user.id, project);

@@ -1,6 +1,5 @@
 import { error, redirect, type Actions } from '@sveltejs/kit';
 import { ErrorHandling } from '$lib/server/errorHandling';
-import { localizeHref } from '$lib/translations';
 import type { Environment } from '$lib/types';
 
 export const load = async ({ params, fetch }) => {
@@ -41,10 +40,7 @@ export const actions: Actions = {
     } catch (error) {
       return ErrorHandling.throwActionError(400, 'createEnvironment', error, true);
     }
-    throw redirect(
-      303,
-      localizeHref(`/app/projects/${params.projectId}/environments/${environment.name}`)
-    );
+    throw redirect(303, `/app/projects/${params.projectId}/environments/${environment.name}`);
   },
   async deleteEnvironment({ request, params, fetch }) {
     const formData = Object.fromEntries(await request.formData());
@@ -184,6 +180,6 @@ export const actions: Actions = {
       return ErrorHandling.throwActionError(400, 'deleteProject', error, true);
     }
 
-    throw redirect(303, localizeHref('/app'));
+    throw redirect(303, '/app');
   }
 };

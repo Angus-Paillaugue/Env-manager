@@ -1,6 +1,7 @@
-import { unLocalizeHref } from '$lib/translations';
+import { origin } from '$lib/translations';
 import { clsx, type ClassValue } from 'clsx';
 import { MediaQuery } from 'svelte/reactivity';
+import { get } from 'svelte/store';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -15,14 +16,9 @@ export const formatTimestamp = (timestamp: Date) => {
   return timestamp.toLocaleString();
 };
 
-export function urlStartsWith(
-  url: string,
-  path: string | string[] | RegExp,
-  origin?: string
-): boolean {
+export function urlStartsWith(url: string, path: string | string[] | RegExp, o?: string): boolean {
   if (!url || !path) return false;
-  url = unLocalizeHref(url, origin);
-  const pathname = new URL(url).pathname;
+  const pathname = new URL(url, o || get(origin)).pathname;
   if (Array.isArray(path)) return path.some((p) => urlStartsWith(pathname, p));
   if (path instanceof RegExp) return path.test(pathname);
   // For the `/` path

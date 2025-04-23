@@ -1,3 +1,4 @@
+import type { Dir } from '$lib/translations/i18n.svelte';
 import type { User } from '$lib/types';
 
 // See https://svelte.dev/docs/kit/types#app.d.ts
@@ -7,7 +8,10 @@ declare global {
     // interface Error {}
     interface Locals {
       user: User;
-      lang: string;
+      i18n: {
+        dir: Dir;
+        lang: string;
+      };
     }
     // interface PageData {}
     // interface PageState {}

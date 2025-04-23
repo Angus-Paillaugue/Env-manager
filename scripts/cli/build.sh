@@ -2,6 +2,6 @@
 
 thisDir=$(dirname $0)
 cliEntryFile="$thisDir/../../cli/cli.ts"
-outFile="$thisDir/../../dist/cli"
+outFile="$thisDir/../../dist/env-manager"
 
 bun build "$cliEntryFile" --compile --outfile "$outFile"

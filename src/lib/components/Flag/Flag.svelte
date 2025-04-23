@@ -7,7 +7,8 @@
 
   let { lang, ...restProps }: Props & SvelteHTMLElements['img'] = $props();
   const overrides: Record<string, string> = {
-    en: 'us'
+    en: 'us',
+    ar: 'ae'
   };
 
   const langCode = Object.keys(overrides).includes(lang) ? overrides[lang] : lang;

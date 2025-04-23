@@ -404,5 +404,49 @@
       "dismiss": "Dismiss",
       "switchToLang": "Switch to {{lang}}"
     }
+  },
+  "errors": {
+    "passwordTooShort": "Password must be at least 6 characters long!",
+    "noUsername": "Please enter a username!",
+    "noEmail": "Please enter an email!",
+    "noPassword": "Please enter a password!",
+    "noAccountWithThisEmail": "No account with this email!",
+    "authFailed": "Authentication failed",
+    "loginSuccessFull": "Logged in successfully!",
+    "mustLogIn": "You must log in first!",
+    "unknownError": "An error occurred!",
+    "incorrectPassword": "Incorrect password!",
+    "needTOTP": "TOPT authentication required. Please provide the TOTP code.",
+    "invalidTOTP": "Invalid TOTP code.",
+    "errorValidatingTOTP": "Error validating TOTP",
+    "errorGeneratingTOTP": "Error generating TOTP",
+    "projectNameTooShort": "Project name must be at least 3 characters long",
+    "projectNotFound": "Project not found",
+    "unauthorized": "Unauthorized",
+    "memberIdRequired": "Member id is required",
+    "environmentIdRequired": "Environment id is required",
+    "memberUsernameRequired": "Member username is required",
+    "userNotFound": "User not found!",
+    "environmentNameRequired": "Environment name is required",
+    "environmentNotFound": "Environment not found",
+    "missingStateParameter": "Missing state parameter"
+  },
+  "api": {
+    "authenticate": {
+      "authSuccessFull": "Logged in successfully!"
+    },
+    "projects": {
+      "project": {
+        "environments": {
+          "environment": {
+            "variables": {
+              "variableDeleted": "Variable deleted",
+              "variablesCreated": "Variables created",
+              "variablesUpdated": "Variable updated"
+            }
+          }
+        }
+      }
+    }
   }
 }

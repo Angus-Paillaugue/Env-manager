@@ -1,12 +1,21 @@
 import { browser, dev } from '$app/environment';
-import { page } from '$app/state';
 import chalk from 'chalk';
 import { get, readable, writable } from 'svelte/store';
+import { config } from './config';
+
+type Required<T> = {
+  [P in keyof T]-?: T[P];
+};
+
+export type Dir = 'rtl' | 'ltr';
 
 interface Loader {
   locale: string;
+  dir?: Dir;
   loader: () => Promise<Record<string, unknown>>;
 }
+
+type InternalConfig = Required<Config>;
 
 export interface Config {
   defaultLocale: string;
@@ -27,7 +36,8 @@ const loggerFactory = () => {
       return [
         l,
         (...args: unknown[]) => {
-          if (dev) console[l](...styledPrefix, ...args);
+          // Log everything in dev and only errors in prod
+          if (dev || (!dev && loggerLevels.indexOf(l) <= 0)) console[l](...styledPrefix, ...args);
         }
       ];
     })
@@ -37,15 +47,30 @@ const loggerFactory = () => {
 const logger = loggerFactory();
 
 export class i18n {
-  private _config: Config;
+  private _config: InternalConfig;
   private _locale = writable<string>('en');
   private _currentPageTranslations = $state<Record<string, string>>({});
   private _origin = writable<string>('');
+  private _dir = writable<Dir>('ltr');
 
   constructor(config: Config) {
-    this._config = config;
+    this._config = this.normalizeConfig(config);
     this._locale.set(config.defaultLocale);
     logger.debug(`i18n initialized with default locale "${config.defaultLocale}"`);
+  }
+
+  private normalizeConfig(config: Config): InternalConfig {
+    const defaultDir = 'ltr';
+    config.loaders.map((loader) => {
+      loader.dir ??= defaultDir;
+      return loader;
+    });
+
+    return config;
+  }
+
+  get config() {
+    return this._config;
   }
 
   get locale() {
@@ -64,44 +89,14 @@ export class i18n {
     return this._origin;
   }
 
+  get dir() {
+    return this._dir;
+  }
+
   setOrigin(origin: string) {
     logger.debug(`Setting origin to "${origin}"`);
     this._origin.set(origin);
   }
-
-  private getAbsoluteUrl = (href: string) => {
-    let url;
-    try {
-      url = new URL(href, get(this._origin));
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_e) {
-      url = new URL(href, page.url.origin);
-    }
-    return url;
-  };
-
-  localizeHref = (href: string, l?: string) => {
-    const url = this.getAbsoluteUrl(href);
-
-    // First, remove any existing locale prefix to avoid double prefixes
-    const exp = new RegExp(`^/(${this.locales.join('|')})`);
-    url.pathname = url.pathname.replace(exp, '');
-
-    // Then add the current locale prefix
-    l ??= get(this.locale);
-    if (l) {
-      url.pathname = `/${l}${url.pathname !== '/' ? url.pathname : ''}`;
-    }
-
-    return url.toString();
-  };
-
-  unLocalizeHref = (href: string, origin?: string) => {
-    const url = origin ? new URL(href, origin) : this.getAbsoluteUrl(href);
-    const exp = new RegExp(`^/(${this.locales.join('|')})`);
-    url.pathname = url.pathname.replace(exp, '');
-    return url.toString();
-  };
 
   setLocale(locale: string, hook?: boolean) {
     if (!locale) {
@@ -109,7 +104,10 @@ export class i18n {
     }
     logger.debug(`Setting locale to "${locale}"`);
     if (this.isLocaleSupported(locale)) {
-      this._locale.set(locale);
+      if (locale !== get(this._locale)) {
+        this._locale.set(locale);
+        this._dir.set(config.loaders.find((l) => l.locale === locale)?.dir as Dir);
+      }
       this.loadTranslations(locale);
     } else {
       logger.error(`Locale ${locale} not supported`);
@@ -119,19 +117,11 @@ export class i18n {
     if (hook) {
       return;
     }
-    // Redirect to the new locale
-    const url = this.localizeHref(this.unLocalizeHref(page.url.pathname), locale);
-    if (url !== page.url.href) {
-      if (browser && 'history' in window) {
-        // goto(url, { replaceState: true });
-        // TODO: make the localizeHref function return reactive values so wo can use the builtin goto function to not have to reload the page. This is a workaround for SvelteKit's goto function until we implement the reactivity
-        window.location.href = url;
-        // Set the locale in localStorage to persist the locale across page reloads
-        // In the top most layout.svelte, this value is compared against the current page locale
-        // If the do not match, the user is redirected to the localStorage locale
-        localStorage.setItem('language-override', locale);
-      }
-    }
+
+    // First delete the old locale cookie
+    document.cookie = `locale=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+    // Then set the new locale cookie
+    document.cookie = `locale=${locale}; path=/; max-age=31536000`;
   }
 
   private isLocaleSupported(locale: string): boolean {
@@ -160,6 +150,8 @@ export class i18n {
 
   // Load translations for the current locale in memory
   async loadTranslations(locale: string) {
+    if (locale === get(this._locale) && Object.keys(this._currentPageTranslations).length !== 0)
+      return;
     const loader = this._config.loaders.find((l) => l.locale === locale);
     if (loader) {
       this._currentPageTranslations = this.flattenTranslations(await loader.loader());
@@ -195,5 +187,11 @@ export class i18n {
       }
       return key;
     });
+  }
+
+  // Translate a single translation and returns a string of it's value. No reactivity (mainly used on the server to i18n error messages)
+  translate(key: string, params?: Record<string, unknown>) {
+    logger.debug(get(this._locale));
+    return get(this.t)(key, params);
   }
 }

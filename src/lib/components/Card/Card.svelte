@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { localizeHref } from '$lib/translations';
   import { cn } from '$lib/utils';
   import { onMount } from 'svelte';
   import type { SvelteHTMLElements } from 'svelte/elements';
@@ -55,13 +54,6 @@
       card?.removeEventListener('mouseleave', handleMouseLeave);
     };
   });
-
-  let href = $state('href' in restProps ? restProps.href : undefined);
-  if ('href' in restProps) {
-    if (restProps.href && overrideHref) {
-      href = localizeHref(restProps.href);
-    }
-  }
 </script>
 
 <svelte:element
@@ -73,7 +65,6 @@
     className
   )}
   {...restProps}
-  {...tagName === 'a' ? { href } : {}}
 >
   <div class="pointer-events-none absolute inset-0 overflow-hidden">
     {#if show}

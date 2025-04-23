@@ -2,12 +2,12 @@ import { redirect, type Actions } from '@sveltejs/kit';
 import { tokenOptions } from '$lib/server/auth';
 import { UserDAO } from '$lib/server/db/user';
 import { ErrorHandling } from '$lib/server/errorHandling';
-import { localizeHref } from '$lib/translations';
+import { translate } from '$lib/translations';
 
 export const load = async ({ locals, url }) => {
   if (locals.user) {
     const redirectUrl = url.searchParams.get('redirect') || '/app';
-    throw redirect(302, localizeHref(redirectUrl));
+    throw redirect(302, redirectUrl);
   }
 };
 
@@ -30,7 +30,11 @@ export const actions: Actions = {
       // Auth OK but need TOTP
       const user = await UserDAO.getUserByEmail(email);
       if (!user) {
-        return ErrorHandling.throwActionError(400, 'logIn', 'No account with this email!');
+        return ErrorHandling.throwActionError(
+          400,
+          'logIn',
+          translate('errors.noAccountWithThisEmail')
+        );
       }
 
       if (user.totpEnabled && user.totpSecret) {
@@ -43,9 +47,9 @@ export const actions: Actions = {
     cookies.set('token', data.token, tokenOptions);
 
     if (actualUrl.searchParams.has('redirect')) {
-      throw redirect(303, localizeHref(actualUrl.searchParams.get('redirect') as string));
+      throw redirect(303, actualUrl.searchParams.get('redirect') as string);
     }
-    throw redirect(302, localizeHref('/app'));
+    throw redirect(302, '/app');
   },
   async confirmTOTP({ cookies, request, fetch, url }) {
     const formData = Object.fromEntries(await request.formData());
@@ -68,8 +72,8 @@ export const actions: Actions = {
     cookies.set('token', totpData.token, tokenOptions);
 
     if (actualUrl.searchParams.has('redirect')) {
-      throw redirect(303, localizeHref(actualUrl.searchParams.get('redirect') as string));
+      throw redirect(303, actualUrl.searchParams.get('redirect') as string);
     }
-    throw redirect(302, localizeHref('/app'));
+    throw redirect(302, '/app');
   }
 };
