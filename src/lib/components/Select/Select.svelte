@@ -3,7 +3,6 @@
   import { ChevronDown } from 'lucide-svelte';
   import { onMount } from 'svelte';
   import type { SvelteHTMLElements } from 'svelte/elements';
-  import { slide } from 'svelte/transition';
   import { accordion } from '../Collapsible/collapsible';
   import { minWidth, value } from './stores';
 

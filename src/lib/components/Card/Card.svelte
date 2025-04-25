@@ -7,7 +7,6 @@
 
   interface MyProps {
     hoverEffect?: boolean;
-    overrideHref?: boolean;
   }
 
   type Props = ({ href: string } & SvelteHTMLElements['a']) | SvelteHTMLElements['div'];
@@ -16,7 +15,6 @@
     children,
     class: className,
     hoverEffect = false,
-    overrideHref = true,
     ...restProps
   }: Props & MyProps = $props();
 

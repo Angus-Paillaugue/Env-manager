@@ -9,7 +9,7 @@
   let isDeletingAccount = $state(false);
 </script>
 
-Annuler<!-- Delete account confirm modal -->
+<!-- Delete account confirm modal -->
 <Modal bind:open={deleteAccountConfirmModalOpen}>
   <Modal.Heading>
     <Modal.Title>{$t('app.account.settings.tabs.dangerZone.deleteAccount.title')}</Modal.Title>
