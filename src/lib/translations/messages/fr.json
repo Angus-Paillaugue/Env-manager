@@ -446,6 +446,7 @@
     "projectNotFound": "Projet introuvable",
     "unauthorized": "Non autorisé",
     "unknownError": "Une erreur s'est produite!",
-    "userNotFound": "L'utilisateur n'est pas trouvé!"
+    "userNotFound": "L'utilisateur n'est pas trouvé!",
+    "missingStateParameter": "Paramètre d'état manquant"
   }
 }

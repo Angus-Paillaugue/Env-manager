@@ -446,6 +446,7 @@
     "projectNotFound": "لم يتم العثور على المشروع",
     "unauthorized": "غير مصرح به",
     "unknownError": "حدث خطأ!",
-    "userNotFound": "لم يتم العثور على المستخدم!"
+    "userNotFound": "لم يتم العثور على المستخدم!",
+    "missingStateParameter": "معلمة الحالة المفقودة"
   }
 }
