@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { SECTION_HEIGHT } from '$lib/components/home/utils';
   import { t } from '$lib/translations';
   import { CloudUpload } from 'lucide-svelte';
   import Pill from '../pill.svelte';
@@ -9,7 +8,7 @@
   import Card4 from './card4.svelte';
 </script>
 
-<section class="px-2 py-12 lg:px-10 lg:py-24" style="min-height: {SECTION_HEIGHT};" id="features">
+<section class="px-2 py-12 lg:px-10 lg:py-24 min-h-svh" id="features">
   <div
     class="mx-auto flex w-full max-w-screen-2xl grow flex-col items-center justify-center gap-10"
   >

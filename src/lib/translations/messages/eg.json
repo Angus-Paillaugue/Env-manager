@@ -447,6 +447,24 @@
     "unauthorized": "غير مصرح به",
     "unknownError": "حدث خطأ!",
     "userNotFound": "لم يتم العثور على المستخدم!",
-    "missingStateParameter": "معلمة الحالة المفقودة"
+    "docsNotFound": "لم يتم العثور على وثائق",
+    "missingStateParameter": "معلمة الحالة المفقودة",
+    "pageNotFound": "الصفحة لم يتم العثور عليها",
+    "unsupportedLocale": "الإعدادات المحلية غير المدعومة {{locale}}"
+  },
+  "docs": {
+    "title": "مستندات"
+  },
+  "components": {
+    "docs": {
+      "markdown": {
+        "img": {
+          "zoom": "Zoom on image"
+        },
+        "pre": {
+          "copyCode": "Copy code"
+        }
+      }
+    }
   }
 }

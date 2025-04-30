@@ -16,7 +16,7 @@ export default defineConfig({
   },
   server: {
     fs: {
-      allow: ['uploads']
+      allow: ['uploads', 'docs']
     }
   },
   resolve: process.env.VITEST

@@ -3,6 +3,7 @@
   import { pageHeading } from '$lib/stores';
   import '../app.css';
   import { dir, locale } from '$lib/translations/';
+  import Navbar from './navbar.svelte';
 
   let { children } = $props();
   let canonical = $derived(page.url.href);
@@ -30,4 +31,6 @@
   {/if}
 </svelte:head>
 
-{@render children()}
+<Navbar />
+
+{@render children?.()}

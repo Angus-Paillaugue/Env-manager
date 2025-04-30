@@ -26,6 +26,7 @@ vite.config.ts.timestamp-*
 
 # Profile pictures
 uploads/
+!uploads/profile_pictures/
 !uploads/profile_pictures/default.webp
 
 pg_data/

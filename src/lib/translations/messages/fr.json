@@ -447,6 +447,24 @@
     "unauthorized": "Non autorisé",
     "unknownError": "Une erreur s'est produite!",
     "userNotFound": "L'utilisateur n'est pas trouvé!",
-    "missingStateParameter": "Paramètre d'état manquant"
+    "docsNotFound": "Aucune documentation trouvée",
+    "missingStateParameter": "Paramètre d'état manquant",
+    "pageNotFound": "Page introuvable",
+    "unsupportedLocale": "Locale non prise en charge {{Locale}}"
+  },
+  "docs": {
+    "title": "Docs"
+  },
+  "components": {
+    "docs": {
+      "markdown": {
+        "img": {
+          "zoom": "Zoomer sur l'image"
+        },
+        "pre": {
+          "copyCode": "Copier de code"
+        }
+      }
+    }
   }
 }

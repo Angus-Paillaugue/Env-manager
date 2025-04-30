@@ -33,6 +33,7 @@
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-svelte": "^2.46.1",
     "globals": "^15.14.0",
+    "mdsvex": "^0.12.3",
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
@@ -51,6 +52,7 @@
   },
   "dependencies": {
     "@inquirer/prompts": "^7.4.0",
+    "@shikijs/transformers": "^3.2.1",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/nodemailer": "^6.4.17",
     "@types/open": "^6.2.1",
@@ -73,7 +75,10 @@
     "open": "^10.1.0",
     "pg": "^8.14.0",
     "qrcode": "^1.5.4",
+    "rehype-slug": "^6.0.0",
+    "remark-attr": "^0.11.1",
     "sharp": "^0.33.5",
+    "shiki": "^3.2.1",
     "speakeasy": "^2.0.0",
     "tailwind-merge": "^3.0.2"
   }

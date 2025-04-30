@@ -48,7 +48,7 @@ export const actions: Actions = {
 
       cookies.set('token', generateAccessToken(user.id), tokenOptions);
     } catch (error) {
-      Logger.error(error);
+      Logger.error('Error creating user account :',error);
       return ErrorHandling.throwActionError(400, 'signUp', error, true);
     }
 

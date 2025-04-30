@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import { Card, Hr } from '$lib/components';
+  import { Card, Hr, Sidebar } from '$lib/components';
   import { t } from '$lib/translations';
   import { cn } from '$lib/utils';
   import { ChevronDown, Code, Folder, FolderOpen, User } from 'lucide-svelte';
@@ -78,12 +78,11 @@
   };
 </script>
 
-<div class="p-2 lg:hidden">
-  <div class="border-border bg-card grid h-12 w-full grid-cols-2 rounded-full border">
-    <a
+<Sidebar>
+  {#snippet mobile()}
+    <Sidebar.MobileItem
       class="flex h-full w-full flex-row items-center justify-center gap-2 font-mono text-base font-medium"
       href="/app"
-      use:isActive
     >
       {#if pathname.startsWith('/app/projects')}
         <FolderOpen class="size-4" />
@@ -91,11 +90,10 @@
         <Folder class="size-4" />
       {/if}
       {$t('app.sidebar.items.projects')}
-    </a>
-    <a
+    </Sidebar.MobileItem>
+    <Sidebar.MobileItem
       class="flex h-full w-full flex-row items-center justify-center gap-2 font-mono text-base font-medium"
       href="/app/account"
-      use:isActive
     >
       <User class="size-5" />
       {$t('app.sidebar.items.account')}

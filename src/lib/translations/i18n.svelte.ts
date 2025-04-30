@@ -104,11 +104,11 @@ export class i18n {
     }
     logger.debug(`Setting locale to "${locale}"`);
     if (this.isLocaleSupported(locale)) {
+      this.loadTranslations(locale);
       if (locale !== get(this._locale)) {
         this._locale.set(locale);
         this._dir.set(config.loaders.find((l) => l.locale === locale)?.dir as Dir);
       }
-      this.loadTranslations(locale);
     } else {
       logger.error(`Locale ${locale} not supported`);
       throw new Error(`Locale ${locale} not supported`);
@@ -191,7 +191,6 @@ export class i18n {
 
   // Translate a single translation and returns a string of it's value. No reactivity (mainly used on the server to i18n error messages)
   translate(key: string, params?: Record<string, unknown>) {
-    logger.debug(get(this._locale));
     return get(this.t)(key, params);
   }
 }

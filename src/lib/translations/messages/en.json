@@ -429,7 +429,10 @@
     "userNotFound": "User not found!",
     "environmentNameRequired": "Environment name is required",
     "environmentNotFound": "Environment not found",
-    "missingStateParameter": "Missing state parameter"
+    "missingStateParameter": "Missing state parameter",
+    "docsNotFound": "No documentation found",
+    "pageNotFound": "Page not found",
+    "unsupportedLocale": "Unsupported locale {{locale}}"
   },
   "api": {
     "authenticate": {
@@ -445,6 +448,21 @@
               "variablesUpdated": "Variable updated"
             }
           }
+        }
+      }
+    }
+  },
+  "docs": {
+    "title": "Docs"
+  },
+  "components": {
+    "docs": {
+      "markdown": {
+        "img": {
+          "zoom": "Zoom on image"
+        },
+        "pre": {
+          "copyCode": "Copy code"
         }
       }
     }
