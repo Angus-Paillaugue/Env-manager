@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 thisDir=$(dirname $0)
-dockerComposeFile="${thisDir}/../../docker-compose.yml"
+dockerComposeFile="${thisDir}/../../docker-compose.yaml"
 
 
 if [ ! -f "$dockerComposeFile" ]; then

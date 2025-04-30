@@ -1,6 +1,5 @@
 tests/
 .github/
-.svelte-kit/
 cli/
 node_modules/
 sql/

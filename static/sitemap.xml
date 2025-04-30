@@ -2,46 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://env-manager.paillaugue.fr/</loc>
-		<lastmod>2025-04-03</lastmod>
+		<lastmod>2025-04-30</lastmod>
 	</url>
 	<url>
-		<loc>https://env-manager.paillaugue.fr/en/</loc>
-		<lastmod>2025-04-03</lastmod>
+		<loc>https://env-manager.paillaugue.fr/auth/callback/success</loc>
+		<lastmod>2025-04-30</lastmod>
 	</url>
 	<url>
-		<loc>https://env-manager.paillaugue.fr/fr/</loc>
-		<lastmod>2025-04-03</lastmod>
+		<loc>https://env-manager.paillaugue.fr/auth/log-in</loc>
+		<lastmod>2025-04-30</lastmod>
 	</url>
 	<url>
-		<loc>https://env-manager.paillaugue.fr/en/auth/callback/success</loc>
-		<lastmod>2025-04-03</lastmod>
+		<loc>https://env-manager.paillaugue.fr/auth/sign-up</loc>
+		<lastmod>2025-04-30</lastmod>
 	</url>
 	<url>
-		<loc>https://env-manager.paillaugue.fr/fr/auth/callback/success</loc>
-		<lastmod>2025-04-03</lastmod>
+		<loc>https://env-manager.paillaugue.fr/help</loc>
+		<lastmod>2025-04-30</lastmod>
 	</url>
 	<url>
-		<loc>https://env-manager.paillaugue.fr/en/auth/log-in</loc>
-		<lastmod>2025-04-03</lastmod>
-	</url>
-	<url>
-		<loc>https://env-manager.paillaugue.fr/fr/auth/log-in</loc>
-		<lastmod>2025-04-03</lastmod>
-	</url>
-	<url>
-		<loc>https://env-manager.paillaugue.fr/en/auth/sign-up</loc>
-		<lastmod>2025-04-03</lastmod>
-	</url>
-	<url>
-		<loc>https://env-manager.paillaugue.fr/fr/auth/sign-up</loc>
-		<lastmod>2025-04-03</lastmod>
-	</url>
-	<url>
-		<loc>https://env-manager.paillaugue.fr/en/help</loc>
-		<lastmod>2025-04-03</lastmod>
-	</url>
-	<url>
-		<loc>https://env-manager.paillaugue.fr/fr/help</loc>
-		<lastmod>2025-04-03</lastmod>
+		<loc>https://env-manager.paillaugue.fr/docs/{...slug}</loc>
+		<lastmod>2025-04-30</lastmod>
 	</url>
 </urlset>

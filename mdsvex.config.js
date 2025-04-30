@@ -1,6 +1,8 @@
+import path from 'path';
 import rehypeSlug from 'rehype-slug';
 import remarkAttr from 'remark-attr';
 import highlighter from './src/lib/components/docs/codeHighlighter.ts';
+
 
 const config = {
   extensions: ['.md', '.svx', '.mdx'],
@@ -10,7 +12,7 @@ const config = {
   highlight: {
     highlighter
   },
-  layout: './src/lib/components/docs/markdown/blueprint.svelte'
+  layout: path.resolve('./src/lib/components/docs/markdown/blueprint.svelte')
 };
 
 export default config;

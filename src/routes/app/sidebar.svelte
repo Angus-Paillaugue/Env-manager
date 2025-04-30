@@ -97,9 +97,9 @@
     >
       <User class="size-5" />
       {$t('app.sidebar.items.account')}
-    </a>
-  </div>
-</div>
+    </Sidebar.MobileItem>
+  {/snippet}
+</Sidebar>
 
 <aside
   class="bg-card border-border relative hidden w-full shrink-0 flex-col overflow-hidden border-r p-4 transition-transform duration-300 lg:flex rtl:border-l"
