@@ -55,12 +55,12 @@
 
 <div class="relative p-4">
   <div
-    class="bg-card border-border mt-12 grid w-full grid-cols-3 items-center justify-center overflow-hidden rounded border"
+    class="bg-card border-border mt-12 grid w-full grid-cols-3 items-center justify-center overflow-hidden overflow-x-auto rounded border"
   >
     {#each sections as section, i}
       <button
         class={cn(
-          'flex w-full cursor-pointer flex-row items-center justify-center gap-2 bg-transparent p-2 font-medium transition-colors',
+          'flex w-full min-w-max cursor-pointer flex-row items-center justify-center gap-2 bg-transparent p-2 font-medium transition-colors',
           i === currentTabIndex && 'bg-card-hover'
         )}
         onclick={() => changeTab(i)}
