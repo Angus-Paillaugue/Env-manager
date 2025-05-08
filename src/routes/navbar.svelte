@@ -80,46 +80,46 @@
 {/if}
 
 {#if scrollDirection === 'up'}
-<div
-  class='flex w-full fixed top-0 left-0 right-0 p-2 transition-all duration-300 h-fit z-20'
-  transition:fly={{ y: '-100%', duration: 400 }}
->
-  <nav
-    class="border-border bg-card flex w-full shrink-0 flex-row items-center justify-between overflow-hidden rounded-lg border p-2 transition-all duration-300 lg:p-3"
+  <div
+    class="fixed top-0 right-0 left-0 z-20 flex h-fit w-full p-2 transition-all duration-300"
+    transition:fly={{ y: '-100%', duration: 400 }}
   >
-    <div class="flex flex-row items-center justify-between gap-4 max-lg:grow">
-      <a href="/">{$t('home.navbar.projectName')}</a>
-      <Button
-        class="size-10 p-2 lg:hidden"
-        variant="secondary"
-        onclick={() => (mobileNavOpen = !mobileNavOpen)}
-      >
-        <Menu class="size-full" />
-      </Button>
-    </div>
-
-    <!-- Center nav -->
-    <div class="hidden flex-row items-center justify-center gap-4 lg:flex">
-      {#each navItems.main as item}
-        <a
-          href={item.href}
-          class="text-foreground after:bg-foreground relative font-mono font-bold after:absolute after:top-full after:left-1/2 after:mt-1 after:h-[2px] after:w-0 after:-translate-x-1/2 after:rounded-full after:transition-all after:duration-300 after:content-[''] hover:after:w-full"
-          >{$t(item.label)}</a
+    <nav
+      class="border-border bg-card flex w-full shrink-0 flex-row items-center justify-between overflow-hidden rounded-lg border p-2 transition-all duration-300 lg:p-3"
+    >
+      <div class="flex flex-row items-center justify-between gap-4 max-lg:grow">
+        <a href="/">{$t('home.navbar.projectName')}</a>
+        <Button
+          class="size-10 p-2 lg:hidden"
+          variant="secondary"
+          onclick={() => (mobileNavOpen = !mobileNavOpen)}
         >
-      {/each}
-    </div>
+          <Menu class="size-full" />
+        </Button>
+      </div>
 
-    <!-- CTA's -->
-    {#if page.data.IS_PUBLIC_WEBSITE}
-      <!-- If is the demo website (public facing), do not show CTA's -->
-      <div class="h-10"></div>
-    {:else}
-      <div class="hidden flex-row items-center gap-2 lg:flex">
-        {#each navItems.cta as item}
-        <Button href={item.href} variant={item.variant}>{$t(item.label)}</Button>
+      <!-- Center nav -->
+      <div class="hidden flex-row items-center justify-center gap-4 lg:flex">
+        {#each navItems.main as item}
+          <a
+            href={item.href}
+            class="text-foreground after:bg-foreground relative font-mono font-bold after:absolute after:top-full after:left-1/2 after:mt-1 after:h-[2px] after:w-0 after:-translate-x-1/2 after:rounded-full after:transition-all after:duration-300 after:content-[''] hover:after:w-full"
+            >{$t(item.label)}</a
+          >
         {/each}
       </div>
-    {/if}
-  </nav>
-</div>
+
+      <!-- CTA's -->
+      {#if page.data.IS_PUBLIC_WEBSITE}
+        <!-- If is the demo website (public facing), do not show CTA's -->
+        <div class="h-10"></div>
+      {:else}
+        <div class="hidden flex-row items-center gap-2 lg:flex">
+          {#each navItems.cta as item}
+            <Button href={item.href} variant={item.variant}>{$t(item.label)}</Button>
+          {/each}
+        </div>
+      {/if}
+    </nav>
+  </div>
 {/if}

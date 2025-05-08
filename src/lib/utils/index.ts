@@ -97,7 +97,7 @@ export const noop = (...args: unknown[]) => {
   void args;
 };
 
-export const isMobile = new MediaQuery('width < 48rem');
+export const isMobile = new MediaQuery('width < 64rem');
 
 export function cloneObject(obj: Record<string, unknown>): Record<string, unknown> {
   if (obj === null || typeof obj !== 'object') return obj;

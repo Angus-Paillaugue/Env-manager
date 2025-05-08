@@ -7,7 +7,7 @@
   import Terminal from './terminal.svelte';
 </script>
 
-<section class="flex flex-col px-2 py-12 lg:px-10 lg:py-24 min-h-svh">
+<section class="flex min-h-svh flex-col px-2 py-12 lg:px-10 lg:py-24">
   <div
     class="mx-auto flex w-full max-w-screen-2xl grow flex-col items-center justify-center gap-10"
   >

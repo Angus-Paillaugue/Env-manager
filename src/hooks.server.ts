@@ -1,5 +1,6 @@
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+import { IS_PUBLIC_WEBSITE } from '$env/static/private';
 import { auth } from '$lib/server/auth';
 import { defaultLocale, config as i18nConfig, locales, origin } from '$lib/translations/';
 import { urlStartsWith } from '$lib/utils';
@@ -30,8 +31,16 @@ const authHandler: Handle = async ({ event, resolve }) => {
     }
   }
 
-  // Redirect to login page if user is not logged in and trying to access a protected route
+  if (
+    IS_PUBLIC_WEBSITE &&
+    (urlStartsWith(url.pathname, NEED_AUTH_ROUTES) ||
+      urlStartsWith(url.pathname, ['/auth', '/api']))
+  ) {
+    redirect(303, '/');
+  }
+
   if (!locals.user && urlStartsWith(url.pathname, NEED_AUTH_ROUTES)) {
+    // Redirect to login page if user is not logged in and trying to access a protected route
     redirect(303, '/auth/log-in');
   }
 

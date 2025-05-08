@@ -6,7 +6,10 @@
   let { children } = $props();
 </script>
 
-<div class="flex w-full flex-col-reverse lg:flex-row" style="margin-top: {NAV_HEIGHT - 8}px; height: calc(100svh - {NAV_HEIGHT - 8}px);">
+<div
+  class="flex w-full flex-col-reverse lg:flex-row"
+  style="margin-top: {NAV_HEIGHT - 8}px; height: calc(100svh - {NAV_HEIGHT - 8}px);"
+>
   <Sidebar />
   <div class="flex w-full grow flex-col overflow-auto">
     <Header />

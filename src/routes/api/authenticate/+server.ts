@@ -64,7 +64,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
       // If password is incorrect, return error
       if (!compare) return json({ error: translate('errors.incorrectPassword') }, { status: 400 });
     } catch (error) {
-      Logger.error("Error getting user info or checking it's password:",error);
+      Logger.error("Error getting user info or checking it's password:", error);
       return json(
         { error: error instanceof Error ? error.message : translate('errors.unknownError') },
         { status: 500 }

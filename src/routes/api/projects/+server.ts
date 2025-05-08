@@ -10,7 +10,6 @@ export const GET: RequestHandler = async ({ locals }) => {
     const projects = (await ProjectDAO.getProjectsByUser(user.id)) || [];
     return json({ projects });
   } catch (error) {
-    console.log(error);
     return json({ error: error instanceof Error ? error.message : error }, { status: 400 });
   }
 };

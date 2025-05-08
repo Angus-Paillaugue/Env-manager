@@ -5,23 +5,27 @@
 
   interface MyProps {
     headings: TOCEntry[];
+    activeSectionId: string | null;
     root?: boolean;
   }
 
-  const { headings, root = false }: MyProps = $props();
+  const { headings, root = false, activeSectionId = null }: MyProps = $props();
 </script>
 
-<ol class={cn(!root && 'ml-2')}>
+<ol class={cn(!root && 'ml-4')}>
   {#each headings as heading}
-    <li class="mb-2 list-none first:mt-2 last:m-0">
+    <li class="my-2 list-none">
       <a
         href={'#' + heading.id}
-        class={cn('hover:text-primary mt-1 max-w-[50px] transition-colors', !root && 'px-1')}
+        class={cn(
+          'hover:text-primary text-muted transition-colors',
+          activeSectionId === heading.id && 'text-primary'
+        )}
       >
         {heading.title}
       </a>
       {#if heading.children.length > 0}
-        <ItemsList headings={heading.children} />
+        <ItemsList {activeSectionId} headings={heading.children} />
       {/if}
     </li>
   {/each}

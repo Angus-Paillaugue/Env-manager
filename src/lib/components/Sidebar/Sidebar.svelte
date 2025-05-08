@@ -25,12 +25,9 @@
 {/if}
 
 {#if desktop}
-  <div class="p-2 w-full max-w-sm shrink-0 hidden lg:flex">
+  <div class="hidden w-full max-w-sm shrink-0 p-2 lg:flex">
     <aside
-      class={cn(
-        'bg-card border-border flex grow rounded-lg flex-col p-4 border',
-        className
-      )}
+      class={cn('bg-card border-border flex grow flex-col rounded-lg border p-4', className)}
       {...restProps}
     >
       {@render desktop()}

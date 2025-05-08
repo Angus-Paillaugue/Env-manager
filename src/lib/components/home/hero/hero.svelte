@@ -1,11 +1,12 @@
 <script lang="ts">
+  import { page } from '$app/state';
   import Button from '$lib/components/Button';
   import { t } from '$lib/translations';
   import Cli from './cli.svelte';
   import DotEnv from './dotEnv.svelte';
 </script>
 
-<section class="text-foreground relative overflow-hidden min-h-svh">
+<section class="text-foreground relative min-h-svh overflow-hidden">
   <div
     class="absolute inset-0 -z-10 bg-[image:radial-gradient(var(--pattern)_1px,_transparent_0)] bg-[size:10px_10px] bg-fixed"
     style="--pattern: color-mix(in oklab,var(--color-foreground)15%,transparent);"
@@ -25,8 +26,9 @@
       {$t('home.homepage.hero.slogan.text')}
       <span class="text-muted">{$t('home.homepage.hero.slogan.emphasis')}</span>
     </p>
-    <Button href="/auth/sign-up" class="pointer-events-auto px-4 py-2 text-lg"
-      >{$t('home.homepage.hero.ctaText')}</Button
+    <Button
+      href={page.data.IS_PUBLIC_WEBSITE ? '/docs' : '/auth/sign-up'}
+      class="pointer-events-auto px-4 py-2 text-lg">{$t('home.homepage.hero.ctaText')}</Button
     >
   </div>
 

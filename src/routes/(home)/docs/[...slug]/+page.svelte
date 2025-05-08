@@ -48,7 +48,11 @@
   }
 </script>
 
-<section id="docsContainer" class="mx-auto w-full max-w-screen-xl" bind:this={pageContentsElement}>
+<section
+  id="docsContainer"
+  class="mx-auto mt-2 w-full max-w-screen-xl"
+  bind:this={pageContentsElement}
+>
   <!-- Need to use svelte:component instead of @render because mdsvex can break the page on the initial server load -->
   <!-- Until this is fixed, we are stick with that -->
   <!-- svelte-ignore svelte_component_deprecated -->

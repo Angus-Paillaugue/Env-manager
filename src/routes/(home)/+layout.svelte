@@ -6,6 +6,6 @@
 
 <Navbar />
 
-<main class="flex h-full grow flex-col min-h-svh">
+<main class="flex h-full min-h-svh grow flex-col">
   {@render children?.()}
 </main>

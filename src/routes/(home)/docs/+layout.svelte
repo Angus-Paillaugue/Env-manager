@@ -9,7 +9,10 @@
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
 </script>
 
-<div class="flex grow flex-col-reverse gap-4 lg:flex-row" style="height: {SECTION_HEIGHT}; margin-top: {NAV_HEIGHT - 8}px;">
+<div
+  class="flex grow flex-col gap-4 lg:flex-row"
+  style="height: {SECTION_HEIGHT}; margin-top: {NAV_HEIGHT - 8}px;"
+>
   <Sidebar tree={data.tree} />
 
   <div

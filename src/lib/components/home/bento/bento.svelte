@@ -8,7 +8,7 @@
   import Card4 from './card4.svelte';
 </script>
 
-<section class="px-2 py-12 lg:px-10 lg:py-24 min-h-svh" id="features">
+<section class="min-h-svh px-2 py-12 lg:px-10 lg:py-24" id="features">
   <div
     class="mx-auto flex w-full max-w-screen-2xl grow flex-col items-center justify-center gap-10"
   >
